@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Complete - WEVERSE</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">
+            <span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../index.html" data-i18n="nav.main">Main</a>
+                    <a href="company.html" data-i18n="nav.company">Company</a>
+                    <a href="product.html" data-i18n="nav.product">Product</a>
+                    <a href="shopping.html" data-i18n="nav.shop">Shop</a>
+                    <a href="login.html" class="nav-auth" data-i18n="nav.login">Login</a>
+                    <a href="cart.html" class="nav-cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </nav>
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Order Complete Content -->
+    <section class="order-complete-section">
+        <div class="container">
+            <div class="order-complete" data-animate>
+                <!-- Success Icon -->
+                <div class="order-success-icon">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M8 12l3 3 5-6"/>
+                    </svg>
+                </div>
+
+                <!-- Success Message -->
+                <h1>Thank You for Your Order!</h1>
+                <p class="order-message">Your order has been successfully placed. We'll send you a confirmation email shortly.</p>
+
+                <!-- Order Number -->
+                <div class="order-number-box">
+                    <span>Order Number</span>
+                    <strong id="orderNumber">-</strong>
+                </div>
+
+                <!-- Order Details Grid -->
+                <div class="order-details-grid">
+                    <!-- Order Items -->
+                    <div class="order-detail-card" data-animate data-delay="1">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                <path d="M16 10a4 4 0 01-8 0"/>
+                            </svg>
+                            Order Items
+                        </h3>
+                        <div class="order-items-list" id="orderItems">
+                            <!-- Items will be rendered by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Shipping Information -->
+                    <div class="order-detail-card" data-animate data-delay="2">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="1" y="3" width="15" height="13"/>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/>
+                                <circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                            Shipping Address
+                        </h3>
+                        <div class="order-shipping-info" id="shippingInfo">
+                            <!-- Shipping info will be rendered by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Payment Summary -->
+                    <div class="order-detail-card" data-animate data-delay="3">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="1" y="4" width="22" height="16" rx="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                            Payment Summary
+                        </h3>
+                        <div class="order-payment-summary">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="orderSubtotal">$0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <span id="orderShipping">FREE</span>
+                            </div>
+                            <div class="summary-row discount" id="orderDiscountRow" style="display: none;">
+                                <span>Discount</span>
+                                <span id="orderDiscount">-$0.00</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Total Paid</span>
+                                <span id="orderTotal">$0.00</span>
+                            </div>
+                            <div class="payment-method-info">
+                                <span>Payment Method:</span>
+                                <strong id="paymentMethod">Credit Card</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- What's Next -->
+                    <div class="order-detail-card" data-animate data-delay="4">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            What's Next?
+                        </h3>
+                        <div class="order-next-steps">
+                            <div class="next-step">
+                                <span class="step-number">1</span>
+                                <div class="step-content">
+                                    <strong>Order Confirmation</strong>
+                                    <p>You will receive an email confirmation shortly.</p>
+                                </div>
+                            </div>
+                            <div class="next-step">
+                                <span class="step-number">2</span>
+                                <div class="step-content">
+                                    <strong>Processing</strong>
+                                    <p>Your order will be processed within 1-2 business days.</p>
+                                </div>
+                            </div>
+                            <div class="next-step">
+                                <span class="step-number">3</span>
+                                <div class="step-content">
+                                    <strong>Shipping</strong>
+                                    <p>You'll receive tracking information once shipped.</p>
+                                </div>
+                            </div>
+                            <div class="next-step">
+                                <span class="step-number">4</span>
+                                <div class="step-content">
+                                    <strong>Delivery</strong>
+                                    <p>Estimated delivery: 5-7 business days.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="order-actions" data-animate data-delay="5">
+                    <a href="shopping.html" class="btn btn-primary">Continue Shopping</a>
+                    <button class="btn btn-outline" onclick="window.print()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polyline points="6 9 6 2 18 2 18 9"/>
+                            <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+                            <rect x="6" y="14" width="12" height="8"/>
+                        </svg>
+                        Print Receipt
+                    </button>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="order-contact" data-animate data-delay="6">
+                    <p>Questions about your order? Contact us at</p>
+                    <a href="mailto:weverse.one@gmail.com">weverse.one@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                    <p data-i18n="footer.desc">Premium healthcare that elevates the value of life. Where science meets innovation to create your healthier tomorrow.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.menu">Menu</h4>
+                    <div class="footer-links">
+                        <a href="../index.html" data-i18n="nav.main">Main</a>
+                        <a href="company.html" data-i18n="nav.company">Company</a>
+                        <a href="product.html" data-i18n="nav.product">Product</a>
+                        <a href="shopping.html" data-i18n="nav.shop">Shop</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.products">Products</h4>
+                    <div class="footer-links">
+                        <a href="products/new-bornaid.html">New-BornAid</a>
+                        <a href="products/alpha-gpc.html">Alpha GPC</a>
+                        <a href="products/nano-lutein.html">Nano Lutein</a>
+                        <a href="products/super-prostaid.html">Super Prost Aid</a>
+                        <a href="products/joint-care.html">Joint Care</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.contact">Contact</h4>
+                    <div class="footer-links">
+                        <a href="mailto:weverse.one@gmail.com">weverse.one@gmail.com</a>
+                        <a href="#">Singapore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+                </div>
+        </div>
+    </footer>
+    <!-- Floating Action Button -->
+    <div class="fab-container" id="fabContainer">
+        <a href="cart.html" class="fab-item fab-cart" title="Cart">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="fab-cart-count" id="fabCartCount">0</span>
+        </a>
+        <a href="account.html" class="fab-item fab-account" title="My Account">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        </a>
+        <button class="fab-item fab-lang" id="fabLang" title="Language" onclick="toggleLanguage()">中</button>
+
+        <button class="fab-toggle" id="fabToggle" aria-label="Quick Menu">
+            <svg class="fab-icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
+            </svg>
+            <svg class="fab-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Get order data from localStorage
+        function loadOrderData() {
+            const orderData = JSON.parse(localStorage.getItem('weverseLastOrder'));
+
+            if (!orderData) {
+                // No order data, redirect to shop
+                window.location.href = 'shopping.html';
+                return;
+            }
+
+            // Order Number
+            document.getElementById('orderNumber').textContent = orderData.orderNumber;
+
+            // Order Items
+            const orderItemsContainer = document.getElementById('orderItems');
+            orderItemsContainer.innerHTML = orderData.items.map(item => `
+                <div class="order-item">
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-details">Qty: ${item.quantity} × $${item.price.toFixed(2)}</span>
+                    <span class="item-total">$${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            // Shipping Info
+            const shippingContainer = document.getElementById('shippingInfo');
+            shippingContainer.innerHTML = `
+                <p class="shipping-name">${orderData.shipping.firstName} ${orderData.shipping.lastName}</p>
+                <p>${orderData.shipping.address}</p>
+                <p>${orderData.shipping.city}, ${orderData.shipping.state} ${orderData.shipping.zipcode}</p>
+                <p>${orderData.shipping.country}</p>
+                <p class="shipping-contact">
+                    <span>${orderData.shipping.email}</span>
+                    <span>${orderData.shipping.phone}</span>
+                </p>
+            `;
+
+            // Payment Summary
+            document.getElementById('orderSubtotal').textContent = `$${orderData.subtotal.toFixed(2)}`;
+            document.getElementById('orderShipping').textContent = orderData.shippingCost === 0 ? 'FREE' : `$${orderData.shippingCost.toFixed(2)}`;
+
+            if (orderData.discount > 0) {
+                document.getElementById('orderDiscountRow').style.display = 'flex';
+                document.getElementById('orderDiscount').textContent = `-$${orderData.discountAmount.toFixed(2)}`;
+            }
+
+            document.getElementById('orderTotal').textContent = `$${orderData.total.toFixed(2)}`;
+
+            // Payment Method
+            const paymentMethodNames = {
+                'card': 'Credit / Debit Card',
+                'paypal': 'PayPal',
+                'bank': 'Bank Transfer'
+            };
+            document.getElementById('paymentMethod').textContent = paymentMethodNames[orderData.paymentMethod] || 'Credit Card';
+
+            // Clear the order data after displaying (optional - keep for order history)
+            // localStorage.removeItem('weverseLastOrder');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderData();
+
+            // Animate elements
+            setTimeout(() => {
+                document.querySelectorAll('[data-animate]').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animated');
+                    }, index * 100);
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

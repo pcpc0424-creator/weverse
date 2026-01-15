@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - WEVERSE</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">
+            <span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../index.html" data-i18n="nav.main">Main</a>
+                    <a href="company.html" data-i18n="nav.company">Company</a>
+                    <a href="product.html" data-i18n="nav.product">Product</a>
+                    <a href="shopping.html" data-i18n="nav.shop">Shop</a>
+                    <a href="login.html" class="nav-auth" data-i18n="nav.login">Login</a>
+                    <a href="cart.html" class="nav-cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </nav>
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <p class="hero-subtitle" data-animate><span data-i18n="cart.subtitle">Your Selection</span></p>
+            <h1 data-animate data-delay="1"><span data-i18n="cart.title">Cart</span></h1>
+        </div>
+    </section>
+
+    <!-- Cart Section -->
+    <section class="section" style="padding-top: var(--space-xl);">
+        <div class="container">
+            <!-- Empty Cart Message -->
+            <div class="cart-empty" id="cartEmpty">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                <h3 data-i18n="cart.empty.title">Your cart is empty</h3>
+                <p data-i18n="cart.empty.desc">Looks like you haven\'t added any products yet.</p>
+                <a href="shopping.html" class="btn btn-primary">Shop Now</a>
+            </div>
+
+            <!-- Cart Content -->
+            <div class="cart-content" id="cartContent" style="display: none;">
+                <div class="cart-grid">
+                    <!-- Cart Items -->
+                    <div class="cart-items" id="cartItems">
+                        <!-- Items will be rendered here by JavaScript -->
+                    </div>
+
+                    <!-- Cart Summary -->
+                    <div class="cart-summary">
+                        <h3 data-i18n="cart.summary">Order Summary</h3>
+                        <div class="cart-summary-row">
+                            <span data-i18n="cart.subtotal">Subtotal</span>
+                            <span id="cartSubtotal">$0.00</span>
+                        </div>
+                        <div class="cart-summary-row">
+                            <span data-i18n="cart.shipping">Shipping</span>
+                            <span id="cartShipping">$0.00</span>
+                        </div>
+                        <div class="cart-summary-row cart-summary-total">
+                            <span data-i18n="cart.total">Total</span>
+                            <span id="cartTotal">$0.00</span>
+                        </div>
+                        <button class="btn btn-primary btn-full" onclick="proceedToCheckout()">Proceed to Checkout</button>
+                        <a href="shopping.html" class="btn btn-outline btn-full">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                    <p data-i18n="footer.desc">Premium healthcare that elevates the value of life. Where science meets innovation to create your healthier tomorrow.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.menu">Menu</h4>
+                    <div class="footer-links">
+                        <a href="../index.html" data-i18n="nav.main">Main</a>
+                        <a href="company.html" data-i18n="nav.company">Company</a>
+                        <a href="product.html" data-i18n="nav.product">Product</a>
+                        <a href="shopping.html" data-i18n="nav.shop">Shop</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.products">Products</h4>
+                    <div class="footer-links">
+                        <a href="products/new-bornaid.html">New-BornAid</a>
+                        <a href="products/alpha-gpc.html">Alpha GPC</a>
+                        <a href="products/nano-lutein.html">Nano Lutein</a>
+                        <a href="products/super-prostaid.html">Super Prost Aid</a>
+                        <a href="products/joint-care.html">Joint Care</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.contact">Contact</h4>
+                    <div class="footer-links">
+                        <a href="mailto:weverse.one@gmail.com">weverse.one@gmail.com</a>
+                        <a href="#">Singapore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Floating Action Button -->
+    <div class="fab-container" id="fabContainer">
+        <a href="cart.html" class="fab-item fab-cart" title="Cart">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="fab-cart-count" id="fabCartCount">0</span>
+        </a>
+        <a href="account.html" class="fab-item fab-account" title="My Account">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        </a>
+        <button class="fab-item fab-lang" id="fabLang" title="Language" onclick="toggleLanguage()">中</button>
+
+        <button class="fab-toggle" id="fabToggle" aria-label="Quick Menu">
+            <svg class="fab-icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
+            </svg>
+            <svg class="fab-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Cart Page Functions
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCart();
+        });
+
+        function renderCart() {
+            const cart = getCart();
+            const cartEmpty = document.getElementById('cartEmpty');
+            const cartContent = document.getElementById('cartContent');
+            const cartItems = document.getElementById('cartItems');
+
+            if (cart.length === 0) {
+                cartEmpty.style.display = 'block';
+                cartContent.style.display = 'none';
+                return;
+            }
+
+            cartEmpty.style.display = 'none';
+            cartContent.style.display = 'block';
+
+            // Render cart items
+            cartItems.innerHTML = cart.map((item, index) => `
+                <div class="cart-item" data-animate data-delay="${index + 1}">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <p class="cart-item-price">$${item.price}.00</p>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="qty-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity('${item.name}', 1)">+</button>
+                    </div>
+                    <div class="cart-item-total">
+                        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart('${item.name}')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+
+            // Update summary
+            updateCartSummary(cart);
+
+            // Trigger animations
+            setTimeout(() => {
+                document.querySelectorAll('.cart-item[data-animate]').forEach(el => {
+                    el.classList.add('animated');
+                });
+            }, 100);
+        }
+
+        function updateQuantity(productName, change) {
+            const cart = getCart();
+            const item = cart.find(i => i.name === productName);
+
+            if (item) {
+                item.quantity += change;
+
+                if (item.quantity <= 0) {
+                    removeFromCart(productName);
+                    return;
+                }
+
+                saveCart(cart);
+                renderCart();
+                updateCartCount();
+            }
+        }
+
+        function removeFromCart(productName) {
+            let cart = getCart();
+            cart = cart.filter(item => item.name !== productName);
+            saveCart(cart);
+            renderCart();
+            updateCartCount();
+            showToast(`${productName} removed from cart`);
+        }
+
+        function updateCartSummary(cart) {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 100 ? 0 : 10;
+            const total = subtotal + shipping;
+
+            document.getElementById('cartSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cartShipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+            document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function proceedToCheckout() {
+            const cart = getCart();
+            if (cart.length === 0) {
+                showToast('Your cart is empty');
+                return;
+            }
+
+            // Redirect to checkout page
+            window.location.href = 'checkout.html';
+        }
+    </script>
+</body>
+</html>

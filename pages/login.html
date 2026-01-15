@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WEVERSE</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">
+            <span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../index.html" data-i18n="nav.main">Main</a>
+                    <a href="company.html" data-i18n="nav.company">Company</a>
+                    <a href="product.html" data-i18n="nav.product">Product</a>
+                    <a href="shopping.html" data-i18n="nav.shop">Shop</a>
+                    <a href="login.html" class="nav-auth active" data-i18n="nav.login">Login</a>
+                    <a href="cart.html" class="nav-cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </nav>
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Section -->
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-container" data-animate>
+                <div class="auth-header">
+                    <h1 data-i18n="login.title">Welcome Back</h1>
+                    <p data-i18n="login.subtitle">Sign in to your account to continue</p>
+                </div>
+
+                <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="email" data-i18n="login.email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" data-i18n="login.password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+                                    <line x1="1" y1="1" x2="23" y2="23"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember">
+                            <span class="checkmark"></span>
+                            <span data-i18n="login.remember">Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link" data-i18n="login.forgot">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full"><span data-i18n="login.submit">Sign In</span></button>
+                </form>
+
+                <div class="auth-divider">
+                    <span data-i18n="login.or">or continue with</span>
+                </div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn" onclick="socialLogin('google')">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                        Google
+                    </button>
+                    <button type="button" class="social-btn" onclick="socialLogin('apple')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                        </svg>
+                        Apple
+                    </button>
+                </div>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                    <p data-i18n="footer.desc">Premium healthcare that elevates the value of life. Where science meets innovation to create your healthier tomorrow.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.menu">Menu</h4>
+                    <div class="footer-links">
+                        <a href="../index.html" data-i18n="nav.main">Main</a>
+                        <a href="company.html" data-i18n="nav.company">Company</a>
+                        <a href="product.html" data-i18n="nav.product">Product</a>
+                        <a href="shopping.html" data-i18n="nav.shop">Shop</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.products">Products</h4>
+                    <div class="footer-links">
+                        <a href="products/new-bornaid.html">New-BornAid</a>
+                        <a href="products/alpha-gpc.html">Alpha GPC</a>
+                        <a href="products/nano-lutein.html">Nano Lutein</a>
+                        <a href="products/super-prostaid.html">Super Prost Aid</a>
+                        <a href="products/joint-care.html">Joint Care</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.contact">Contact</h4>
+                    <div class="footer-links">
+                        <a href="mailto:weverse.one@gmail.com">weverse.one@gmail.com</a>
+                        <a href="#">Singapore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+                </div>
+        </div>
+    </footer>
+    <!-- Floating Action Button -->
+    <div class="fab-container" id="fabContainer">
+        <a href="cart.html" class="fab-item fab-cart" title="Cart">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="fab-cart-count" id="fabCartCount">0</span>
+        </a>
+        <a href="account.html" class="fab-item fab-account" title="My Account">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        </a>
+        <button class="fab-item fab-lang" id="fabLang" title="Language" onclick="toggleLanguage()">中</button>
+
+        <button class="fab-toggle" id="fabToggle" aria-label="Quick Menu">
+            <svg class="fab-icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
+            </svg>
+            <svg class="fab-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+
+
+    <script src="../js/main.js"></script>
+    <script>
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const btn = input.parentElement.querySelector('.password-toggle');
+            const eyeOpen = btn.querySelector('.eye-open');
+            const eyeClosed = btn.querySelector('.eye-closed');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeOpen.style.display = 'none';
+                eyeClosed.style.display = 'block';
+            } else {
+                input.type = 'password';
+                eyeOpen.style.display = 'block';
+                eyeClosed.style.display = 'none';
+            }
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+
+            // Get registered users
+            const users = JSON.parse(localStorage.getItem('weverseUsers')) || [];
+            const user = users.find(u => u.email === email);
+
+            if (!user) {
+                showToast('Account not found. Please sign up first.');
+                return;
+            }
+
+            if (user.password !== password) {
+                showToast('Incorrect password. Please try again.');
+                return;
+            }
+
+            // Login successful
+            const sessionData = {
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                phone: user.phone,
+                loggedIn: true,
+                loginTime: new Date().toISOString()
+            };
+
+            if (remember) {
+                localStorage.setItem('weverseSession', JSON.stringify(sessionData));
+            } else {
+                sessionStorage.setItem('weverseSession', JSON.stringify(sessionData));
+            }
+
+            // Update profile
+            localStorage.setItem('weverseProfile', JSON.stringify({
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                phone: user.phone
+            }));
+
+            showToast('Login successful! Redirecting...');
+
+            setTimeout(() => {
+                window.location.href = 'account.html';
+            }, 1000);
+        }
+
+        // Social login (demo)
+        function socialLogin(provider) {
+            showToast(`${provider.charAt(0).toUpperCase() + provider.slice(1)} login coming soon!`);
+        }
+
+        // Check if already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const session = JSON.parse(localStorage.getItem('weverseSession')) ||
+                           JSON.parse(sessionStorage.getItem('weverseSession'));
+
+            if (session && session.loggedIn) {
+                window.location.href = 'account.html';
+            }
+
+            // Animate
+            setTimeout(() => {
+                document.querySelectorAll('[data-animate]').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animated');
+                    }, index * 100);
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

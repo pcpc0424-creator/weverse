@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - WEVERSE</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">
+            <span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../index.html" data-i18n="nav.main">Main</a>
+                    <a href="company.html" data-i18n="nav.company">Company</a>
+                    <a href="product.html" data-i18n="nav.product">Product</a>
+                    <a href="shopping.html" class="active" data-i18n="nav.shop">Shop</a>
+                    <a href="login.html" class="nav-auth" data-i18n="nav.login">Login</a>
+                    <a href="cart.html" class="nav-cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </nav>
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <p class="hero-subtitle" data-animate><span data-i18n="shop.subtitle">Premium Collection</span></p>
+            <h1 data-animate data-delay="1"><span data-i18n="shop.title">Shop</span></h1>
+        </div>
+    </section>
+
+    <!-- Shop Grid -->
+    <section class="section" style="padding-top: 0;">
+        <div class="container">
+            <div class="shop-grid">
+                <!-- Product 1 -->
+                <a href="products/new-bornaid.html" class="shop-card" data-animate data-delay="1">
+                    <div class="shop-card-image">
+                        <span class="shop-card-badge">Best</span>
+                        <img src="../images/shop-1.jpg" alt="New-BornAid">
+                    </div>
+                    <div class="shop-card-info">
+                        <h4>New-BornAid</h4>
+                        <p class="price">$89.00</p>
+                    </div>
+                </a>
+
+                <!-- Product 2 -->
+                <a href="products/alpha-gpc.html" class="shop-card" data-animate data-delay="2">
+                    <div class="shop-card-image">
+                        <img src="../images/shop-2.jpg" alt="Alpha GPC">
+                    </div>
+                    <div class="shop-card-info">
+                        <h4>Alpha GPC</h4>
+                        <p class="price">$129.00</p>
+                    </div>
+                </a>
+
+                <!-- Product 3 -->
+                <a href="products/nano-lutein.html" class="shop-card" data-animate data-delay="3">
+                    <div class="shop-card-image">
+                        <span class="shop-card-badge">New</span>
+                        <img src="../images/shop-3.jpg" alt="Nano Lutein">
+                    </div>
+                    <div class="shop-card-info">
+                        <h4>Nano Lutein</h4>
+                        <p class="price">$79.00</p>
+                    </div>
+                </a>
+
+                <!-- Product 4 -->
+                <a href="products/super-prostaid.html" class="shop-card" data-animate data-delay="1">
+                    <div class="shop-card-image">
+                        <img src="../images/shop-4.jpg" alt="Super ProstaAid">
+                    </div>
+                    <div class="shop-card-info">
+                        <h4>Super ProstaAid</h4>
+                        <p class="price">$99.00</p>
+                    </div>
+                </a>
+
+                <!-- Product 5 -->
+                <a href="products/joint-care.html" class="shop-card" data-animate data-delay="2">
+                    <div class="shop-card-image">
+                        <img src="../images/shop-5.jpg" alt="Joint Care">
+                    </div>
+                    <div class="shop-card-info">
+                        <h4>Joint Care</h4>
+                        <p class="price">$69.00</p>
+                    </div>
+                </a>
+
+                <!-- Product 6 -->
+                <a href="products/premium-package.html" class="shop-card" data-animate data-delay="3">
+                    <div class="shop-card-image">
+                        <span class="shop-card-badge">Premium</span>
+                        <img src="../images/shop-6.jpg" alt="Premium Package">
+                    </div>
+                    <div class="shop-card-info">
+                        <h4>Premium Package</h4>
+                        <p class="price">$299.00 <span class="price-original">$465.00</span></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item" data-animate data-delay="1">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                    </svg>
+                    <h4>Free Shipping</h4>
+                    <p>Free shipping on orders over $100</p>
+                </div>
+                <div class="feature-item" data-animate data-delay="2">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    <h4>100% Authentic</h4>
+                    <p>Guaranteed authenticity and quality certified</p>
+                </div>
+                <div class="feature-item" data-animate data-delay="3">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <h4>Easy Returns</h4>
+                    <p>Free returns within 30 days</p>
+                </div>
+                <div class="feature-item" data-animate data-delay="4">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <h4>24/7 Support</h4>
+                    <p>Customer service available anytime</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2 data-animate>
+                Questions? <span class="text-light">Contact Us</span>
+            </h2>
+            <p data-animate data-delay="1">If you have any questions, feel free to contact us anytime</p>
+            <a href="mailto:weverse.one@gmail.com" class="btn btn-outline" data-animate data-delay="2">Get in Touch</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                    <p data-i18n="footer.desc">Premium healthcare that elevates the value of life. Where science meets innovation to create your healthier tomorrow.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.menu">Menu</h4>
+                    <div class="footer-links">
+                        <a href="../index.html" data-i18n="nav.main">Main</a>
+                        <a href="company.html" data-i18n="nav.company">Company</a>
+                        <a href="product.html" data-i18n="nav.product">Product</a>
+                        <a href="shopping.html" data-i18n="nav.shop">Shop</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.products">Products</h4>
+                    <div class="footer-links">
+                        <a href="products/new-bornaid.html">New-BornAid</a>
+                        <a href="products/alpha-gpc.html">Alpha GPC</a>
+                        <a href="products/nano-lutein.html">Nano Lutein</a>
+                        <a href="products/super-prostaid.html">Super Prost Aid</a>
+                        <a href="products/joint-care.html">Joint Care</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.contact">Contact</h4>
+                    <div class="footer-links">
+                        <a href="mailto:weverse.one@gmail.com">weverse.one@gmail.com</a>
+                        <a href="#">Singapore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Floating Action Button -->
+    <div class="fab-container" id="fabContainer">
+        <a href="cart.html" class="fab-item fab-cart" title="Cart">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="fab-cart-count" id="fabCartCount">0</span>
+        </a>
+        <a href="account.html" class="fab-item fab-account" title="My Account">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        </a>
+        <button class="fab-item fab-lang" id="fabLang" title="Language" onclick="toggleLanguage()">中</button>
+
+        <button class="fab-toggle" id="fabToggle" aria-label="Quick Menu">
+            <svg class="fab-icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
+            </svg>
+            <svg class="fab-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

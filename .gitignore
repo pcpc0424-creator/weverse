@@ -1,0 +1,15 @@
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Development files
+other/
+scripts/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

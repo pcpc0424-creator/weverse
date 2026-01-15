@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super ProstaAid - WEVERSE</title>
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">
+            <span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../../index.html" data-i18n="nav.main">Main</a>
+                    <a href="../company.html" data-i18n="nav.company">Company</a>
+                    <a href="../product.html" data-i18n="nav.product">Product</a>
+                    <a href="../shopping.html" class="active" data-i18n="nav.shop">Shop</a>
+                    <a href="../login.html" class="nav-auth" data-i18n="nav.login">Login</a>
+                    <a href="../cart.html" class="nav-cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </nav>
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Product Detail Hero -->
+    <section class="product-hero">
+        <div class="container">
+            <div class="product-hero-grid">
+                <div class="product-hero-content">
+                    <p class="tagline" data-animate>Prostate Health</p>
+                    <h1 data-animate data-delay="1">Super ProstaAid</h1>
+                    <p data-animate data-delay="2">
+                        Prostate hypertrophy & inflammation suppression. Prostate urination disorders occur in men over the age of 45. Early beds can be found young by Pygeum.
+                    </p>
+                    <p class="product-price" data-animate data-delay="3">$99.00</p>
+                    <div class="product-actions" data-animate data-delay="4">
+                        <button class="btn btn-outline btn-cart" onclick="addToCart('Super ProstaAid', 99)" data-i18n="common.addtocart">Add to Cart</button>
+                        <button class="btn btn-primary btn-buy" onclick="buyNow('Super ProstaAid', 99)" data-i18n="common.buynow">Buy Now</button>
+                    </div>
+                </div>
+                <div class="product-hero-image" data-animate="slide-right" data-delay="2">
+                    <img src="../../images/shop-4.jpg" alt="Super ProstaAid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Features -->
+    <section class="section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: var(--space-xl);" data-animate>
+                <span class="text-light" data-i18n="product.keyfeatures">Key Features</span>
+            </h2>
+            <div class="features-grid" style="background: transparent;">
+                <div class="product-feature-card" data-animate data-delay="1">
+                    <h4>Prostate Care</h4>
+                    <p>Effective prevention and management of prostate hypertrophy for men's health</p>
+                </div>
+                <div class="product-feature-card" data-animate data-delay="2">
+                    <h4>Inflammation Suppression</h4>
+                    <p>Natural anti-inflammatory effects to reduce discomfort and improve quality of life</p>
+                </div>
+                <div class="product-feature-card" data-animate data-delay="3">
+                    <h4>Pygeum Extract</h4>
+                    <p>Premium natural ingredient known for its prostate health benefits</p>
+                </div>
+                <div class="product-feature-card" data-animate data-delay="4">
+                    <h4>Men's Health</h4>
+                    <p>Specially formulated for men over 45 to maintain optimal prostate function</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2 data-animate><span class="text-light" data-i18n="cta.experience">Experience</span> <span data-i18n="cta.premium">Premium Healthcare</span></h2>
+            <p data-animate data-delay="1" data-i18n="cta.discover">Discover more products from our collection</p>
+            <a href="../shopping.html" class="btn btn-primary" data-animate data-delay="2"><span data-i18n="common.viewall">View All Products</span></a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="../../index.html" class="logo">WE<span>V</span>ERSE</a>
+                    <p data-i18n="footer.desc">Premium healthcare that elevates the value of life. Where science meets innovation to create your healthier tomorrow.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.menu">Menu</h4>
+                    <div class="footer-links">
+                        <a href="../../index.html" data-i18n="nav.main">Main</a>
+                        <a href="../company.html" data-i18n="nav.company">Company</a>
+                        <a href="../product.html" data-i18n="nav.product">Product</a>
+                        <a href="../shopping.html" data-i18n="nav.shop">Shop</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.products">Products</h4>
+                    <div class="footer-links">
+                        <a href="new-bornaid.html">New-BornAid</a>
+                        <a href="alpha-gpc.html">Alpha GPC</a>
+                        <a href="nano-lutein.html">Nano Lutein</a>
+                        <a href="super-prostaid.html">Super Prost Aid</a>
+                        <a href="joint-care.html">Joint Care</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.contact">Contact</h4>
+                    <div class="footer-links">
+                        <a href="mailto:weverse.one@gmail.com">weverse.one@gmail.com</a>
+                        <a href="#">Singapore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+                </div>
+        </div>
+    </footer>
+    <!-- Floating Action Button -->
+    <div class="fab-container" id="fabContainer">
+        <a href="../cart.html" class="fab-item fab-cart" title="Cart">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="fab-cart-count" id="fabCartCount">0</span>
+        </a>
+        <a href="../account.html" class="fab-item fab-account" title="My Account">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        </a>
+        <button class="fab-item fab-lang" id="fabLang" title="Language" onclick="toggleLanguage()">中</button>
+
+        <button class="fab-toggle" id="fabToggle" aria-label="Quick Menu">
+            <svg class="fab-icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
+            </svg>
+            <svg class="fab-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

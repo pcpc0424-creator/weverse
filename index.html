@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEVERSE</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">
+            <span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="index.html" class="active" data-i18n="nav.main">Main</a>
+                    <a href="pages/company.html" data-i18n="nav.company">Company</a>
+                    <a href="pages/product.html" data-i18n="nav.product">Product</a>
+                    <a href="pages/shopping.html" data-i18n="nav.shop">Shop</a>
+                    <a href="pages/login.html" class="nav-auth" data-i18n="nav.login">Login</a>
+                    <a href="pages/cart.html" class="nav-cart">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </nav>
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <!-- Floating Decorative Elements -->
+        <div class="hero-float hero-float-1"></div>
+        <div class="hero-float hero-float-2"></div>
+        <div class="hero-float hero-float-3"></div>
+
+        <div class="hero-content">
+            <p class="hero-subtitle" data-animate data-delay="1" data-i18n="hero.subtitle">Premium Health Innovation</p>
+            <h1 class="hero-title">
+                <span class="hero-brand" data-animate data-delay="2" data-i18n="hero.brand">WEVERSE,</span>
+                <span class="text-light" data-animate data-delay="3" data-i18n="hero.title1">The Power That</span>
+                <span data-animate data-delay="4" data-i18n="hero.title2">Changes The World</span>
+            </h1>
+            <p class="hero-tagline" data-animate data-delay="5" data-i18n="hero.tagline">is the beginning.</p>
+            <a href="pages/product.html" class="hero-cta" data-animate data-delay="6">
+                <span data-i18n="hero.cta">Discover More</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+        <div class="hero-scroll">
+            <span data-i18n="common.scroll">Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee">
+        <div class="marquee-inner">
+            <span class="marquee-item">PREMIUM <span>&mdash;</span></span>
+            <span class="marquee-item">INNOVATION <span>&mdash;</span></span>
+            <span class="marquee-item">HEALTH <span>&mdash;</span></span>
+            <span class="marquee-item">WELLNESS <span>&mdash;</span></span>
+            <span class="marquee-item">PREMIUM <span>&mdash;</span></span>
+            <span class="marquee-item">INNOVATION <span>&mdash;</span></span>
+            <span class="marquee-item">HEALTH <span>&mdash;</span></span>
+            <span class="marquee-item">WELLNESS <span>&mdash;</span></span>
+        </div>
+    </div>
+
+    <!-- About -->
+    <section class="section about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <h2 data-animate>
+                        <span class="text-light" data-i18n="about.title1">Weverse, The Power That</span>
+                        <span data-i18n="about.title2">Changes The World</span>
+                    </h2>
+                    <p data-animate data-delay="1" data-i18n="about.p1">
+                        Weverse, the power that changes the world, is the beginning. Weverse makes a difference in our lives with a clear goal of improving the value of human life.
+                    </p>
+                    <p data-animate data-delay="2" data-i18n="about.p2">
+                        Premium ingredients, scientific validation, and innovative technology. When these three elements converge, Weverse's premium healthcare solutions are born.
+                    </p>
+                    <div class="about-stats" data-animate data-delay="3">
+                        <div class="stat-item">
+                            <div class="stat-number" data-i18n="about.stat1.number">15+</div>
+                            <div class="stat-label" data-i18n="about.stat1.label">Years</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-i18n="about.stat2.number">50K+</div>
+                            <div class="stat-label" data-i18n="about.stat2.label">Customers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-i18n="about.stat3.number">99%</div>
+                            <div class="stat-label" data-i18n="about.stat3.label">Satisfaction</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image" data-animate="slide-right" data-delay="2">
+                    <img src="images/about.jpg" alt="About Weverse">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="section products">
+        <div class="container">
+            <div class="products-header">
+                <h2 data-animate><span class="text-light" data-i18n="products.title1">Our</span> <span data-i18n="products.title2">Products</span></h2>
+                <p data-animate data-delay="1" data-i18n="products.subtitle">Science-backed premium healthcare</p>
+            </div>
+            <div class="products-grid">
+                <a href="pages/products/new-bornaid.html" class="product-card" data-animate data-delay="1">
+                    <div class="product-card-image">
+                        <img src="images/product-1.jpg" alt="New-BornAid">
+                        <div class="product-card-overlay"></div>
+                    </div>
+                    <div class="product-card-content">
+                        <h4 data-i18n="products.newbornaid">New-BornAid</h4>
+                        <p data-i18n="products.newbornaid.desc">Fermented enzyme with 20 minerals & vitamins</p>
+                        <span class="product-card-link">
+                            <span data-i18n="products.viewdetails">View Details</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </span>
+                    </div>
+                </a>
+                <a href="pages/products/alpha-gpc.html" class="product-card" data-animate data-delay="2">
+                    <div class="product-card-image">
+                        <img src="images/product-2.jpg" alt="Alpha GPC">
+                        <div class="product-card-overlay"></div>
+                    </div>
+                    <div class="product-card-content">
+                        <h4 data-i18n="products.alphagpc">Alpha GPC</h4>
+                        <p data-i18n="products.alphagpc.desc">Brain health & cognitive enhancement</p>
+                        <span class="product-card-link">
+                            <span data-i18n="products.viewdetails">View Details</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </span>
+                    </div>
+                </a>
+                <a href="pages/products/nano-lutein.html" class="product-card" data-animate data-delay="3">
+                    <div class="product-card-image">
+                        <img src="images/product-3.jpg" alt="Nano Lutein">
+                        <div class="product-card-overlay"></div>
+                    </div>
+                    <div class="product-card-content">
+                        <h4 data-i18n="products.nanolutein">Nano Lutein</h4>
+                        <p data-i18n="products.nanolutein.desc">Advanced nano-technology for eye health</p>
+                        <span class="product-card-link">
+                            <span data-i18n="products.viewdetails">View Details</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-item" data-animate data-delay="1">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    <h4 data-i18n="features.quality.title">Premium Quality</h4>
+                    <p data-i18n="features.quality.desc">Only the finest grade ingredients carefully selected</p>
+                </div>
+                <div class="feature-item" data-animate data-delay="2">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                    <h4 data-i18n="features.science.title">Science Based</h4>
+                    <p data-i18n="features.science.desc">Products backed by scientific research and clinical trials</p>
+                </div>
+                <div class="feature-item" data-animate data-delay="3">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <h4 data-i18n="features.global.title">Global Standard</h4>
+                    <p data-i18n="features.global.desc">Manufacturing facilities meeting international quality standards</p>
+                </div>
+                <div class="feature-item" data-animate data-delay="4">
+                    <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <h4 data-i18n="features.customer.title">Customer First</h4>
+                    <p data-i18n="features.customer.desc">Your healthy life is our top priority</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2 data-animate>
+                <span class="text-light" data-i18n="cta.title1">Experience</span> <span data-i18n="cta.title2">Premium</span>
+            </h2>
+            <p data-animate data-delay="1" data-i18n="cta.subtitle">Start your healthy transformation with Weverse today</p>
+            <a href="pages/shopping.html" class="btn btn-primary" data-animate data-delay="2" data-i18n="cta.button">Shop Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">WE<span>V</span>ERSE</a>
+                    <p data-i18n="footer.desc">Premium healthcare that elevates the value of life. Where science meets innovation to create your healthier tomorrow.</p>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.menu">Menu</h4>
+                    <div class="footer-links">
+                        <a href="index.html" data-i18n="nav.main">Main</a>
+                        <a href="pages/company.html" data-i18n="nav.company">Company</a>
+                        <a href="pages/product.html" data-i18n="nav.product">Product</a>
+                        <a href="pages/shopping.html" data-i18n="nav.shop">Shop</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.products">Products</h4>
+                    <div class="footer-links">
+                        <a href="pages/products/new-bornaid.html">New-BornAid</a>
+                        <a href="pages/products/alpha-gpc.html">Alpha GPC</a>
+                        <a href="pages/products/nano-lutein.html">Nano Lutein</a>
+                        <a href="pages/products/super-prostaid.html">Super Prost Aid</a>
+                        <a href="pages/products/joint-care.html">Joint Care</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4 class="footer-title" data-i18n="footer.contact">Contact</h4>
+                    <div class="footer-links">
+                        <a href="mailto:weverse.one@gmail.com">weverse.one@gmail.com</a>
+                        <a href="#">Singapore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copyright" data-i18n="footer.copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <div class="fab-container" id="fabContainer">
+        <a href="pages/cart.html" class="fab-item fab-cart" title="Cart" data-i18n-title="fab.cart">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="fab-cart-count" id="fabCartCount">0</span>
+        </a>
+        <a href="pages/account.html" class="fab-item fab-account" title="My Account" data-i18n-title="fab.account">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+        </a>
+        <button class="fab-item fab-lang" id="fabLang" title="Language" onclick="toggleLanguage()">中</button>
+
+        <button class="fab-toggle" id="fabToggle" aria-label="Quick Menu">
+            <svg class="fab-icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="12" cy="5" r="1"/>
+                <circle cx="12" cy="19" r="1"/>
+            </svg>
+            <svg class="fab-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
