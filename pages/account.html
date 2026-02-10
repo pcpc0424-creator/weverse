@@ -72,7 +72,6 @@
                             </svg>
                         </div>
                         <h3 id="profileName">Guest User</h3>
-                        <p id="profileEmail">guest@example.com</p>
                     </div>
                     <nav class="account-nav">
                         <button class="account-nav-item active" data-tab="orders">
@@ -82,6 +81,13 @@
                                 <path d="M16 10a4 4 0 01-8 0"/>
                             </svg>
                             Order History
+                        </button>
+                        <button class="account-nav-item" data-tab="points">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                            My Points
                         </button>
                         <button class="account-nav-item" data-tab="profile">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -102,6 +108,14 @@
                                 <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
                             </svg>
                             Wishlist
+                        </button>
+                        <button class="account-nav-item logout-btn" onclick="handleLogout()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Logout
                         </button>
                     </nav>
                 </aside>
@@ -133,6 +147,82 @@
                         </div>
                     </div>
 
+                    <!-- Points Tab -->
+                    <div class="account-tab" id="tab-points">
+                        <div class="account-tab-header">
+                            <h2>My Points</h2>
+                            <p>Manage your points and rewards</p>
+                        </div>
+
+                        <!-- Point Balance Cards -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                            <div style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 0.9rem; opacity: 0.9;">W페이</div>
+                                <div style="font-size: 2rem; font-weight: 700;" id="accountRPay">₩0</div>
+                                <div style="font-size: 0.85rem; opacity: 0.8;">KRW Balance</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 0.9rem; opacity: 0.9;">P포인트</div>
+                                <div style="font-size: 2rem; font-weight: 700;" id="accountPPoint">$0</div>
+                                <div style="font-size: 0.85rem; opacity: 0.8;">Earned Points</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 0.9rem; opacity: 0.9;">C포인트</div>
+                                <div style="font-size: 2rem; font-weight: 700;" id="accountCPoint">$0</div>
+                                <div style="font-size: 0.85rem; opacity: 0.8;">Bonus Points</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%); color: white; padding: 1.5rem; border-radius: 12px; text-align: center;">
+                                <div style="font-size: 0.9rem; opacity: 0.9;">T포인트</div>
+                                <div style="font-size: 2rem; font-weight: 700;" id="accountTPoint">$0</div>
+                                <div style="font-size: 0.85rem; opacity: 0.8;">Transfer Points</div>
+                            </div>
+                        </div>
+
+                        <!-- Member Type -->
+                        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary);">회원 유형</div>
+                                    <div style="font-size: 1.25rem; font-weight: 600;" id="accountMemberType">회원</div>
+                                </div>
+                                <span id="accountMemberBadge" style="padding: 0.5rem 1rem; background: rgba(33, 150, 243, 0.1); color: #2196f3; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Member</span>
+                            </div>
+                        </div>
+
+                        <!-- Point Actions -->
+                        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                            <a href="points.html" class="btn btn-primary" style="flex: 1; min-width: 150px; justify-content: center;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                포인트 상세 보기
+                            </a>
+                            <a href="rpay-charge.html" class="btn btn-outline" style="flex: 1; min-width: 150px; justify-content: center;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                                </svg>
+                                W페이 충전
+                            </a>
+                            <a href="point-transfer.html" class="btn btn-outline" style="flex: 1; min-width: 150px; justify-content: center;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"/>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                                포인트 전송
+                            </a>
+                            <a href="withdrawal.html" class="btn btn-outline" id="withdrawalLink" style="flex: 1; min-width: 150px; justify-content: center; display: none;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                출금 신청
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- Profile Tab -->
                     <div class="account-tab" id="tab-profile">
                         <div class="account-tab-header">
@@ -141,26 +231,34 @@
                         </div>
 
                         <div class="account-form">
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="editFirstName">First Name</label>
-                                    <input type="text" id="editFirstName" placeholder="Enter first name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="editLastName">Last Name</label>
-                                    <input type="text" id="editLastName" placeholder="Enter last name">
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="editEmail">Email Address</label>
-                                    <input type="email" id="editEmail" placeholder="Enter email">
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="editPhone">Phone Number</label>
-                                    <input type="tel" id="editPhone" placeholder="Enter phone number">
-                                </div>
+                            <div class="form-group">
+                                <label for="editFullName">이름</label>
+                                <input type="text" id="editFullName" placeholder="이름을 입력하세요">
                             </div>
                             <div class="form-actions">
                                 <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+                            </div>
+                        </div>
+
+                        <!-- Password Change Section -->
+                        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+                            <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">비밀번호 변경</h3>
+                            <div class="account-form">
+                                <div class="form-group">
+                                    <label for="currentPassword">현재 비밀번호</label>
+                                    <input type="password" id="currentPassword" placeholder="현재 비밀번호 입력">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">새 비밀번호</label>
+                                    <input type="password" id="newPassword" placeholder="새 비밀번호 입력 (최소 6자)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">새 비밀번호 확인</label>
+                                    <input type="password" id="confirmPassword" placeholder="새 비밀번호 다시 입력">
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn btn-primary" onclick="changePassword()">비밀번호 변경</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -351,42 +449,75 @@
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
     <script src="../js/main.js"></script>
     <script>
         // Initialize data
         let orders = [];
         let profile = {};
         let addresses = [];
+        let currentMember = null;
 
         // Load data from localStorage
-        function loadAccountData() {
-            // Load orders
+        async function loadAccountData() {
+            // Get current user session
+            let session = null;
+            try {
+                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                session = (storageSession && storageSession.loggedIn) ? storageSession :
+                          (localSession && localSession.loggedIn) ? localSession :
+                          (storageSession || localSession);
+            } catch (e) {}
+
+            // Load all orders
             const storedOrders = localStorage.getItem('weverseOrders');
-            orders = storedOrders ? JSON.parse(storedOrders) : [];
+            const allOrders = storedOrders ? JSON.parse(storedOrders) : [];
 
             // Check for last order and add to history if not already there
             const lastOrder = localStorage.getItem('weverseLastOrder');
             if (lastOrder) {
                 const order = JSON.parse(lastOrder);
-                const exists = orders.find(o => o.orderNumber === order.orderNumber);
+                const exists = allOrders.find(o => o.orderNumber === order.orderNumber || o.id === order.orderNumber);
                 if (!exists) {
-                    orders.unshift(order);
-                    localStorage.setItem('weverseOrders', JSON.stringify(orders));
+                    allOrders.unshift(order);
+                    localStorage.setItem('weverseOrders', JSON.stringify(allOrders));
                 }
             }
 
-            // Load profile
+            // Filter orders for current user only
+            if (session && session.username) {
+                orders = allOrders.filter(order => {
+                    // Check if order belongs to current user by username
+                    if (order.customer && order.customer.username === session.username) return true;
+                    if (order.shipping && order.shipping.username === session.username) return true;
+                    return false;
+                });
+            } else {
+                // Not logged in - show orders from lastOrder only (guest orders)
+                orders = lastOrder ? [JSON.parse(lastOrder)] : [];
+            }
+
+            // Load profile from session
             const storedProfile = localStorage.getItem('weverseProfile');
-            profile = storedProfile ? JSON.parse(storedProfile) : {
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: ''
-            };
+            if (session) {
+                // Use session data for profile
+                profile = storedProfile ? JSON.parse(storedProfile) : {
+                    fullName: session.fullName || session.name || ''
+                };
+            } else {
+                profile = storedProfile ? JSON.parse(storedProfile) : {
+                    fullName: ''
+                };
+            }
 
             // Load addresses
             const storedAddresses = localStorage.getItem('weverseAddresses');
             addresses = storedAddresses ? JSON.parse(storedAddresses) : [];
+
+            // Load member data and points
+            await loadMemberPoints();
 
             // Render all data
             renderProfile();
@@ -394,35 +525,111 @@
             renderAddresses();
         }
 
+        // Load member points
+        async function loadMemberPoints() {
+            let session = null;
+            try {
+                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                session = (storageSession && storageSession.loggedIn) ? storageSession :
+                          (localSession && localSession.loggedIn) ? localSession :
+                          (storageSession || localSession);
+            } catch (e) {}
+            if (!session || (!session.loggedIn && !session.username)) return;
+
+            // Find member in weverseData
+            if (typeof weverseData !== 'undefined') {
+                const members = await weverseData.getMembers();
+                currentMember = members.find(m => m.username === session.username);
+
+                if (currentMember) {
+                    const points = currentMember.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
+
+                    // Update point displays
+                    document.getElementById('accountRPay').textContent = '₩' + (points.rPay || 0).toLocaleString();
+                    document.getElementById('accountPPoint').textContent = '$' + (points.pPoint || 0).toLocaleString();
+                    document.getElementById('accountCPoint').textContent = '$' + (points.cPoint || 0).toLocaleString();
+                    document.getElementById('accountTPoint').textContent = '$' + (points.tPoint || 0).toLocaleString();
+
+                    // Update member type - show as "회원" for all
+                    document.getElementById('accountMemberType').textContent = '회원';
+                    const badge = document.getElementById('accountMemberBadge');
+                    badge.textContent = 'Member';
+                    badge.style.background = 'rgba(33, 150, 243, 0.1)';
+                    badge.style.color = '#2196f3';
+                    // Show withdrawal link for all members
+                    document.getElementById('withdrawalLink').style.display = 'flex';
+                }
+            }
+        }
+
         // Render profile
         function renderProfile() {
-            const name = profile.firstName && profile.lastName
-                ? `${profile.firstName} ${profile.lastName}`
-                : 'Guest User';
-            const email = profile.email || 'guest@example.com';
-
+            const name = profile.fullName || 'Guest User';
             document.getElementById('profileName').textContent = name;
-            document.getElementById('profileEmail').textContent = email;
 
             // Fill form
-            document.getElementById('editFirstName').value = profile.firstName || '';
-            document.getElementById('editLastName').value = profile.lastName || '';
-            document.getElementById('editEmail').value = profile.email || '';
-            document.getElementById('editPhone').value = profile.phone || '';
+            document.getElementById('editFullName').value = profile.fullName || '';
         }
 
         // Save profile
         function saveProfile() {
             profile = {
-                firstName: document.getElementById('editFirstName').value,
-                lastName: document.getElementById('editLastName').value,
-                email: document.getElementById('editEmail').value,
-                phone: document.getElementById('editPhone').value
+                fullName: document.getElementById('editFullName').value
             };
 
             localStorage.setItem('weverseProfile', JSON.stringify(profile));
             renderProfile();
             showToast('Profile saved successfully!');
+        }
+
+        // Change password
+        async function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validation
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showToast('모든 필드를 입력해주세요.');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showToast('새 비밀번호는 최소 6자 이상이어야 합니다.');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showToast('새 비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            if (!currentMember) {
+                showToast('로그인이 필요합니다.');
+                return;
+            }
+
+            // Verify current password
+            const verifyResult = await weverseData.verifyMemberPassword(currentMember.id, currentPassword);
+            if (verifyResult.error) {
+                showToast(verifyResult.error);
+                return;
+            }
+
+            // Update password
+            const updateResult = await weverseData.updateMemberPassword(currentMember.id, newPassword);
+            if (updateResult.error) {
+                showToast(updateResult.error);
+                return;
+            }
+
+            // Clear form
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+
+            showToast('비밀번호가 성공적으로 변경되었습니다.');
         }
 
         // Render orders
@@ -540,12 +747,10 @@
                     <div class="order-detail-grid">
                         <div class="order-detail-section">
                             <h3>Shipping Address</h3>
-                            <p>${order.shipping.firstName} ${order.shipping.lastName}</p>
+                            <p>${order.shipping.fullName}</p>
                             <p>${order.shipping.address}</p>
                             <p>${order.shipping.city}, ${order.shipping.state} ${order.shipping.zipcode}</p>
                             <p>${order.shipping.country}</p>
-                            <p class="contact-info">${order.shipping.email}</p>
-                            <p class="contact-info">${order.shipping.phone}</p>
                         </div>
 
                         <div class="order-detail-section">
@@ -716,8 +921,29 @@
             }
         });
 
+        // Handle logout
+        function handleLogout() {
+            // Clear session data
+            localStorage.removeItem('weverseSession');
+            sessionStorage.removeItem('weverseSession');
+
+            // Show toast message
+            showToast('Logged out successfully');
+
+            // Redirect to login page after a short delay
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 500);
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Debug: Check session state
+            const localSession = localStorage.getItem('weverseSession');
+            const sessionSession = sessionStorage.getItem('weverseSession');
+            console.log('Account page - localStorage session:', localSession);
+            console.log('Account page - sessionStorage session:', sessionSession);
+
             loadAccountData();
 
             // Animate elements

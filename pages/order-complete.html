@@ -64,7 +64,7 @@
 
                 <!-- Success Message -->
                 <h1>Thank You for Your Order!</h1>
-                <p class="order-message">Your order has been successfully placed. We'll send you a confirmation email shortly.</p>
+                <p class="order-message">Your order has been successfully placed.</p>
 
                 <!-- Order Number -->
                 <div class="order-number-box">
@@ -152,7 +152,7 @@
                                 <span class="step-number">1</span>
                                 <div class="step-content">
                                     <strong>Order Confirmation</strong>
-                                    <p>You will receive an email confirmation shortly.</p>
+                                    <p>Your order has been confirmed.</p>
                                 </div>
                             </div>
                             <div class="next-step">
@@ -303,14 +303,10 @@
             // Shipping Info
             const shippingContainer = document.getElementById('shippingInfo');
             shippingContainer.innerHTML = `
-                <p class="shipping-name">${orderData.shipping.firstName} ${orderData.shipping.lastName}</p>
+                <p class="shipping-name">${orderData.shipping.fullName}</p>
                 <p>${orderData.shipping.address}</p>
                 <p>${orderData.shipping.city}, ${orderData.shipping.state} ${orderData.shipping.zipcode}</p>
                 <p>${orderData.shipping.country}</p>
-                <p class="shipping-contact">
-                    <span>${orderData.shipping.email}</span>
-                    <span>${orderData.shipping.phone}</span>
-                </p>
             `;
 
             // Payment Summary

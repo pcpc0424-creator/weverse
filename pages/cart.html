@@ -89,6 +89,10 @@
                             <span id="cartSubtotal">$0.00</span>
                         </div>
                         <div class="cart-summary-row">
+                            <span style="color: #9c27b0;">Total PV</span>
+                            <span id="cartTotalPV" style="color: #9c27b0; font-weight: 600;">0 PV</span>
+                        </div>
+                        <div class="cart-summary-row">
                             <span data-i18n="cart.shipping">Shipping</span>
                             <span id="cartShipping">$0.00</span>
                         </div>
@@ -177,6 +181,8 @@
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
     <script src="../js/main.js"></script>
     <script>
         // Cart Page Functions
@@ -184,7 +190,7 @@
             renderCart();
         });
 
-        function renderCart() {
+        async function renderCart() {
             const cart = getCart();
             const cartEmpty = document.getElementById('cartEmpty');
             const cartContent = document.getElementById('cartContent');
@@ -199,12 +205,22 @@
             cartEmpty.style.display = 'none';
             cartContent.style.display = 'block';
 
+            // Get products for PV info
+            const products = typeof weverseData !== 'undefined' ? await weverseData.getProducts() : [];
+
             // Render cart items
-            cartItems.innerHTML = cart.map((item, index) => `
+            cartItems.innerHTML = cart.map((item, index) => {
+                const product = products.find(p => p.name === item.name);
+                const pv = product?.pv || 0;
+                const pvHtml = pv > 0 ? `<span style="font-size: 0.85rem; color: #9c27b0; margin-left: 0.5rem;">PV${pv}</span>` : '';
+                const itemTotalPV = pv * item.quantity;
+                const pvTotalHtml = itemTotalPV > 0 ? `<span style="font-size: 0.8rem; color: #9c27b0; display: block;">PV${itemTotalPV}</span>` : '';
+
+                return `
                 <div class="cart-item" data-animate data-delay="${index + 1}">
                     <div class="cart-item-info">
                         <h4>${item.name}</h4>
-                        <p class="cart-item-price">$${item.price}.00</p>
+                        <p class="cart-item-price">$${item.price}.00${pvHtml}</p>
                     </div>
                     <div class="cart-item-quantity">
                         <button class="qty-btn" onclick="updateQuantity('${item.name}', -1)">-</button>
@@ -213,6 +229,7 @@
                     </div>
                     <div class="cart-item-total">
                         <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                        ${pvTotalHtml}
                     </div>
                     <button class="cart-item-remove" onclick="removeFromCart('${item.name}')">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -220,7 +237,7 @@
                         </svg>
                     </button>
                 </div>
-            `).join('');
+            `}).join('');
 
             // Update summary
             updateCartSummary(cart);
@@ -260,12 +277,18 @@
             showToast(`${productName} removed from cart`);
         }
 
-        function updateCartSummary(cart) {
+        async function updateCartSummary(cart) {
+            const products = typeof weverseData !== 'undefined' ? await weverseData.getProducts() : [];
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const totalPV = cart.reduce((sum, item) => {
+                const product = products.find(p => p.name === item.name);
+                return sum + ((product?.pv || 0) * item.quantity);
+            }, 0);
             const shipping = subtotal >= 100 ? 0 : 10;
             const total = subtotal + shipping;
 
             document.getElementById('cartSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cartTotalPV').textContent = `${totalPV} PV`;
             document.getElementById('cartShipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
             document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
         }

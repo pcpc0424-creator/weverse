@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>W페이 충전 - WEVERSE</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .charge-section { padding: 120px 0 60px; min-height: 100vh; }
+        .charge-container { max-width: 500px; margin: 0 auto; }
+        .charge-header { text-align: center; margin-bottom: 2rem; }
+        .charge-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        .current-balance {
+            background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .current-balance .label { font-size: 0.9rem; opacity: 0.9; }
+        .current-balance .value { font-size: 2.5rem; font-weight: 700; }
+
+        .charge-form {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: var(--bg); color: var(--text); }
+        .form-control:focus { outline: none; border-color: var(--primary); }
+
+        .amount-presets { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .amount-preset {
+            padding: 0.5rem 1rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .amount-preset:hover { border-color: var(--primary); color: var(--primary); }
+        .amount-preset.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .charge-summary {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .charge-summary .row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .charge-summary .row:last-child { margin-bottom: 0; border-top: 1px solid var(--border); padding-top: 0.5rem; font-weight: 600; }
+
+        .btn-charge { width: 100%; padding: 1rem; font-size: 1.1rem; }
+
+        .payment-methods { margin-top: 1rem; }
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+        .payment-method:hover { border-color: var(--primary); }
+        .payment-method.selected { border-color: var(--primary); background: rgba(var(--primary-rgb), 0.05); }
+        .payment-method input { display: none; }
+
+        .notice { background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 1rem; font-size: 0.85rem; color: #856404; margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader"><div class="loader-text"><span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span></div></div>
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../index.html">Main</a>
+                    <a href="shopping.html">Shop</a>
+                    <a href="account.html">Account</a>
+                </nav>
+                <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="charge-section">
+        <div class="container">
+            <div class="charge-container">
+                <div class="charge-header">
+                    <h1>W페이 충전</h1>
+                    <p>원하는 금액을 충전하세요</p>
+                </div>
+
+                <div class="current-balance">
+                    <div class="label">현재 W페이 잔액</div>
+                    <div class="value" id="currentBalance">₩0</div>
+                </div>
+
+                <div class="charge-form">
+                    <div class="form-group">
+                        <label class="form-label">충전 금액</label>
+                        <input type="number" class="form-control" id="chargeAmount" placeholder="충전할 금액을 입력하세요" min="1000" step="1000">
+                        <div class="amount-presets">
+                            <span class="amount-preset" onclick="setAmount(10000)">₩10,000</span>
+                            <span class="amount-preset" onclick="setAmount(30000)">₩30,000</span>
+                            <span class="amount-preset" onclick="setAmount(50000)">₩50,000</span>
+                            <span class="amount-preset" onclick="setAmount(100000)">₩100,000</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">결제 방법</label>
+                        <div class="payment-methods">
+                            <label class="payment-method selected">
+                                <input type="radio" name="paymentMethod" value="card" checked>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                    <line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                                <span>신용/체크카드</span>
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="paymentMethod" value="bank">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                                </svg>
+                                <span>무통장입금</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="charge-summary">
+                        <div class="row">
+                            <span>충전 금액</span>
+                            <span id="summaryAmount">₩0</span>
+                        </div>
+                        <div class="row">
+                            <span>충전 후 잔액</span>
+                            <span id="summaryTotal">₩0</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-charge" onclick="processCharge()">충전하기</button>
+
+                    <div class="notice">
+                        <strong>안내사항</strong><br>
+                        - 이 페이지는 시뮬레이션용입니다. 실제 결제가 이루어지지 않습니다.<br>
+                        - W페이는 WEVERSE 쇼핑몰에서 결제 시 사용할 수 있습니다.
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="points.html" style="color: var(--primary);">← 내 포인트로 돌아가기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        let currentMember = null;
+        let currentBalance = 0;
+
+        async function initChargePage() {
+            // Check login (check both localStorage and sessionStorage)
+            let session = null;
+            try {
+                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                session = (storageSession && storageSession.loggedIn) ? storageSession :
+                          (localSession && localSession.loggedIn) ? localSession :
+                          (storageSession || localSession);
+            } catch (e) {}
+            if (!session || (!session.loggedIn && !session.username)) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Find member
+            const members = await weverseData.getMembers();
+            currentMember = members.find(m => m.username === session.username);
+
+            if (!currentMember) {
+                showToast('회원 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // Display current balance
+            currentBalance = currentMember.points?.rPay || 0;
+            document.getElementById('currentBalance').textContent = '₩' + currentBalance.toLocaleString();
+
+            // Setup event listeners
+            document.getElementById('chargeAmount').addEventListener('input', updateSummary);
+
+            // Payment method selection
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                    this.querySelector('input').checked = true;
+                });
+            });
+        }
+
+        function setAmount(amount) {
+            document.getElementById('chargeAmount').value = amount;
+            document.querySelectorAll('.amount-preset').forEach(el => el.classList.remove('selected'));
+            event.target.classList.add('selected');
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const amount = parseInt(document.getElementById('chargeAmount').value) || 0;
+            document.getElementById('summaryAmount').textContent = '₩' + amount.toLocaleString();
+            document.getElementById('summaryTotal').textContent = '₩' + (currentBalance + amount).toLocaleString();
+        }
+
+        async function processCharge() {
+            const amount = parseInt(document.getElementById('chargeAmount').value) || 0;
+
+            if (amount < 1000) {
+                showToast('최소 충전 금액은 ₩1,000입니다.');
+                return;
+            }
+
+            if (!currentMember) {
+                showToast('회원 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // Simulate charging (in real app, this would go through payment gateway)
+            const result = await weverseData.chargeRPay(currentMember.id, amount);
+
+            if (result && !result.error) {
+                showToast('₩' + amount.toLocaleString() + ' W페이가 충전되었습니다!');
+
+                // Update display
+                currentBalance = result.points.rPay;
+                document.getElementById('currentBalance').textContent = '₩' + currentBalance.toLocaleString();
+                document.getElementById('chargeAmount').value = '';
+                updateSummary();
+
+                // Clear preset selection
+                document.querySelectorAll('.amount-preset').forEach(el => el.classList.remove('selected'));
+            } else {
+                showToast(result?.error || '충전에 실패했습니다.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initChargePage);
+    </script>
+</body>
+</html>

@@ -61,75 +61,8 @@
     <!-- Shop Grid -->
     <section class="section" style="padding-top: 0;">
         <div class="container">
-            <div class="shop-grid">
-                <!-- Product 1 -->
-                <a href="products/new-bornaid.html" class="shop-card" data-animate data-delay="1">
-                    <div class="shop-card-image">
-                        <span class="shop-card-badge">Best</span>
-                        <img src="../images/shop-1.jpg" alt="New-BornAid">
-                    </div>
-                    <div class="shop-card-info">
-                        <h4>New-BornAid</h4>
-                        <p class="price">$89.00</p>
-                    </div>
-                </a>
-
-                <!-- Product 2 -->
-                <a href="products/alpha-gpc.html" class="shop-card" data-animate data-delay="2">
-                    <div class="shop-card-image">
-                        <img src="../images/shop-2.jpg" alt="Alpha GPC">
-                    </div>
-                    <div class="shop-card-info">
-                        <h4>Alpha GPC</h4>
-                        <p class="price">$129.00</p>
-                    </div>
-                </a>
-
-                <!-- Product 3 -->
-                <a href="products/nano-lutein.html" class="shop-card" data-animate data-delay="3">
-                    <div class="shop-card-image">
-                        <span class="shop-card-badge">New</span>
-                        <img src="../images/shop-3.jpg" alt="Nano Lutein">
-                    </div>
-                    <div class="shop-card-info">
-                        <h4>Nano Lutein</h4>
-                        <p class="price">$79.00</p>
-                    </div>
-                </a>
-
-                <!-- Product 4 -->
-                <a href="products/super-prostaid.html" class="shop-card" data-animate data-delay="1">
-                    <div class="shop-card-image">
-                        <img src="../images/shop-4.jpg" alt="Super ProstaAid">
-                    </div>
-                    <div class="shop-card-info">
-                        <h4>Super ProstaAid</h4>
-                        <p class="price">$99.00</p>
-                    </div>
-                </a>
-
-                <!-- Product 5 -->
-                <a href="products/joint-care.html" class="shop-card" data-animate data-delay="2">
-                    <div class="shop-card-image">
-                        <img src="../images/shop-5.jpg" alt="Joint Care">
-                    </div>
-                    <div class="shop-card-info">
-                        <h4>Joint Care</h4>
-                        <p class="price">$69.00</p>
-                    </div>
-                </a>
-
-                <!-- Product 6 -->
-                <a href="products/premium-package.html" class="shop-card" data-animate data-delay="3">
-                    <div class="shop-card-image">
-                        <span class="shop-card-badge">Premium</span>
-                        <img src="../images/shop-6.jpg" alt="Premium Package">
-                    </div>
-                    <div class="shop-card-info">
-                        <h4>Premium Package</h4>
-                        <p class="price">$299.00 <span class="price-original">$465.00</span></p>
-                    </div>
-                </a>
+            <div class="shop-grid" id="shopGrid">
+                <!-- Products will be loaded dynamically -->
             </div>
         </div>
     </section>
@@ -254,6 +187,104 @@
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
     <script src="../js/main.js"></script>
+    <script>
+        // Render products from data store
+        async function renderShopProducts() {
+            const grid = document.getElementById('shopGrid');
+            if (!grid) return;
+
+            // Check if weverseData is available
+            if (typeof weverseData === 'undefined') {
+                console.error('weverseData not loaded');
+                return;
+            }
+
+            const products = await weverseData.getProducts();
+            const activeProducts = products.filter(p => p.status === 'active');
+
+            if (activeProducts.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; padding: 2rem;">No products available.</p>';
+                return;
+            }
+
+            // 기본 상품 ID별 올바른 정보 (기존 6개 상품 데이터 오류 방지)
+            const DEFAULT_PRODUCT_DATA = {
+                'WV-NB-001': { name: 'New-BornAid', priceUSD: 89, pv: 45, image: 'shop-1.jpg', detailPage: 'products/new-bornaid.html', badge: 'Best' },
+                'WV-AG-002': { name: 'Alpha GPC', priceUSD: 129, pv: 65, image: 'shop-2.jpg', detailPage: 'products/alpha-gpc.html', badge: '' },
+                'WV-NL-003': { name: 'Nano Lutein', priceUSD: 79, pv: 40, image: 'shop-3.jpg', detailPage: 'products/nano-lutein.html', badge: 'New' },
+                'WV-SP-004': { name: 'Super ProstaAid', priceUSD: 99, pv: 50, image: 'shop-4.jpg', detailPage: 'products/super-prostaid.html', badge: '' },
+                'WV-JC-005': { name: 'Joint Care', priceUSD: 69, pv: 35, image: 'shop-5.jpg', detailPage: 'products/joint-care.html', badge: '' },
+                'WV-PP-006': { name: 'Premium Package', priceUSD: 299, pv: 150, image: 'shop-6.jpg', detailPage: 'products/premium-package.html', badge: 'Premium' }
+            };
+
+            grid.innerHTML = activeProducts.map((product, index) => {
+                const delay = (index % 3) + 1;
+
+                // 기본 6개 상품은 고정값 사용, 새로 등록된 상품은 DB 값 사용
+                const defaultData = DEFAULT_PRODUCT_DATA[product.id];
+
+                let productName, priceUSD, pvValue, imgSrc, detailPage, badge;
+
+                if (defaultData) {
+                    // 기본 6개 상품: 고정값 우선 사용
+                    productName = defaultData.name;
+                    priceUSD = defaultData.priceUSD;
+                    pvValue = defaultData.pv;
+                    imgSrc = `../images/${defaultData.image}`;
+                    detailPage = defaultData.detailPage;
+                    badge = defaultData.badge;
+                } else {
+                    // 새로 등록된 상품: DB 값 사용, 동적 상세 페이지로 연결
+                    productName = product.name || '';
+                    priceUSD = product.priceUSD || product.priceUsd || product.price_usd || 0;
+                    pvValue = product.pv || 0;
+                    imgSrc = product.imageData || `../images/${product.image || 'shop-1.jpg'}`;
+                    detailPage = `products/detail.html?id=${product.id}`;
+                    badge = product.badge || '';
+                }
+
+                const badgeHtml = badge ? `<span class="shop-card-badge">${badge}</span>` : '';
+
+                let priceHtml = `$${priceUSD}.00`;
+                if (product.originalPrice) {
+                    const originalPriceUSD = product.originalPriceUSD || Math.round(product.originalPrice / 1300);
+                    priceHtml = `$${priceUSD}.00 <span class="price-original">$${originalPriceUSD}.00</span>`;
+                }
+
+                // Add PV display for all users
+                const pvHtml = pvValue > 0 ? `<span style="font-size: 0.85rem; color: #9c27b0; margin-left: 0.5rem; font-weight: 500;">PV${pvValue}</span>` : '';
+
+                return `
+                    <a href="${detailPage}" class="shop-card" data-animate data-delay="${delay}">
+                        <div class="shop-card-image">
+                            ${badgeHtml}
+                            <img src="${imgSrc}" alt="${productName}">
+                        </div>
+                        <div class="shop-card-info">
+                            <h4>${productName}</h4>
+                            <p class="price">${priceHtml}${pvHtml}</p>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+
+            // Trigger animations
+            setTimeout(() => {
+                document.querySelectorAll('[data-animate]').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animated');
+                    }, index * 100);
+                });
+            }, 100);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderShopProducts();
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 로그인 - WEVERSE</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+            padding: 1rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-logo span {
+            color: var(--accent);
+        }
+
+        .login-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .login-form .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-form .form-control {
+            padding: 0.875rem 1rem;
+            font-size: 0.95rem;
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon-wrapper svg {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-light);
+        }
+
+        .input-icon-wrapper .form-control {
+            padding-left: 2.75rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .password-toggle svg {
+            position: static;
+            transform: none;
+            stroke: var(--text-light);
+            transition: stroke 0.2s;
+        }
+
+        .password-toggle:hover svg {
+            stroke: var(--text-primary);
+        }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .checkbox-wrapper input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        .forgot-link {
+            font-size: 0.875rem;
+            color: var(--primary);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .forgot-link:hover {
+            opacity: 0.8;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .login-footer {
+            text-align: center;
+            padding: 1.5rem 2rem;
+            background: var(--bg-main);
+            border-top: 1px solid var(--border);
+        }
+
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--danger);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        .error-message svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Loading state */
+        .login-btn.loading {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .login-btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin: -10px 0 0 -10px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">WE<span>V</span>ERSE</div>
+            <p class="login-subtitle">관리자 대시보드</p>
+        </div>
+
+        <div class="login-body">
+            <div class="error-message" id="errorMessage">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <span id="errorText">아이디 또는 비밀번호가 올바르지 않습니다</span>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">아이디</label>
+                    <div class="input-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <input type="text" class="form-control" id="username" placeholder="아이디를 입력하세요" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">비밀번호</label>
+                    <div class="input-icon-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                        <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" required style="padding-right: 3rem;">
+                        <button type="button" class="password-toggle" id="passwordToggle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="remember-row">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="remember">
+                        로그인 상태 유지
+                    </label>
+                    <a href="#" class="forgot-link">비밀번호 찾기</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary login-btn" id="loginBtn">
+                    로그인
+                </button>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            <a href="../index.html">&larr; 웹사이트로 돌아가기</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script>
+        // 기본 관리자 계정 (회원 데이터에 없는 경우 사용)
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'admin'
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in
+            if (isLoggedIn()) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const loginForm = document.getElementById('loginForm');
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            // Toggle password visibility
+            passwordToggle.addEventListener('click', function() {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+
+                eyeIcon.innerHTML = isPassword
+                    ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+                    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+            });
+
+            // Form submission
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const remember = document.getElementById('remember').checked;
+                const loginBtn = document.getElementById('loginBtn');
+                const errorMessage = document.getElementById('errorMessage');
+                const errorText = document.getElementById('errorText');
+
+                // Hide previous error
+                errorMessage.classList.remove('show');
+
+                // Show loading
+                loginBtn.classList.add('loading');
+
+                let loginSuccess = false;
+                let sessionData = null;
+
+                // 1. 기본 관리자 계정 체크
+                if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                    loginSuccess = true;
+                    sessionData = {
+                        id: 'admin',
+                        username: username,
+                        name: '관리자',
+                        role: '최고 관리자',
+                        loginTime: new Date().toISOString()
+                    };
+                }
+                // 2. Supabase에서 회원 검색
+                else if (typeof weverseData !== 'undefined') {
+                    const member = await weverseData.getMemberByUsername(username);
+                    if (member && member.password === password) {
+                        // 모든 회원 관리자 접근 허용
+                        loginSuccess = true;
+                        sessionData = {
+                            id: member.id,
+                            username: member.username,
+                            name: member.name,
+                            role: member.memberType === 'admin' ? '최고 관리자' : '관리자',
+                            memberType: member.memberType,
+                            loginTime: new Date().toISOString()
+                        };
+                    }
+                }
+
+                if (loginSuccess && sessionData) {
+                    if (remember) {
+                        localStorage.setItem('adminSession', JSON.stringify(sessionData));
+                    } else {
+                        sessionStorage.setItem('adminSession', JSON.stringify(sessionData));
+                    }
+
+                    // Redirect to dashboard
+                    window.location.href = 'index.html';
+                } else {
+                    // Login failed
+                    loginBtn.classList.remove('loading');
+                    errorText.textContent = '아이디 또는 비밀번호가 올바르지 않습니다.';
+                    errorMessage.classList.add('show');
+
+                    // Shake effect
+                    loginForm.style.animation = 'shake 0.5s ease';
+                    setTimeout(() => loginForm.style.animation = '', 500);
+                }
+            });
+        });
+
+        function isLoggedIn() {
+            return localStorage.getItem('adminSession') || sessionStorage.getItem('adminSession');
+        }
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

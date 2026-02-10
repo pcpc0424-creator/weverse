@@ -72,175 +72,122 @@
                         </h3>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="firstName">First Name *</label>
-                                <input type="text" id="firstName" name="firstName" required>
+                                <label for="fullName">Name *</label>
+                                <input type="text" id="fullName" name="fullName" required>
                             </div>
                             <div class="form-group">
-                                <label for="lastName">Last Name *</label>
-                                <input type="text" id="lastName" name="lastName" required>
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="email">Email Address *</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="phone">Phone Number *</label>
-                                <input type="tel" id="phone" name="phone" required>
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="address">Street Address *</label>
-                                <input type="text" id="address" name="address" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="city">City *</label>
-                                <input type="text" id="city" name="city" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="state">State / Province *</label>
-                                <input type="text" id="state" name="state" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="zipcode">ZIP / Postal Code *</label>
-                                <input type="text" id="zipcode" name="zipcode" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="country">Country *</label>
-                                <select id="country" name="country" required>
-                                    <option value="">Select Country</option>
-                                    <option value="SG" selected>Singapore</option>
-                                    <option value="US">United States</option>
-                                    <option value="KR">South Korea</option>
-                                    <option value="JP">Japan</option>
-                                    <option value="CN">China</option>
-                                    <option value="MY">Malaysia</option>
-                                    <option value="TH">Thailand</option>
-                                    <option value="VN">Vietnam</option>
-                                    <option value="ID">Indonesia</option>
-                                    <option value="PH">Philippines</option>
-                                    <option value="AU">Australia</option>
-                                    <option value="GB">United Kingdom</option>
-                                    <option value="DE">Germany</option>
-                                    <option value="FR">France</option>
-                                    <option value="CA">Canada</option>
+                                <label for="gender">Gender *</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="phone">Phone *</label>
+                                <input type="tel" id="phone" name="phone" placeholder="010-0000-0000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="zipcode">Postal Code *</label>
+                                <input type="text" id="zipcode" name="zipcode" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="address">Address *</label>
+                                <input type="text" id="address" name="address" required>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Payment Information -->
-                    <div class="checkout-section" data-animate data-delay="1">
+                    <!-- Point Payment -->
+                    <div class="checkout-section" data-animate data-delay="1" id="pointPaymentSection">
                         <h3 class="checkout-section-title">
                             <span class="checkout-step">2</span>
-                            Payment Method
+                            Points Payment
                         </h3>
 
-                        <!-- Payment Method Selection -->
-                        <div class="payment-methods">
-                            <label class="payment-method active">
-                                <input type="radio" name="paymentMethod" value="card" checked>
-                                <div class="payment-method-content">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <rect x="1" y="4" width="22" height="16" rx="2"/>
-                                        <line x1="1" y1="10" x2="23" y2="10"/>
-                                    </svg>
-                                    <span>Credit / Debit Card</span>
+                        <div style="background: var(--bg); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">My Points Balance</div>
+                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; font-size: 0.9rem;">
+                                <div style="text-align: center; padding: 0.5rem; background: var(--card-bg); border-radius: 8px;">
+                                    <div style="color: #4caf50; font-weight: 600;" id="myRPay">₩0</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">W-Pay</div>
                                 </div>
-                            </label>
-                            <label class="payment-method">
-                                <input type="radio" name="paymentMethod" value="paypal">
-                                <div class="payment-method-content">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <path d="M7 11l5-7h4c2 0 4 1.5 4 4s-2 4-4 4h-3l-1 6H7"/>
-                                        <path d="M4 21l5-7h4c2 0 4-1.5 4-4"/>
-                                    </svg>
-                                    <span>PayPal</span>
+                                <div style="text-align: center; padding: 0.5rem; background: var(--card-bg); border-radius: 8px;">
+                                    <div style="color: #2196f3; font-weight: 600;" id="myPPoint">$0</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">P-Point</div>
                                 </div>
-                            </label>
-                            <label class="payment-method">
-                                <input type="radio" name="paymentMethod" value="bank">
-                                <div class="payment-method-content">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
-                                    </svg>
-                                    <span>Bank Transfer</span>
+                                <div style="text-align: center; padding: 0.5rem; background: var(--card-bg); border-radius: 8px;">
+                                    <div style="color: #ff9800; font-weight: 600;" id="myCPoint">$0</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">C-Point</div>
                                 </div>
-                            </label>
-                        </div>
-
-                        <!-- Card Details -->
-                        <div class="card-details" id="cardDetails">
-                            <div class="form-grid">
-                                <div class="form-group full-width">
-                                    <label for="cardName">Name on Card *</label>
-                                    <input type="text" id="cardName" name="cardName" placeholder="JOHN DOE">
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="cardNumber">Card Number *</label>
-                                    <div class="card-input-wrapper">
-                                        <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
-                                        <div class="card-icons">
-                                            <svg class="card-icon" viewBox="0 0 38 24" fill="none">
-                                                <rect width="38" height="24" rx="4" fill="#1A1F71"/>
-                                                <path d="M15 18l2-12h3l-2 12h-3zm11-12l-3 8-1-4-.5-2c-.5-1-1.5-2-3-2l4 0 3.5 12h3l4-12h-3l-2.5 8-1-8h-2.5z" fill="#fff"/>
-                                            </svg>
-                                            <svg class="card-icon" viewBox="0 0 38 24" fill="none">
-                                                <rect width="38" height="24" rx="4" fill="#000"/>
-                                                <circle cx="15" cy="12" r="7" fill="#EB001B"/>
-                                                <circle cx="23" cy="12" r="7" fill="#F79E1B"/>
-                                                <path d="M19 7a7 7 0 000 10 7 7 0 000-10z" fill="#FF5F00"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="cardExpiry">Expiry Date *</label>
-                                    <input type="text" id="cardExpiry" name="cardExpiry" placeholder="MM/YY" maxlength="5">
-                                </div>
-                                <div class="form-group">
-                                    <label for="cardCvc">CVC / CVV *</label>
-                                    <div class="cvc-input-wrapper">
-                                        <input type="text" id="cardCvc" name="cardCvc" placeholder="123" maxlength="4">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                            <rect x="3" y="11" width="18" height="11" rx="2"/>
-                                            <circle cx="12" cy="16" r="1"/>
-                                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                                        </svg>
-                                    </div>
+                                <div style="text-align: center; padding: 0.5rem; background: var(--card-bg); border-radius: 8px;">
+                                    <div style="color: #9c27b0; font-weight: 600;" id="myTPoint">$0</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">T-Point</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- PayPal Details -->
-                        <div class="paypal-details" id="paypalDetails" style="display: none;">
-                            <div class="payment-info-box">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                                    <path d="M7 11l5-7h4c2 0 4 1.5 4 4s-2 4-4 4h-3l-1 6H7"/>
-                                    <path d="M4 21l5-7h4c2 0 4-1.5 4-4"/>
+                        <div class="form-grid" style="gap: 1rem;">
+                            <div class="form-group" style="width: 100%;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <input type="checkbox" id="useRPay" onchange="updatePointPayment()">
+                                    <span style="color: #4caf50; font-weight: 500;">Use W-Pay</span>
+                                    <span style="font-size: 0.85rem; color: var(--text-secondary);">(1 USD = ₩<span id="exchangeRateDisplay">1,350</span>)</span>
+                                </label>
+                                <input type="number" class="form-control" id="useRPayAmount" placeholder="W-Pay amount (KRW)" min="0" onchange="updatePointPayment()" disabled style="font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <input type="checkbox" id="usePPoint" onchange="updatePointPayment()">
+                                    <span style="color: #2196f3; font-weight: 500;">Use P-Point</span>
+                                </label>
+                                <input type="number" class="form-control" id="usePPointAmount" placeholder="P-Point amount ($)" min="0" step="0.01" onchange="updatePointPayment()" disabled style="font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <input type="checkbox" id="useCPoint" onchange="updatePointPayment()">
+                                    <span style="color: #ff9800; font-weight: 500;">Use C-Point</span>
+                                </label>
+                                <input type="number" class="form-control" id="useCPointAmount" placeholder="C-Point amount ($)" min="0" step="0.01" onchange="updatePointPayment()" disabled style="font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <input type="checkbox" id="useTPoint" onchange="updatePointPayment()">
+                                    <span style="color: #9c27b0; font-weight: 500;">Use T-Point</span>
+                                </label>
+                                <input type="number" class="form-control" id="useTPointAmount" placeholder="T-Point amount ($)" min="0" step="0.01" onchange="updatePointPayment()" disabled style="font-size: 0.9rem;">
+                            </div>
+                        </div>
+
+                        <div id="pointPaymentSummary" style="background: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 8px; padding: 1rem; margin-top: 1rem; display: none;">
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Points Payment Amount</div>
+                            <div id="pointPaymentDetails" style="font-size: 0.9rem;"></div>
+                            <div style="border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.5rem; display: flex; justify-content: space-between; font-weight: 600;">
+                                <span>Remaining Balance</span>
+                                <span id="remainingAmount">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div id="insufficientPointsWarning" style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 1rem; margin-top: 1rem; display: none;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; color: #ef4444;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="12"/>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"/>
                                 </svg>
-                                <p>You will be redirected to PayPal to complete your payment securely.</p>
+                                <span style="font-weight: 600;">Insufficient Points</span>
                             </div>
-                        </div>
-
-                        <!-- Bank Transfer Details -->
-                        <div class="bank-details" id="bankDetails" style="display: none;">
-                            <div class="payment-info-box">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                                    <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/>
-                                </svg>
-                                <p>Bank transfer details will be provided after you place the order. Please complete the transfer within 48 hours.</p>
-                                <div class="bank-info">
-                                    <p><strong>Bank:</strong> DBS Bank Singapore</p>
-                                    <p><strong>Account Name:</strong> WEVERSE PTE LTD</p>
-                                    <p><strong>Account Number:</strong> Will be provided after order</p>
-                                </div>
-                            </div>
+                            <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);">
+                                You don't have enough points. The entire order must be paid with points.
+                            </p>
                         </div>
                     </div>
+
 
                     <!-- Additional Options -->
                     <div class="checkout-section" data-animate data-delay="2">
                         <h3 class="checkout-section-title">
-                            <span class="checkout-step">3</span>
+                            <span class="checkout-step" id="additionalStepNumber">3</span>
                             Additional Options
                         </h3>
                         <div class="checkout-options">
@@ -282,6 +229,10 @@
                                 <span>Subtotal</span>
                                 <span id="checkoutSubtotal">$0.00</span>
                             </div>
+                            <div class="checkout-total-row" style="color: #9c27b0;">
+                                <span>Total PV</span>
+                                <span id="checkoutTotalPV" style="font-weight: 600;">0 PV</span>
+                            </div>
                             <div class="checkout-total-row">
                                 <span>Shipping</span>
                                 <span id="checkoutShipping">$0.00</span>
@@ -309,26 +260,7 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                             </svg>
-                            <span>Secure checkout with SSL encryption</span>
-                        </div>
-
-                        <div class="checkout-badges">
-                            <span>We Accept:</span>
-                            <div class="payment-badges">
-                                <svg viewBox="0 0 38 24" fill="none">
-                                    <rect width="38" height="24" rx="4" fill="#1A1F71"/>
-                                    <path d="M15 18l2-12h3l-2 12h-3z" fill="#fff"/>
-                                </svg>
-                                <svg viewBox="0 0 38 24" fill="none">
-                                    <rect width="38" height="24" rx="4" fill="#000"/>
-                                    <circle cx="15" cy="12" r="6" fill="#EB001B"/>
-                                    <circle cx="23" cy="12" r="6" fill="#F79E1B"/>
-                                </svg>
-                                <svg viewBox="0 0 38 24" fill="none">
-                                    <rect width="38" height="24" rx="4" fill="#016FD0"/>
-                                    <text x="19" y="15" font-size="8" fill="#fff" text-anchor="middle">AMEX</text>
-                                </svg>
-                            </div>
+                            <span>Secure payment with points</span>
                         </div>
                     </div>
                 </div>
@@ -421,6 +353,8 @@
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
     <script src="../js/main.js"></script>
     <script>
         // Promo codes
@@ -430,9 +364,180 @@
             'PREMIUM15': 15
         };
         let appliedDiscount = 0;
+        let currentMember = null;
+        let memberPoints = { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
+        let settings = { exchangeRate: 1350 };
+        let pointPaymentTotal = 0;
+
+        // Initialize point payment section
+        async function initPointPayment() {
+            const session = JSON.parse(localStorage.getItem('weverseSession')) ||
+                           JSON.parse(sessionStorage.getItem('weverseSession'));
+
+            // Find member
+            if (session && session.username) {
+                try {
+                    currentMember = await weverseData.getMemberByUsername(session.username);
+                } catch (e) {
+                    console.error('Error fetching member:', e);
+                }
+            }
+
+            // Get settings
+            try {
+                settings = await weverseData.getSettings();
+            } catch (e) {
+                settings = { exchangeRate: 1350 };
+            }
+
+            // Display points
+            if (currentMember && currentMember.points) {
+                memberPoints = currentMember.points;
+            } else {
+                memberPoints = { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
+            }
+
+            document.getElementById('myRPay').textContent = '₩' + (memberPoints.rPay || 0).toLocaleString();
+            document.getElementById('myPPoint').textContent = '$' + (memberPoints.pPoint || 0).toLocaleString();
+            document.getElementById('myCPoint').textContent = '$' + (memberPoints.cPoint || 0).toLocaleString();
+            document.getElementById('myTPoint').textContent = '$' + (memberPoints.tPoint || 0).toLocaleString();
+            document.getElementById('exchangeRateDisplay').textContent = (settings.exchangeRate || 1350).toLocaleString();
+
+            // Setup checkbox listeners - auto-fill with max amount when checked
+            document.getElementById('useRPay').addEventListener('change', function() {
+                const amountInput = document.getElementById('useRPayAmount');
+                amountInput.disabled = !this.checked;
+                if (this.checked) {
+                    amountInput.value = memberPoints.rPay || 0;
+                } else {
+                    amountInput.value = '';
+                }
+                updatePointPayment();
+            });
+
+            document.getElementById('usePPoint').addEventListener('change', function() {
+                const amountInput = document.getElementById('usePPointAmount');
+                amountInput.disabled = !this.checked;
+                if (this.checked) {
+                    amountInput.value = memberPoints.pPoint || 0;
+                } else {
+                    amountInput.value = '';
+                }
+                updatePointPayment();
+            });
+
+            document.getElementById('useCPoint').addEventListener('change', function() {
+                const amountInput = document.getElementById('useCPointAmount');
+                amountInput.disabled = !this.checked;
+                if (this.checked) {
+                    amountInput.value = memberPoints.cPoint || 0;
+                } else {
+                    amountInput.value = '';
+                }
+                updatePointPayment();
+            });
+
+            document.getElementById('useTPoint').addEventListener('change', function() {
+                const amountInput = document.getElementById('useTPointAmount');
+                amountInput.disabled = !this.checked;
+                if (this.checked) {
+                    amountInput.value = memberPoints.tPoint || 0;
+                } else {
+                    amountInput.value = '';
+                }
+                updatePointPayment();
+            });
+
+            // Initial check for point sufficiency
+            updatePointPayment();
+        }
+
+        // Update point payment calculation
+        function updatePointPayment() {
+            const cart = getCart();
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 100 ? 0 : 10;
+            const discountAmount = (subtotal * appliedDiscount) / 100;
+            const total = subtotal + shipping - discountAmount;
+
+            const exchangeRate = settings.exchangeRate || 1350;
+            let totalPointPaymentUSD = 0;
+            let details = [];
+
+            // W-Pay (KRW → USD 변환)
+            if (document.getElementById('useRPay').checked) {
+                let rPayAmount = parseInt(document.getElementById('useRPayAmount').value) || 0;
+                rPayAmount = Math.min(rPayAmount, memberPoints.rPay || 0);
+                const rPayUSD = rPayAmount / exchangeRate;
+                if (rPayAmount > 0) {
+                    totalPointPaymentUSD += rPayUSD;
+                    details.push(`<div style="display: flex; justify-content: space-between;"><span>W-Pay</span><span>₩${rPayAmount.toLocaleString()} ($${rPayUSD.toFixed(2)})</span></div>`);
+                }
+            }
+
+            // P-Point (USD)
+            if (document.getElementById('usePPoint').checked) {
+                let pPointAmount = parseFloat(document.getElementById('usePPointAmount').value) || 0;
+                pPointAmount = Math.min(pPointAmount, memberPoints.pPoint || 0);
+                if (pPointAmount > 0) {
+                    totalPointPaymentUSD += pPointAmount;
+                    details.push(`<div style="display: flex; justify-content: space-between;"><span>P-Point</span><span>$${pPointAmount.toFixed(2)}</span></div>`);
+                }
+            }
+
+            // C-Point (USD)
+            if (document.getElementById('useCPoint').checked) {
+                let cPointAmount = parseFloat(document.getElementById('useCPointAmount').value) || 0;
+                cPointAmount = Math.min(cPointAmount, memberPoints.cPoint || 0);
+                if (cPointAmount > 0) {
+                    totalPointPaymentUSD += cPointAmount;
+                    details.push(`<div style="display: flex; justify-content: space-between;"><span>C-Point</span><span>$${cPointAmount.toFixed(2)}</span></div>`);
+                }
+            }
+
+            // T-Point (USD)
+            if (document.getElementById('useTPoint').checked) {
+                let tPointAmount = parseFloat(document.getElementById('useTPointAmount').value) || 0;
+                tPointAmount = Math.min(tPointAmount, memberPoints.tPoint || 0);
+                if (tPointAmount > 0) {
+                    totalPointPaymentUSD += tPointAmount;
+                    details.push(`<div style="display: flex; justify-content: space-between;"><span>T-Point</span><span>$${tPointAmount.toFixed(2)}</span></div>`);
+                }
+            }
+
+            // 총 포인트 결제가 주문 금액을 초과하지 않도록
+            totalPointPaymentUSD = Math.min(totalPointPaymentUSD, total);
+            pointPaymentTotal = totalPointPaymentUSD;
+
+            const remaining = total - totalPointPaymentUSD;
+
+            // Update UI
+            const summaryEl = document.getElementById('pointPaymentSummary');
+            const detailsEl = document.getElementById('pointPaymentDetails');
+            const remainingEl = document.getElementById('remainingAmount');
+            const warningEl = document.getElementById('insufficientPointsWarning');
+
+            if (totalPointPaymentUSD > 0) {
+                summaryEl.style.display = 'block';
+                detailsEl.innerHTML = details.join('');
+                remainingEl.textContent = '$' + remaining.toFixed(2);
+            } else {
+                summaryEl.style.display = 'none';
+            }
+
+            // Show warning if points are insufficient
+            if (remaining > 0.01) {
+                warningEl.style.display = 'block';
+            } else {
+                warningEl.style.display = 'none';
+            }
+
+            // Update checkout totals display
+            updateCheckoutTotals(cart);
+        }
 
         // Render checkout page
-        function renderCheckout() {
+        async function renderCheckout() {
             const cart = getCart();
             const checkoutContent = document.getElementById('checkoutContent');
             const checkoutEmpty = document.getElementById('checkoutEmpty');
@@ -447,28 +552,45 @@
             checkoutContent.style.display = 'grid';
             checkoutEmpty.style.display = 'none';
 
-            // Render items
-            checkoutItems.innerHTML = cart.map(item => `
+            // Get products for PV info
+            const products = typeof weverseData !== 'undefined' ? await weverseData.getProducts() : [];
+
+            // Render items with PV
+            checkoutItems.innerHTML = cart.map(item => {
+                const product = products.find(p => p.name === item.name);
+                const pv = product?.pv || 0;
+                const itemTotalPV = pv * item.quantity;
+                const pvHtml = itemTotalPV > 0 ? `<span style="font-size: 0.75rem; color: #9c27b0; margin-left: 0.25rem;">PV${itemTotalPV}</span>` : '';
+
+                return `
                 <div class="checkout-item">
                     <div class="checkout-item-info">
                         <span class="checkout-item-name">${item.name}</span>
                         <span class="checkout-item-qty">Qty: ${item.quantity}</span>
                     </div>
-                    <span class="checkout-item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+                    <span class="checkout-item-price">$${(item.price * item.quantity).toFixed(2)}${pvHtml}</span>
                 </div>
-            `).join('');
+            `}).join('');
 
             updateCheckoutTotals(cart);
         }
 
         // Update totals
-        function updateCheckoutTotals(cart) {
+        async function updateCheckoutTotals(cart) {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const shipping = subtotal >= 100 ? 0 : 10;
             const discountAmount = (subtotal * appliedDiscount) / 100;
             const total = subtotal + shipping - discountAmount;
 
+            // Calculate total PV
+            const products = typeof weverseData !== 'undefined' ? await weverseData.getProducts() : [];
+            const totalPV = cart.reduce((sum, item) => {
+                const product = products.find(p => p.name === item.name);
+                return sum + ((product?.pv || 0) * item.quantity);
+            }, 0);
+
             document.getElementById('checkoutSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('checkoutTotalPV').textContent = `${totalPV} PV`;
             document.getElementById('checkoutShipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
 
             const discountRow = document.getElementById('discountRow');
@@ -498,43 +620,9 @@
             }
         }
 
-        // Payment method toggle
-        document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                // Update active class
-                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
-                this.closest('.payment-method').classList.add('active');
-
-                // Show/hide payment details
-                document.getElementById('cardDetails').style.display = this.value === 'card' ? 'block' : 'none';
-                document.getElementById('paypalDetails').style.display = this.value === 'paypal' ? 'block' : 'none';
-                document.getElementById('bankDetails').style.display = this.value === 'bank' ? 'block' : 'none';
-            });
-        });
-
-        // Card number formatting
-        document.getElementById('cardNumber').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
-            let formatted = value.match(/.{1,4}/g)?.join(' ') || '';
-            e.target.value = formatted;
-        });
-
-        // Expiry date formatting
-        document.getElementById('cardExpiry').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.slice(0, 2) + '/' + value.slice(2, 4);
-            }
-            e.target.value = value;
-        });
-
-        // CVC formatting
-        document.getElementById('cardCvc').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '');
-        });
 
         // Place order
-        function placeOrder() {
+        async function placeOrder() {
             const cart = getCart();
             if (cart.length === 0) {
                 showToast('Your cart is empty');
@@ -547,13 +635,81 @@
                 return;
             }
 
-            // Validate required fields
-            const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'state', 'zipcode', 'country'];
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            // Calculate totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shippingCost = subtotal >= 100 ? 0 : 10;
+            const discountAmount = (subtotal * appliedDiscount) / 100;
+            const total = subtotal + shippingCost - discountAmount;
 
-            if (paymentMethod === 'card') {
-                requiredFields.push('cardName', 'cardNumber', 'cardExpiry', 'cardCvc');
+            // Calculate point payments - only use what's needed for the order
+            const exchangeRate = settings.exchangeRate || 1350;
+            let rPayUsed = 0, pPointUsed = 0, cPointUsed = 0, tPointUsed = 0;
+            let remainingToPay = total; // Track remaining amount to pay
+
+            if (currentMember) {
+                // Use W-Pay first (convert to USD)
+                if (document.getElementById('useRPay').checked && remainingToPay > 0) {
+                    let rPayInput = Math.min(parseInt(document.getElementById('useRPayAmount').value) || 0, memberPoints.rPay || 0);
+                    let rPayInUSD = rPayInput / exchangeRate;
+
+                    if (rPayInUSD > remainingToPay) {
+                        // Only use what's needed
+                        rPayUsed = Math.ceil(remainingToPay * exchangeRate);
+                        remainingToPay = 0;
+                    } else {
+                        rPayUsed = rPayInput;
+                        remainingToPay -= rPayInUSD;
+                    }
+                }
+
+                // Use P-Point
+                if (document.getElementById('usePPoint').checked && remainingToPay > 0) {
+                    let pPointInput = Math.min(parseFloat(document.getElementById('usePPointAmount').value) || 0, memberPoints.pPoint || 0);
+
+                    if (pPointInput > remainingToPay) {
+                        pPointUsed = remainingToPay;
+                        remainingToPay = 0;
+                    } else {
+                        pPointUsed = pPointInput;
+                        remainingToPay -= pPointInput;
+                    }
+                }
+
+                // Use C-Point
+                if (document.getElementById('useCPoint').checked && remainingToPay > 0) {
+                    let cPointInput = Math.min(parseFloat(document.getElementById('useCPointAmount').value) || 0, memberPoints.cPoint || 0);
+
+                    if (cPointInput > remainingToPay) {
+                        cPointUsed = remainingToPay;
+                        remainingToPay = 0;
+                    } else {
+                        cPointUsed = cPointInput;
+                        remainingToPay -= cPointInput;
+                    }
+                }
+
+                // Use T-Point
+                if (document.getElementById('useTPoint').checked && remainingToPay > 0) {
+                    let tPointInput = Math.min(parseFloat(document.getElementById('useTPointAmount').value) || 0, memberPoints.tPoint || 0);
+
+                    if (tPointInput > remainingToPay) {
+                        tPointUsed = remainingToPay;
+                        remainingToPay = 0;
+                    } else {
+                        tPointUsed = tPointInput;
+                        remainingToPay -= tPointInput;
+                    }
+                }
             }
+
+            // Check if points are sufficient (points-only payment)
+            if (remainingToPay > 0.01) {
+                showToast('Insufficient points. The entire order must be paid with points.');
+                return;
+            }
+
+            // Validate required fields
+            const requiredFields = ['fullName', 'gender', 'phone', 'zipcode', 'address'];
 
             for (let field of requiredFields) {
                 const input = document.getElementById(field);
@@ -564,45 +720,107 @@
                 }
             }
 
-            // Calculate totals
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shippingCost = subtotal >= 100 ? 0 : 10;
-            const discountAmount = (subtotal * appliedDiscount) / 100;
-            const total = subtotal + shippingCost - discountAmount;
-
             // Generate order number
             const orderNumber = 'WV' + Date.now().toString().slice(-8);
 
-            // Get country name
-            const countrySelect = document.getElementById('country');
-            const countryName = countrySelect.options[countrySelect.selectedIndex].text;
+            // Calculate total PV
+            const products = await weverseData.getProducts();
+            let totalPV = 0;
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.productId || p.name === item.name);
+                totalPV += (product?.pv || 0) * item.quantity;
+            });
 
             // Create order data object
             const orderData = {
                 orderNumber: orderNumber,
                 items: cart,
                 shipping: {
-                    firstName: document.getElementById('firstName').value,
-                    lastName: document.getElementById('lastName').value,
-                    email: document.getElementById('email').value,
+                    fullName: document.getElementById('fullName').value,
+                    gender: document.getElementById('gender').value,
                     phone: document.getElementById('phone').value,
-                    address: document.getElementById('address').value,
-                    city: document.getElementById('city').value,
-                    state: document.getElementById('state').value,
                     zipcode: document.getElementById('zipcode').value,
-                    country: countryName
+                    address: document.getElementById('address').value
                 },
                 subtotal: subtotal,
                 shippingCost: shippingCost,
                 discount: appliedDiscount,
                 discountAmount: discountAmount,
                 total: total,
-                paymentMethod: paymentMethod,
-                orderDate: new Date().toISOString()
+                totalPV: totalPV,
+                pvProcessed: false,
+                payment: {
+                    method: 'points',
+                    details: {
+                        rPay: rPayUsed,
+                        pPoint: pPointUsed,
+                        cPoint: cPointUsed,
+                        tPoint: tPointUsed
+                    }
+                },
+                paymentMethod: 'points',
+                orderDate: new Date().toISOString(),
+                memberId: currentMember?.id || null
             };
 
             // Save order data to localStorage
             localStorage.setItem('weverseLastOrder', JSON.stringify(orderData));
+
+            // Deduct points from member in Supabase
+            if (currentMember) {
+                const newPoints = {
+                    rPay: (memberPoints.rPay || 0) - rPayUsed,
+                    pPoint: (memberPoints.pPoint || 0) - pPointUsed,
+                    cPoint: (memberPoints.cPoint || 0) - cPointUsed,
+                    tPoint: (memberPoints.tPoint || 0) - tPointUsed
+                };
+
+                // Update member points in Supabase
+                await weverseData.updateMember(currentMember.id, { points: newPoints });
+
+                // Add point transactions
+                if (rPayUsed > 0) {
+                    await weverseData.addPointTransaction({
+                        memberId: currentMember.id,
+                        pointType: 'rPay',
+                        type: 'used',
+                        amount: -rPayUsed,
+                        description: `Order payment #${orderNumber}`
+                    });
+                }
+                if (pPointUsed > 0) {
+                    await weverseData.addPointTransaction({
+                        memberId: currentMember.id,
+                        pointType: 'pPoint',
+                        type: 'used',
+                        amount: -pPointUsed,
+                        description: `Order payment #${orderNumber}`
+                    });
+                }
+                if (cPointUsed > 0) {
+                    await weverseData.addPointTransaction({
+                        memberId: currentMember.id,
+                        pointType: 'cPoint',
+                        type: 'used',
+                        amount: -cPointUsed,
+                        description: `Order payment #${orderNumber}`
+                    });
+                }
+                if (tPointUsed > 0) {
+                    await weverseData.addPointTransaction({
+                        memberId: currentMember.id,
+                        pointType: 'tPoint',
+                        type: 'used',
+                        amount: -tPointUsed,
+                        description: `Order payment #${orderNumber}`
+                    });
+                }
+            }
+
+            // Add order to data store for admin dashboard
+            if (typeof weverseData !== 'undefined') {
+                await weverseData.addOrder(orderData);
+            }
 
             // Clear cart
             localStorage.removeItem('weverseCart');
@@ -612,9 +830,65 @@
             window.location.href = 'order-complete.html';
         }
 
+        // Check if user is logged in
+        function checkMemberAccess() {
+            let session = null;
+            try {
+                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                session = (storageSession && storageSession.loggedIn) ? storageSession :
+                          (localSession && localSession.loggedIn) ? localSession :
+                          (storageSession || localSession);
+            } catch (e) {}
+
+            if (!session || (!session.loggedIn && !session.username)) {
+                showLoginRequiredModal();
+                return false;
+            }
+
+            return true;
+        }
+
+        // Show login required modal for checkout page
+        function showLoginRequiredModal() {
+            const checkoutContent = document.getElementById('checkoutContent');
+            const checkoutEmpty = document.getElementById('checkoutEmpty');
+
+            if (checkoutContent) checkoutContent.style.display = 'none';
+            if (checkoutEmpty) checkoutEmpty.style.display = 'none';
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'dealer-modal-overlay show';
+            modal.innerHTML = `
+                <div class="dealer-modal" style="transform: scale(1) translateY(0);">
+                    <div class="dealer-modal-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <h3>Login Required</h3>
+                    <p>Please log in to place an order.</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">If you don't have an account, please sign up first.</p>
+                    <div class="dealer-modal-buttons">
+                        <a href="login.html" class="btn btn-primary">Login</a>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Check member access first
+            if (!checkMemberAccess()) {
+                return;
+            }
+
             renderCheckout();
+            initPointPayment();
 
             // Animate elements
             setTimeout(() => {

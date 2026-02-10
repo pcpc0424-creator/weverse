@@ -9,35 +9,42 @@
    CSS Variables
    ======================================== */
 :root {
-    /* Monochrome Colors */
-    --black: #000000;
-    --black-soft: #0a0a0a;
-    --black-light: #141414;
+    /* Pastel Colors - Warm Orange & Fresh Green */
+    --black: #3d5a3d;
+    --black-soft: #4a6b4a;
+    --black-light: #5a7d5a;
     --white: #ffffff;
-    --white-off: #fafafa;
-    --white-warm: #f5f5f5;
-    --gray-100: #f0f0f0;
-    --gray-200: #e0e0e0;
-    --gray-300: #c0c0c0;
-    --gray-400: #999999;
-    --gray-500: #666666;
-    --gray-600: #444444;
-    --gray-700: #333333;
-    --gray-800: #1a1a1a;
+    --white-off: #fffaf5;
+    --white-warm: #fff5eb;
+    --gray-100: #f5efe8;
+    --gray-200: #e8dfd5;
+    --gray-300: #d4c8bc;
+    --gray-400: #8fa58f;
+    --gray-500: #6b8a6b;
+    --gray-600: #5a7d5a;
+    --gray-700: #4a6b4a;
+    --gray-800: #3d5a3d;
 
-    /* Modern Accent */
-    --accent: #c0c0c0;
-    --accent-glow: rgba(192, 192, 192, 0.3);
+    /* Modern Accent - Pastel Orange */
+    --accent: #ffb088;
+    --accent-glow: rgba(255, 176, 136, 0.3);
+
+    /* Pastel Theme Colors */
+    --pastel-orange: #ffe4d6;
+    --pastel-orange-light: #fff0e8;
+    --pastel-green: #d4edda;
+    --pastel-green-light: #e8f5eb;
+    --pastel-mint: #c8e6c9;
 
     /* Gradients */
-    --gradient-dark: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-    --gradient-radial: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 70%);
-    --gradient-text: linear-gradient(135deg, #ffffff 0%, #999999 100%);
-    --gradient-shine: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    --gradient-dark: linear-gradient(135deg, #d4edda 0%, #ffe4d6 100%);
+    --gradient-radial: radial-gradient(ellipse at center, #e8f5eb 0%, #fff0e8 70%);
+    --gradient-text: linear-gradient(135deg, #3d5a3d 0%, #6b8a6b 100%);
+    --gradient-shine: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
 
     /* Glass Effect */
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(93, 138, 93, 0.15);
     --glass-blur: blur(20px);
 
     /* Typography */
@@ -101,8 +108,8 @@ body::before {
 }
 
 ::selection {
-    background: var(--black);
-    color: var(--white);
+    background: var(--accent);
+    color: var(--black);
 }
 
 a {
@@ -135,7 +142,7 @@ img {
 .cursor {
     width: 40px;
     height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(61, 90, 61, 0.4);
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
@@ -147,28 +154,26 @@ img {
                 border-color 0.3s,
                 opacity 0.3s;
     transform: translate(-50%, -50%);
-    mix-blend-mode: difference;
     backdrop-filter: blur(1px);
 }
 
 .cursor-dot {
     width: 6px;
     height: 6px;
-    background: var(--white);
+    background: var(--black);
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    mix-blend-mode: difference;
     transition: transform 0.1s var(--ease);
 }
 
 .cursor.hover {
     width: 80px;
     height: 80px;
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 176, 136, 0.1);
+    border-color: rgba(255, 176, 136, 0.5);
 }
 
 .cursor.hover .cursor-dot {
@@ -325,27 +330,27 @@ p {
     transition: all var(--duration-fast) var(--ease-smooth);
 }
 
-/* Header on dark hero */
+/* Header on pastel hero */
 .header .logo {
-    color: var(--white);
+    color: var(--black);
     transition: color var(--duration-fast);
 }
 
 .header .nav a {
-    color: var(--gray-400);
+    color: var(--gray-500);
 }
 
 .header .nav a:hover,
 .header .nav a.active {
-    color: var(--white);
+    color: var(--black);
 }
 
 .header .nav a::after {
-    background: var(--white);
+    background: var(--accent);
 }
 
 .header .nav-toggle span {
-    background: var(--white);
+    background: var(--black);
 }
 
 /* Header scrolled - Glassmorphism */
@@ -492,7 +497,7 @@ p {
 }
 
 .header .nav-cart svg {
-    stroke: var(--white);
+    stroke: var(--black);
 }
 
 .header.scrolled .nav-cart svg {
@@ -510,7 +515,7 @@ p {
     padding: 8px 16px;
     font-size: 0.875rem;
     font-weight: 500;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(61, 90, 61, 0.3);
     border-radius: 50px;
     transition: all var(--duration-fast) var(--ease);
 }
@@ -520,14 +525,14 @@ p {
 }
 
 .header .nav-auth {
-    color: var(--white);
-    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--black);
+    border-color: rgba(61, 90, 61, 0.3);
 }
 
 .header .nav-auth:hover {
-    background: var(--white);
-    color: var(--black);
-    border-color: var(--white);
+    background: var(--accent);
+    color: #3d5a3d;
+    border-color: var(--accent);
 }
 
 .header.scrolled .nav-auth {
@@ -536,9 +541,9 @@ p {
 }
 
 .header.scrolled .nav-auth:hover {
-    background: var(--black);
-    color: var(--white);
-    border-color: var(--black);
+    background: var(--accent);
+    color: #3d5a3d;
+    border-color: var(--accent);
 }
 
 /* Mobile Nav */
@@ -650,7 +655,7 @@ p {
     position: relative;
     overflow: hidden;
     background: var(--gradient-dark);
-    color: var(--white);
+    color: var(--black);
 }
 
 /* Radial glow effect */
@@ -662,7 +667,7 @@ p {
     transform: translate(-50%, -50%);
     width: 800px;
     height: 800px;
-    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255,176,136,0.15) 0%, transparent 60%);
     pointer-events: none;
 }
 
@@ -672,8 +677,8 @@ p {
     position: absolute;
     inset: 0;
     background-image:
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+        linear-gradient(rgba(61,90,61,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(61,90,61,0.03) 1px, transparent 1px);
     background-size: 100px 100px;
     pointer-events: none;
     opacity: 0.5;
@@ -700,11 +705,11 @@ p {
 
 .hero-title span {
     display: block;
-    color: var(--white);
+    color: var(--black);
 }
 
 .hero-title .text-light {
-    color: var(--gray-400);
+    color: var(--gray-500);
     font-size: 0.5em;
 }
 
@@ -712,7 +717,7 @@ p {
     font-size: 1.3em;
     font-weight: 300;
     letter-spacing: 0.05em;
-    color: var(--white);
+    color: var(--black);
 }
 
 .hero-title .hero-brand + span,
@@ -722,7 +727,7 @@ p {
 
 .hero-subtitle {
     font-size: 0.7rem;
-    color: var(--gray-400);
+    color: var(--gray-500);
     font-weight: 500;
     letter-spacing: 0.3em;
     text-transform: uppercase;
@@ -737,7 +742,7 @@ p {
     content: '';
     width: 30px;
     height: 1px;
-    background: var(--gray-700);
+    background: var(--accent);
 }
 
 .hero-cta {
@@ -748,9 +753,9 @@ p {
     font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--white);
+    color: var(--black);
     padding: 1.25rem 0;
-    border-bottom: 1px solid var(--gray-700);
+    border-bottom: 1px solid var(--accent);
     transition: all var(--duration-fast) var(--ease);
     position: relative;
 }
@@ -762,7 +767,7 @@ p {
     left: 0;
     width: 0;
     height: 1px;
-    background: var(--white);
+    background: var(--black);
     transition: width var(--duration-fast) var(--ease);
 }
 
@@ -798,13 +803,13 @@ p {
     font-size: 0.65rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--gray-400);
+    color: var(--gray-500);
 }
 
 .scroll-line {
     width: 1px;
     height: 60px;
-    background: linear-gradient(to bottom, var(--white), transparent);
+    background: linear-gradient(to bottom, var(--accent), transparent);
     animation: scrollLine 2s ease-in-out infinite;
 }
 
@@ -820,9 +825,10 @@ p {
 /* Floating decorative elements */
 .hero-float {
     position: absolute;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 176, 136, 0.3);
     border-radius: 50%;
     pointer-events: none;
+    background: rgba(255, 176, 136, 0.05);
 }
 
 .hero-float-1 {
@@ -862,9 +868,9 @@ p {
 .marquee {
     overflow: hidden;
     padding: var(--space-lg) 0;
-    background: var(--black);
-    border-top: 1px solid var(--gray-800);
-    border-bottom: 1px solid var(--gray-800);
+    background: var(--pastel-mint);
+    border-top: 1px solid var(--pastel-green);
+    border-bottom: 1px solid var(--pastel-green);
 }
 
 .marquee-inner {
@@ -877,12 +883,12 @@ p {
     font-size: clamp(2.5rem, 6vw, 5rem);
     font-weight: 200;
     white-space: nowrap;
-    color: var(--white);
+    color: var(--black);
     letter-spacing: 0.1em;
 }
 
 .marquee-item span {
-    color: var(--gray-700);
+    color: var(--accent);
     margin: 0 var(--space-md);
 }
 
@@ -1138,8 +1144,8 @@ a.product-card {
    Features Section - Bento Grid
    ======================================== */
 .features {
-    background: var(--gradient-dark);
-    color: var(--white);
+    background: var(--pastel-orange-light);
+    color: var(--black);
     position: relative;
     overflow: hidden;
 }
@@ -1152,12 +1158,12 @@ a.product-card {
     transform: translateX(-50%);
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(200,230,201,0.3) 0%, transparent 60%);
     pointer-events: none;
 }
 
 .features > .container > h2 {
-    color: var(--white);
+    color: var(--black);
 }
 
 .features-grid {
@@ -1197,15 +1203,15 @@ a.product-card {
 
 .feature-item:hover {
     transform: translateY(-5px);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 176, 136, 0.3);
+    box-shadow: 0 20px 40px rgba(61, 90, 61, 0.15);
 }
 
 .feature-icon {
     width: 40px;
     height: 40px;
     margin: 0 auto var(--space-md);
-    color: var(--white);
+    color: var(--accent);
     stroke-width: 1;
     transition: transform var(--duration) var(--ease);
 }
@@ -1219,13 +1225,13 @@ a.product-card {
     font-weight: 500;
     margin-bottom: var(--space-sm);
     letter-spacing: 0.05em;
-    color: var(--white);
+    color: var(--black);
 }
 
 .feature-item p {
     font-size: 0.85rem;
     line-height: 1.7;
-    color: var(--gray-400);
+    color: var(--gray-600);
 }
 
 @media (max-width: 992px) {
@@ -1326,21 +1332,21 @@ a.product-card {
     color: var(--white);
 }
 
-/* Dark section buttons */
+/* Pastel section buttons */
 .section-dark .btn-primary,
 .hero .btn-primary,
 .page-hero .btn-primary {
-    background: var(--white);
-    color: var(--black);
-    border-color: var(--white);
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
 }
 
 .section-dark .btn-primary:hover,
 .hero .btn-primary:hover,
 .page-hero .btn-primary:hover {
     background: transparent;
-    color: var(--white);
-    border-color: var(--white);
+    color: var(--black);
+    border-color: var(--black);
 }
 
 /* Ripple effect container */
@@ -1365,8 +1371,8 @@ a.product-card {
    ======================================== */
 .footer {
     padding: var(--space-xl) 0 var(--space-lg);
-    background: var(--gradient-dark);
-    color: var(--white);
+    background: var(--pastel-green);
+    color: var(--black);
     position: relative;
 }
 
@@ -1377,7 +1383,7 @@ a.product-card {
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gray-700), transparent);
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
 }
 
 .footer-grid {
@@ -1388,14 +1394,14 @@ a.product-card {
 }
 
 .footer-brand .logo {
-    color: var(--white);
+    color: var(--black);
     margin-bottom: var(--space-md);
 }
 
 .footer-brand p {
     font-size: 0.85rem;
     line-height: 1.8;
-    color: var(--gray-500);
+    color: var(--gray-600);
 }
 
 .footer-title {
@@ -1403,7 +1409,7 @@ a.product-card {
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--white);
+    color: var(--black);
     margin-bottom: var(--space-md);
 }
 
@@ -1415,13 +1421,13 @@ a.product-card {
 
 .footer-links a {
     font-size: 0.85rem;
-    color: var(--gray-500);
+    color: var(--gray-600);
     transition: all var(--duration-fast);
     position: relative;
 }
 
 .footer-links a:hover {
-    color: var(--white);
+    color: var(--black);
     transform: translateX(5px);
 }
 
@@ -1430,12 +1436,12 @@ a.product-card {
     justify-content: space-between;
     align-items: center;
     padding-top: var(--space-lg);
-    border-top: 1px solid var(--gray-800);
+    border-top: 1px solid var(--pastel-mint);
 }
 
 .footer-copyright {
     font-size: 0.75rem;
-    color: var(--gray-600);
+    color: var(--gray-500);
 }
 
 .footer-social {
@@ -1449,7 +1455,7 @@ a.product-card {
 }
 
 .footer-social a:hover {
-    color: var(--white);
+    color: var(--black);
     transform: translateY(-3px);
 }
 
@@ -1550,7 +1556,7 @@ a.product-card {
     text-align: center;
     padding-top: 100px;
     background: var(--gradient-dark);
-    color: var(--white);
+    color: var(--black);
     position: relative;
     overflow: hidden;
 }
@@ -1563,22 +1569,22 @@ a.product-card {
     transform: translate(-50%, -50%);
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255,176,136,0.15) 0%, transparent 60%);
     pointer-events: none;
 }
 
 .page-hero h1 {
     font-size: clamp(2.5rem, 8vw, 5rem);
     font-weight: 200;
-    color: var(--white);
+    color: var(--black);
 }
 
 .page-hero .hero-subtitle {
-    color: var(--gray-400);
+    color: var(--gray-500);
 }
 
 .page-hero .text-light {
-    color: var(--gray-400);
+    color: var(--gray-500);
 }
 
 /* ========================================
@@ -1807,7 +1813,7 @@ a.shop-card {
     position: relative;
     padding-top: 100px;
     background: var(--gradient-dark);
-    color: var(--white);
+    color: var(--black);
     overflow: hidden;
 }
 
@@ -1818,7 +1824,7 @@ a.shop-card {
     right: 10%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(255,176,136,0.15) 0%, transparent 60%);
     pointer-events: none;
 }
 
@@ -1845,12 +1851,12 @@ a.shop-card {
 .product-hero-content h1 {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     margin-bottom: var(--space-md);
-    color: var(--white);
+    color: var(--black);
 }
 
 .product-hero-content .tagline {
     font-size: 0.75rem;
-    color: var(--gray-400);
+    color: var(--gray-500);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     margin-bottom: var(--space-sm);
@@ -1864,40 +1870,40 @@ a.shop-card {
     content: '';
     width: 20px;
     height: 1px;
-    background: var(--gray-600);
+    background: var(--accent);
 }
 
 .product-hero-content p {
     margin-bottom: var(--space-lg);
     line-height: 1.9;
-    color: var(--gray-400);
+    color: var(--gray-600);
 }
 
 .product-hero-content .text-light {
-    color: var(--gray-400);
+    color: var(--gray-500);
 }
 
 .product-hero .btn-primary {
-    background: var(--white);
-    color: var(--black);
-    border-color: var(--white);
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
 }
 
 .product-hero .btn-primary:hover {
     background: transparent;
-    color: var(--white);
+    color: var(--black);
 }
 
 .product-hero-content .product-price {
     font-size: 1.5rem;
     font-weight: 500;
-    color: var(--white);
+    color: #3d5a3d;
     margin-bottom: var(--space-md);
 }
 
 .product-hero-content .product-price .price-original {
     font-size: 1rem;
-    color: var(--gray-500);
+    color: var(--gray-400);
     text-decoration: line-through;
     margin-left: var(--space-sm);
     font-weight: 400;
@@ -1916,8 +1922,8 @@ a.shop-card {
 
 .product-hero .btn-outline {
     background: transparent;
-    color: var(--white);
-    border-color: var(--gray-500);
+    color: var(--black);
+    border-color: var(--accent);
 }
 
 .product-hero .btn-outline:hover {
@@ -3063,6 +3069,25 @@ a.shop-card {
     stroke: var(--white);
 }
 
+.account-nav-item.logout-btn {
+    margin-top: var(--space-md);
+    color: #dc3545;
+    border-top: 1px solid var(--gray-100);
+}
+
+.account-nav-item.logout-btn svg {
+    stroke: #dc3545;
+}
+
+.account-nav-item.logout-btn:hover {
+    background: #dc3545;
+    color: var(--white);
+}
+
+.account-nav-item.logout-btn:hover svg {
+    stroke: var(--white);
+}
+
 /* Account Main Content */
 .account-main {
     min-height: 500px;
@@ -4074,12 +4099,12 @@ a.shop-card {
 .auth-header h1 {
     font-size: 2.5rem;
     font-weight: 600;
-    color: var(--white);
+    color: var(--black);
     margin-bottom: var(--space-xs);
 }
 
 .auth-header p {
-    color: var(--gray-400);
+    color: var(--gray-600);
     font-size: 1rem;
 }
 
@@ -4103,7 +4128,7 @@ a.shop-card {
 
 .auth-form label {
     font-size: 0.875rem;
-    color: var(--gray-300);
+    color: var(--gray-600);
     font-weight: 500;
 }
 
@@ -4113,23 +4138,23 @@ a.shop-card {
 .auth-form input[type="tel"] {
     width: 100%;
     padding: 1rem 1.25rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--gray-200);
     border-radius: 12px;
-    color: var(--white);
+    color: var(--black);
     font-size: 1rem;
     font-family: var(--font);
     transition: all var(--duration-fast) var(--ease);
 }
 
 .auth-form input::placeholder {
-    color: var(--gray-500);
+    color: var(--gray-400);
 }
 
 .auth-form input:focus {
     outline: none;
-    border-color: var(--white);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 1);
 }
 
 .password-input {
@@ -4160,12 +4185,56 @@ a.shop-card {
 }
 
 .password-toggle:hover svg {
-    color: var(--white);
+    color: var(--black);
 }
 
 .password-hint {
     font-size: 0.75rem;
     color: var(--gray-500);
+}
+
+/* Referrer Input */
+.referrer-input {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.referrer-input input {
+    flex: 1;
+}
+
+.btn-referrer-check {
+    padding: 0.75rem 1.25rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--gray-300);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--black);
+    transition: all var(--duration-fast) var(--ease);
+    white-space: nowrap;
+}
+
+.btn-referrer-check:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.referrer-result {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    min-height: 1.5rem;
+}
+
+.referrer-result.success .referrer-success {
+    color: #10b981;
+    font-weight: 500;
+}
+
+.referrer-result.error .referrer-error {
+    color: #ef4444;
+    font-weight: 500;
 }
 
 .form-options {
@@ -4182,7 +4251,7 @@ a.shop-card {
     gap: 0.75rem;
     cursor: pointer;
     font-size: 0.875rem;
-    color: var(--gray-300);
+    color: var(--gray-600);
 }
 
 .checkbox-label input[type="checkbox"] {
@@ -4192,17 +4261,17 @@ a.shop-card {
 .checkmark {
     width: 20px;
     height: 20px;
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--gray-300);
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.8);
     position: relative;
     transition: all var(--duration-fast) var(--ease);
     flex-shrink: 0;
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark {
-    background: var(--white);
-    border-color: var(--white);
+    background: var(--accent);
+    border-color: var(--accent);
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
@@ -4212,14 +4281,14 @@ a.shop-card {
     top: 2px;
     width: 6px;
     height: 10px;
-    border: solid var(--black);
+    border: solid var(--white);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
 
 .forgot-link,
 .terms-link {
-    color: var(--gray-300);
+    color: var(--gray-500);
     text-decoration: none;
     font-size: 0.875rem;
     transition: color var(--duration-fast) var(--ease);
@@ -4227,7 +4296,7 @@ a.shop-card {
 
 .forgot-link:hover,
 .terms-link:hover {
-    color: var(--white);
+    color: var(--black);
 }
 
 .btn-full {
@@ -4267,10 +4336,10 @@ a.shop-card {
     justify-content: center;
     gap: 0.75rem;
     padding: 1rem 1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--gray-200);
     border-radius: 12px;
-    color: var(--white);
+    color: var(--black);
     font-size: 0.9375rem;
     font-weight: 500;
     font-family: var(--font);
@@ -4279,8 +4348,8 @@ a.shop-card {
 }
 
 .social-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 1);
+    border-color: var(--accent);
 }
 
 .social-btn svg {
@@ -4293,12 +4362,12 @@ a.shop-card {
 }
 
 .auth-footer p {
-    color: var(--gray-400);
+    color: var(--gray-600);
     font-size: 0.9375rem;
 }
 
 .auth-footer a {
-    color: var(--white);
+    color: var(--accent);
     text-decoration: none;
     font-weight: 500;
     transition: opacity var(--duration-fast) var(--ease);
@@ -4733,7 +4802,7 @@ a.shop-card {
     line-height: 18px;
     text-align: center;
     color: var(--white);
-    background: var(--black);
+    background: var(--accent);
     border-radius: 50px;
     display: none;
 }
@@ -4804,5 +4873,110 @@ a.shop-card {
 
     .fab-item::before {
         display: none;
+    }
+}
+
+/* ========================================
+   Dealer-Only Modal
+   ======================================== */
+.dealer-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s var(--ease);
+    padding: 1rem;
+}
+
+.dealer-modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.dealer-modal {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2.5rem;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s var(--ease-spring);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.dealer-modal-overlay.show .dealer-modal {
+    transform: scale(1) translateY(0);
+}
+
+.dealer-modal-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dealer-modal-icon svg {
+    stroke: #ff9800;
+}
+
+.dealer-modal h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--black);
+}
+
+.dealer-modal p {
+    color: var(--text-primary);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.dealer-modal-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.dealer-modal-buttons .btn {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .dealer-modal {
+        padding: 2rem 1.5rem;
+    }
+
+    .dealer-modal-icon {
+        width: 64px;
+        height: 64px;
+    }
+
+    .dealer-modal-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .dealer-modal h3 {
+        font-size: 1.25rem;
+    }
+
+    .dealer-modal-buttons {
+        flex-direction: column;
     }
 }

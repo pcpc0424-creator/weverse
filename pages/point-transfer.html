@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포인트 전송 - WEVERSE</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .transfer-section { padding: 120px 0 60px; min-height: 100vh; }
+        .transfer-container { max-width: 500px; margin: 0 auto; }
+        .transfer-header { text-align: center; margin-bottom: 2rem; }
+        .transfer-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        .balance-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .balance-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .balance-card .label { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
+        .balance-card .value { font-size: 1.5rem; font-weight: 700; }
+        .balance-card.ppoint .value { color: #2196f3; }
+        .balance-card.cpoint .value { color: #ff9800; }
+
+        .transfer-form {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: var(--bg); color: var(--text); }
+        .form-control:focus { outline: none; border-color: var(--primary); }
+
+        .point-type-select {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .point-type-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .point-type-btn:hover { border-color: var(--primary); }
+        .point-type-btn.selected { border-color: var(--primary); background: rgba(var(--primary-rgb), 0.05); }
+        .point-type-btn .type-name { font-weight: 600; margin-bottom: 0.25rem; }
+        .point-type-btn .type-balance { font-size: 0.85rem; color: var(--text-secondary); }
+
+        .recipient-info {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        .recipient-info.show { display: block; }
+        .recipient-name { font-weight: 600; }
+
+        .transfer-summary {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .transfer-summary .row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .transfer-summary .note { font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.5rem; }
+
+        .btn-transfer { width: 100%; padding: 1rem; font-size: 1.1rem; }
+
+        .notice { background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 1rem; font-size: 0.85rem; color: #856404; margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader"><div class="loader-text"><span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span></div></div>
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../index.html">Main</a>
+                    <a href="shopping.html">Shop</a>
+                    <a href="account.html">Account</a>
+                </nav>
+                <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="transfer-section">
+        <div class="container">
+            <div class="transfer-container">
+                <div class="transfer-header">
+                    <h1>포인트 전송</h1>
+                    <p>P포인트 또는 C포인트를 다른 회원에게 T포인트로 전송하세요</p>
+                </div>
+
+                <div class="balance-info">
+                    <div class="balance-card ppoint">
+                        <div class="label">P포인트 잔액</div>
+                        <div class="value" id="ppointBalance">$0</div>
+                    </div>
+                    <div class="balance-card cpoint">
+                        <div class="label">C포인트 잔액</div>
+                        <div class="value" id="cpointBalance">$0</div>
+                    </div>
+                </div>
+
+                <div class="transfer-form">
+                    <div class="form-group">
+                        <label class="form-label">전송할 포인트 선택</label>
+                        <div class="point-type-select">
+                            <div class="point-type-btn selected" data-type="pPoint" onclick="selectPointType('pPoint', this)">
+                                <div class="type-name">P포인트</div>
+                                <div class="type-balance" id="pPointTypeBalance">$0</div>
+                            </div>
+                            <div class="point-type-btn" data-type="cPoint" onclick="selectPointType('cPoint', this)">
+                                <div class="type-name">C포인트</div>
+                                <div class="type-balance" id="cPointTypeBalance">$0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">받는 사람 (아이디 또는 회원 ID)</label>
+                        <input type="text" class="form-control" id="recipientSearch" placeholder="아이디 또는 회원 ID를 입력하세요" oninput="searchRecipient()">
+                        <small style="color: var(--text-secondary); font-size: 0.8rem;">예: seoyeon 또는 M002</small>
+                        <div class="recipient-info" id="recipientInfo">
+                            <div class="recipient-name" id="recipientName">-</div>
+                            <div class="recipient-id" id="recipientIdDisplay" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">-</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">전송 금액 (USD)</label>
+                        <input type="number" class="form-control" id="transferAmount" placeholder="전송할 금액을 입력하세요" min="1" oninput="updateSummary()">
+                    </div>
+
+                    <div class="transfer-summary">
+                        <div class="row">
+                            <span>전송 포인트</span>
+                            <span id="summaryPointType">P포인트</span>
+                        </div>
+                        <div class="row">
+                            <span>전송 금액</span>
+                            <span id="summaryAmount">$0</span>
+                        </div>
+                        <div class="row">
+                            <span>받는 사람 수령액</span>
+                            <span id="summaryReceive">T포인트 $0</span>
+                        </div>
+                        <div class="note">* 전송된 포인트는 받는 사람의 T포인트로 적립됩니다.</div>
+                    </div>
+
+                    <button class="btn btn-primary btn-transfer" onclick="processTransfer()">전송하기</button>
+
+                    <div class="notice">
+                        <strong>안내사항</strong><br>
+                        - P포인트와 C포인트만 전송 가능합니다.<br>
+                        - 전송된 포인트는 받는 사람의 T포인트로 적립됩니다.<br>
+                        - 전송 완료 후에는 취소할 수 없습니다.
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="points.html" style="color: var(--primary);">← 내 포인트로 돌아가기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        let currentMember = null;
+        let selectedPointType = 'pPoint';
+        let foundRecipient = null;
+
+        async function initTransferPage() {
+            // Check login (check both localStorage and sessionStorage)
+            let session = null;
+            try {
+                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                session = (storageSession && storageSession.loggedIn) ? storageSession :
+                          (localSession && localSession.loggedIn) ? localSession :
+                          (storageSession || localSession);
+            } catch (e) {}
+            if (!session || (!session.loggedIn && !session.username)) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Find member
+            const members = await weverseData.getMembers();
+            currentMember = members.find(m => m.username === session.username);
+
+            if (!currentMember) {
+                showToast('회원 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // Display balances
+            const points = currentMember.points || { pPoint: 0, cPoint: 0 };
+            document.getElementById('ppointBalance').textContent = '$' + (points.pPoint || 0).toLocaleString();
+            document.getElementById('cpointBalance').textContent = '$' + (points.cPoint || 0).toLocaleString();
+            document.getElementById('pPointTypeBalance').textContent = '$' + (points.pPoint || 0).toLocaleString();
+            document.getElementById('cPointTypeBalance').textContent = '$' + (points.cPoint || 0).toLocaleString();
+        }
+
+        function selectPointType(type, element) {
+            selectedPointType = type;
+
+            document.querySelectorAll('.point-type-btn').forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+
+            updateSummary();
+        }
+
+        async function searchRecipient() {
+            const searchTerm = document.getElementById('recipientSearch').value.trim();
+            const infoEl = document.getElementById('recipientInfo');
+
+            if (!searchTerm) {
+                infoEl.classList.remove('show');
+                foundRecipient = null;
+                return;
+            }
+
+            if (!currentMember) {
+                infoEl.classList.remove('show');
+                foundRecipient = null;
+                return;
+            }
+
+            // Search for member by username OR member ID
+            const members = await weverseData.getMembers();
+            foundRecipient = members.find(m => {
+                // Don't match self
+                if (m.id === currentMember.id) return false;
+
+                // Match by username (case-insensitive)
+                if (m.username && m.username.toLowerCase() === searchTerm.toLowerCase()) return true;
+
+                // Match by member ID (case-insensitive)
+                if (m.id && m.id.toLowerCase() === searchTerm.toLowerCase()) return true;
+
+                return false;
+            });
+
+            if (foundRecipient) {
+                document.getElementById('recipientName').textContent = foundRecipient.name;
+                document.getElementById('recipientIdDisplay').textContent = 'ID: ' + foundRecipient.id;
+                infoEl.classList.add('show');
+            } else {
+                infoEl.classList.remove('show');
+            }
+        }
+
+        function updateSummary() {
+            const amount = parseInt(document.getElementById('transferAmount').value) || 0;
+            const pointTypeName = selectedPointType === 'pPoint' ? 'P포인트' : 'C포인트';
+
+            document.getElementById('summaryPointType').textContent = pointTypeName;
+            document.getElementById('summaryAmount').textContent = '$' + amount.toLocaleString();
+            document.getElementById('summaryReceive').textContent = 'T포인트 $' + amount.toLocaleString();
+        }
+
+        async function processTransfer() {
+            const amount = parseInt(document.getElementById('transferAmount').value) || 0;
+
+            if (!foundRecipient) {
+                showToast('유효한 받는 사람을 입력해주세요.');
+                return;
+            }
+
+            if (amount <= 0) {
+                showToast('전송 금액을 입력해주세요.');
+                return;
+            }
+
+            const points = currentMember.points || { pPoint: 0, cPoint: 0 };
+            const balance = selectedPointType === 'pPoint' ? points.pPoint : points.cPoint;
+
+            if (amount > balance) {
+                showToast('잔액이 부족합니다.');
+                return;
+            }
+
+            // Confirm
+            const pointTypeName = selectedPointType === 'pPoint' ? 'P포인트' : 'C포인트';
+            if (!confirm(`${foundRecipient.name}님에게 ${pointTypeName} $${amount}를 전송하시겠습니까?\n\n받는 분은 T포인트로 수령합니다.`)) {
+                return;
+            }
+
+            // Process transfer
+            const result = await weverseData.transferPoints(currentMember.id, foundRecipient.id, selectedPointType, amount);
+
+            if (result.success) {
+                showToast('포인트가 성공적으로 전송되었습니다!');
+
+                // Refresh member data
+                const members = await weverseData.getMembers();
+                currentMember = members.find(m => m.id === currentMember.id);
+
+                // Update display
+                const newPoints = currentMember.points || { pPoint: 0, cPoint: 0 };
+                document.getElementById('ppointBalance').textContent = '$' + (newPoints.pPoint || 0).toLocaleString();
+                document.getElementById('cpointBalance').textContent = '$' + (newPoints.cPoint || 0).toLocaleString();
+                document.getElementById('pPointTypeBalance').textContent = '$' + (newPoints.pPoint || 0).toLocaleString();
+                document.getElementById('cPointTypeBalance').textContent = '$' + (newPoints.cPoint || 0).toLocaleString();
+
+                // Clear form
+                document.getElementById('recipientSearch').value = '';
+                document.getElementById('transferAmount').value = '';
+                document.getElementById('recipientInfo').classList.remove('show');
+                foundRecipient = null;
+                updateSummary();
+            } else {
+                showToast(result.error || '전송에 실패했습니다.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initTransferPage);
+    </script>
+</body>
+</html>

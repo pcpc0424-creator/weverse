@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 관리 - WEVERSE 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">WE<span>V</span>ERSE</a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인</div>
+                </div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    대시보드
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">관리</div>
+                </div>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    상품 관리
+                </a>
+                <a href="orders.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    주문 관리
+                </a>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    회원 관리
+                </a>
+                <a href="points.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    포인트 관리
+                </a>
+                <a href="ppoint-earning.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    P포인트 적립 상세
+                </a>
+                <a href="statistics.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    통계
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">시스템</div>
+                </div>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                    시스템 설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <h1 class="page-title">주문 관리</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="주문 검색..." id="orderSearch" oninput="searchOrders()">
+                    </div>
+                    <a href="../index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                            <polyline points="15,3 21,3 21,9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-area">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>대기중</h3>
+                            <div class="stat-value" id="statPending">0건</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>처리중</h3>
+                            <div class="stat-value" id="statProcessing">0건</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>배송중</h3>
+                            <div class="stat-value" id="statShipped">0건</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"/>
+                                <polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/>
+                                <circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>배송완료</h3>
+                            <div class="stat-value" id="statDelivered">0건</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                <polyline points="22,4 12,14.01 9,11.01"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="card">
+                    <div class="card-body d-flex align-center justify-between">
+                        <div class="d-flex align-center gap-2">
+                            <select class="form-control form-select" style="width: 140px;" id="statusFilter" onchange="filterOrders()">
+                                <option value="">전체 상태</option>
+                                <option value="pending">대기중</option>
+                                <option value="processing">처리중</option>
+                                <option value="shipped">배송중</option>
+                                <option value="delivered">배송완료</option>
+                                <option value="cancelled">취소됨</option>
+                            </select>
+                            <select class="form-control form-select" style="width: 140px;" id="periodFilter" onchange="filterOrders()">
+                                <option value="">전체 기간</option>
+                                <option value="today">오늘</option>
+                                <option value="week">이번 주</option>
+                                <option value="month">이번 달</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-outline" onclick="exportOrders()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            내보내기
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">전체 주문</h2>
+                        <span class="text-muted" id="orderCount">총 0건</span>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table" id="ordersTable">
+                                <thead>
+                                    <tr>
+                                        <th>주문번호</th>
+                                        <th>고객</th>
+                                        <th>상품</th>
+                                        <th>PV</th>
+                                        <th>금액</th>
+                                        <th>송장번호</th>
+                                        <th>상태</th>
+                                        <th>주문일</th>
+                                        <th>관리</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTableBody">
+                                    <!-- Orders will be loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="pagination">
+                            <div class="pagination-info" id="orderPaginationInfo">0건 중 0-0 표시</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal-overlay" id="orderDetailModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalOrderId">주문 #</h3>
+                <button class="modal-close" onclick="closeModal('orderDetailModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <h4 style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">고객 정보</h4>
+                        <p class="fw-500 mb-1" id="modalCustomerName">-</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">배송 주소</h4>
+                        <p class="text-muted" style="font-size: 0.875rem;" id="modalShippingAddress">-</p>
+                    </div>
+                </div>
+
+                <h4 style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">주문 상품</h4>
+                <table class="data-table" style="margin-bottom: 1.5rem;">
+                    <thead>
+                        <tr>
+                            <th>상품</th>
+                            <th>가격</th>
+                            <th>수량</th>
+                            <th>PV</th>
+                            <th class="text-right">합계</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalOrderItems">
+                        <!-- Items will be loaded dynamically -->
+                    </tbody>
+                </table>
+
+                <div style="border-top: 1px solid var(--border); padding-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span class="text-muted">소계</span>
+                        <span id="modalSubtotal">₩0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span class="text-muted">총 PV</span>
+                        <span id="modalTotalPV" style="color: #9c27b0; font-weight: 600;">0 PV</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span class="text-muted">배송비</span>
+                        <span id="modalShipping">무료</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 1.125rem; font-weight: 600; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                        <span>총 결제금액</span>
+                        <span id="modalTotal">₩0</span>
+                    </div>
+                </div>
+
+                <!-- Payment Details -->
+                <div id="modalPaymentDetails" style="margin-top: 1rem; padding: 1rem; background: var(--bg); border-radius: 8px; display: none;">
+                    <h4 style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">결제 상세</h4>
+                    <div id="modalPaymentList" style="font-size: 0.875rem;"></div>
+                </div>
+
+                <!-- P포인트 적립 상태 -->
+                <div id="modalPvStatus" style="margin-top: 1rem; padding: 1rem; background: rgba(156, 39, 176, 0.05); border: 1px solid rgba(156, 39, 176, 0.2); border-radius: 8px; display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">P포인트 적립</span>
+                            <span id="modalPvStatusBadge" class="status-badge" style="margin-left: 0.5rem;">-</span>
+                        </div>
+                        <span id="modalPvProcessDate" style="font-size: 0.75rem; color: var(--text-secondary);"></span>
+                    </div>
+                </div>
+
+                <!-- Tracking Info -->
+                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg); border-radius: 8px;">
+                    <h4 style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">배송 정보</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem;">
+                        <div>
+                            <label class="form-label" style="font-size: 0.75rem;">택배사</label>
+                            <select class="form-control form-select" id="modalTrackingCompany" style="font-size: 0.875rem;">
+                                <option value="">선택</option>
+                                <option value="CJ대한통운">CJ대한통운</option>
+                                <option value="한진택배">한진택배</option>
+                                <option value="롯데택배">롯데택배</option>
+                                <option value="우체국택배">우체국택배</option>
+                                <option value="로젠택배">로젠택배</option>
+                                <option value="GS택배">GS택배</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-size: 0.75rem;">송장번호</label>
+                            <input type="text" class="form-control" id="modalTrackingNumber" placeholder="송장번호 입력" style="font-size: 0.875rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <label class="form-label">상태 변경</label>
+                    <select class="form-control form-select" id="modalStatusSelect">
+                        <option value="pending">대기중</option>
+                        <option value="processing">처리중</option>
+                        <option value="shipped">배송중</option>
+                        <option value="delivered">배송완료</option>
+                        <option value="cancelled">취소됨</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('orderDetailModal')">닫기</button>
+                <button class="btn btn-primary" onclick="updateOrderFromModal()">주문 수정</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Order Modal -->
+    <div class="modal-overlay" id="editOrderModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">주문 수정</h3>
+                <button class="modal-close" onclick="closeModal('editOrderModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editOrderForm">
+                    <input type="hidden" id="editOrderId">
+
+                    <h4 style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-secondary);">배송 정보</h4>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">이름 *</label>
+                            <input type="text" class="form-control" id="editOrderCustomerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">성별</label>
+                            <select class="form-control form-select" id="editOrderGender">
+                                <option value="">선택</option>
+                                <option value="male">남성</option>
+                                <option value="female">여성</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">연락처</label>
+                            <input type="tel" class="form-control" id="editOrderPhone" placeholder="010-0000-0000">
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">우편번호</label>
+                            <input type="text" class="form-control" id="editOrderZipcode">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">주소</label>
+                            <input type="text" class="form-control" id="editOrderAddress">
+                        </div>
+                    </div>
+
+                    <h4 style="font-size: 0.9rem; margin: 1.5rem 0 1rem; color: var(--text-secondary);">배송 추적</h4>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">택배사</label>
+                            <select class="form-control form-select" id="editOrderTrackingCompany">
+                                <option value="">선택</option>
+                                <option value="CJ대한통운">CJ대한통운</option>
+                                <option value="한진택배">한진택배</option>
+                                <option value="롯데택배">롯데택배</option>
+                                <option value="우체국택배">우체국택배</option>
+                                <option value="로젠택배">로젠택배</option>
+                                <option value="GS택배">GS택배</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">송장번호</label>
+                            <input type="text" class="form-control" id="editOrderTrackingNumber" placeholder="송장번호">
+                        </div>
+                    </div>
+
+                    <h4 style="font-size: 0.9rem; margin: 1.5rem 0 1rem; color: var(--text-secondary);">주문 상태</h4>
+                    <div class="form-group">
+                        <label class="form-label">상태</label>
+                        <select class="form-control form-select" id="editOrderStatus">
+                            <option value="pending">대기중</option>
+                            <option value="processing">처리중</option>
+                            <option value="shipped">배송중</option>
+                            <option value="delivered">배송완료</option>
+                            <option value="cancelled">취소됨</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editOrderModal')">취소</button>
+                <button class="btn btn-primary" onclick="saveOrder()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        let currentViewOrder = null;
+
+        // Initialize orders page
+        async function initOrdersPage() {
+            await updateOrderStats();
+            await renderOrders();
+        }
+
+        // Update order stats
+        async function updateOrderStats() {
+            const stats = await weverseData.getOrderStats();
+            document.getElementById('statPending').textContent = stats.pending + '건';
+            document.getElementById('statProcessing').textContent = stats.processing + '건';
+            document.getElementById('statShipped').textContent = stats.shipped + '건';
+            document.getElementById('statDelivered').textContent = stats.delivered + '건';
+        }
+
+        // Render orders table
+        let orderSearchTerm = '';
+        let statusFilter = '';
+        let periodFilter = '';
+
+        async function searchOrders() {
+            orderSearchTerm = document.getElementById('orderSearch').value.trim().toLowerCase();
+            await renderOrders();
+        }
+
+        async function filterOrders() {
+            statusFilter = document.getElementById('statusFilter').value;
+            periodFilter = document.getElementById('periodFilter').value;
+            await renderOrders();
+        }
+
+        async function renderOrders() {
+            let orders = await weverseData.getOrders();
+
+            // Apply search filter
+            if (orderSearchTerm) {
+                orders = orders.filter(o =>
+                    o.id.toLowerCase().includes(orderSearchTerm) ||
+                    o.customer.name.toLowerCase().includes(orderSearchTerm) ||
+                    o.items.some(item => item.name.toLowerCase().includes(orderSearchTerm))
+                );
+            }
+
+            // Apply status filter
+            if (statusFilter) {
+                orders = orders.filter(o => o.status === statusFilter);
+            }
+
+            // Apply period filter
+            if (periodFilter) {
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+                orders = orders.filter(o => {
+                    const orderDate = new Date(o.orderDate);
+                    switch(periodFilter) {
+                        case 'today':
+                            return orderDate >= today;
+                        case 'week':
+                            const weekAgo = new Date(today);
+                            weekAgo.setDate(weekAgo.getDate() - 7);
+                            return orderDate >= weekAgo;
+                        case 'month':
+                            const monthAgo = new Date(today);
+                            monthAgo.setMonth(monthAgo.getMonth() - 1);
+                            return orderDate >= monthAgo;
+                        default:
+                            return true;
+                    }
+                });
+            }
+
+            const tbody = document.getElementById('ordersTableBody');
+            const orderCount = document.getElementById('orderCount');
+            const paginationInfo = document.getElementById('orderPaginationInfo');
+
+            if (!tbody) return;
+
+            orderCount.textContent = `총 ${orders.length}건`;
+            paginationInfo.textContent = `${orders.length}건 중 1-${orders.length} 표시`;
+
+            const statusMap = {
+                'pending': { class: 'pending', text: '대기중' },
+                'processing': { class: 'processing', text: '처리중' },
+                'shipped': { class: 'shipped', text: '배송중' },
+                'delivered': { class: 'delivered', text: '배송완료' },
+                'cancelled': { class: 'cancelled', text: '취소됨' }
+            };
+
+            tbody.innerHTML = orders.map(order => {
+                const status = statusMap[order.status] || { class: '', text: order.status };
+                const itemsSummary = order.items.map(item => `${item.name} x ${item.quantity}`).join(', ');
+                const orderDate = new Date(order.orderDate).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }).replace(/\. /g, '.').replace('.', '');
+                const totalPV = order.totalPV || 0;
+                const trackingDisplay = order.trackingNumber
+                    ? `<span style="font-size: 0.75rem;">${order.trackingCompany || ''}<br>${order.trackingNumber}</span>`
+                    : '<span class="text-muted" style="font-size: 0.75rem;">-</span>';
+
+                return `
+                    <tr>
+                        <td><strong>#${order.id}</strong></td>
+                        <td>
+                            <div>
+                                <div class="fw-500">${order.customer.name}</div>
+                            </div>
+                        </td>
+                        <td>${itemsSummary}</td>
+                        <td class="fw-500" style="color: #9c27b0;">${totalPV}</td>
+                        <td class="fw-600">₩${order.total.toLocaleString()}</td>
+                        <td>${trackingDisplay}</td>
+                        <td><span class="status-badge ${status.class}">${status.text}</span></td>
+                        <td>${orderDate}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" title="상세보기/수정" onclick="viewOrderDetail('${order.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn" title="주문수정" onclick="openEditOrder('${order.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn" title="주문삭제" onclick="deleteOrder('${order.id}')" style="color: #dc3545;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                                        <line x1="10" y1="11" x2="10" y2="17"/>
+                                        <line x1="14" y1="11" x2="14" y2="17"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // View order detail
+        async function viewOrderDetail(orderId) {
+            currentViewOrder = await weverseData.getOrderById(orderId);
+            if (!currentViewOrder) return;
+
+            document.getElementById('modalOrderId').textContent = '주문 #' + currentViewOrder.id;
+            const genderText = currentViewOrder.shipping?.gender === 'male' ? '남성' : currentViewOrder.shipping?.gender === 'female' ? '여성' : '-';
+            document.getElementById('modalCustomerName').textContent = currentViewOrder.shipping?.fullName || currentViewOrder.customer.name;
+            document.getElementById('modalShippingAddress').innerHTML = `
+                성별: ${genderText}<br>
+                연락처: ${currentViewOrder.shipping.phone || '-'}<br>
+                우편번호: ${currentViewOrder.shipping.zipcode || '-'}<br>
+                주소: ${currentViewOrder.shipping.address || '-'}
+            `;
+
+            // Get products to find PV values
+            const products = await weverseData.getProducts();
+
+            // Render order items with PV
+            const itemsTable = document.getElementById('modalOrderItems');
+            let totalPV = 0;
+            itemsTable.innerHTML = currentViewOrder.items.map(item => {
+                const product = products.find(p => p.id === item.productId || p.name === item.name);
+                const itemPV = (product?.pv || 0) * item.quantity;
+                totalPV += itemPV;
+                return `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>₩${item.price.toLocaleString()}</td>
+                        <td>${item.quantity}</td>
+                        <td style="color: #9c27b0;">${itemPV}</td>
+                        <td class="text-right fw-500">₩${(item.price * item.quantity).toLocaleString()}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('modalSubtotal').textContent = '₩' + currentViewOrder.subtotal.toLocaleString();
+            document.getElementById('modalTotalPV').textContent = (currentViewOrder.totalPV || totalPV) + ' PV';
+            document.getElementById('modalShipping').textContent = currentViewOrder.shippingCost === 0 ? '무료' : '₩' + currentViewOrder.shippingCost.toLocaleString();
+            document.getElementById('modalTotal').textContent = '₩' + currentViewOrder.total.toLocaleString();
+            document.getElementById('modalStatusSelect').value = currentViewOrder.status;
+
+            // Show payment details if available
+            const paymentDetailsEl = document.getElementById('modalPaymentDetails');
+            const paymentListEl = document.getElementById('modalPaymentList');
+            if (currentViewOrder.payment && currentViewOrder.payment.details) {
+                const details = currentViewOrder.payment.details;
+                let paymentHtml = '';
+                if (details.rPay > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>W페이</span><span>₩${details.rPay.toLocaleString()}</span></div>`;
+                if (details.pPoint > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>P포인트</span><span>$${details.pPoint.toLocaleString()}</span></div>`;
+                if (details.cPoint > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>C포인트</span><span>$${details.cPoint.toLocaleString()}</span></div>`;
+                if (details.tPoint > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>T포인트</span><span>$${details.tPoint.toLocaleString()}</span></div>`;
+                if (details.card > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>카드결제</span><span>₩${details.card.toLocaleString()}</span></div>`;
+                if (details.bank > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>무통장입금</span><span>₩${details.bank.toLocaleString()}</span></div>`;
+
+                if (paymentHtml) {
+                    paymentListEl.innerHTML = paymentHtml;
+                    paymentDetailsEl.style.display = 'block';
+                } else {
+                    paymentDetailsEl.style.display = 'none';
+                }
+            } else {
+                paymentDetailsEl.style.display = 'none';
+            }
+
+            // Show PV status if order is delivered
+            const pvStatusEl = document.getElementById('modalPvStatus');
+            if (currentViewOrder.status === 'delivered' && (currentViewOrder.totalPV || totalPV) > 0) {
+                pvStatusEl.style.display = 'block';
+                const pvBadge = document.getElementById('modalPvStatusBadge');
+                const pvDate = document.getElementById('modalPvProcessDate');
+                if (currentViewOrder.pvProcessed) {
+                    pvBadge.textContent = '적립완료';
+                    pvBadge.style.background = 'rgba(76,175,80,0.1)';
+                    pvBadge.style.color = '#4caf50';
+                    pvDate.textContent = currentViewOrder.pvProcessDate ? new Date(currentViewOrder.pvProcessDate).toLocaleDateString('ko-KR') + ' 적립' : '';
+                } else {
+                    pvBadge.textContent = '대기중';
+                    pvBadge.style.background = 'rgba(255,193,7,0.1)';
+                    pvBadge.style.color = '#ffc107';
+                    pvDate.textContent = '';
+                }
+            } else {
+                pvStatusEl.style.display = 'none';
+            }
+
+            // Set tracking info
+            document.getElementById('modalTrackingCompany').value = currentViewOrder.trackingCompany || '';
+            document.getElementById('modalTrackingNumber').value = currentViewOrder.trackingNumber || '';
+
+            openModal('orderDetailModal');
+        }
+
+        // Change order status
+        async function changeOrderStatus(orderId) {
+            const order = await weverseData.getOrderById(orderId);
+            const statuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+            const statusNames = { pending: '대기중', processing: '처리중', shipped: '배송중', delivered: '배송완료', cancelled: '취소됨' };
+
+            const currentIndex = statuses.indexOf(order.status);
+            let newStatus;
+
+            if (currentIndex < 3) {
+                newStatus = statuses[currentIndex + 1];
+            } else {
+                return;
+            }
+
+            if (confirm(`주문 상태를 "${statusNames[newStatus]}"(으)로 변경하시겠습니까?`)) {
+                await weverseData.updateOrderStatus(orderId, newStatus);
+                await updateOrderStats();
+                await renderOrders();
+                showToast('주문 상태가 변경되었습니다.');
+            }
+        }
+
+        // Update order from modal
+        async function updateOrderFromModal() {
+            if (!currentViewOrder) return;
+
+            const newStatus = document.getElementById('modalStatusSelect').value;
+            const trackingCompany = document.getElementById('modalTrackingCompany').value;
+            const trackingNumber = document.getElementById('modalTrackingNumber').value.trim();
+
+            // Update status
+            await weverseData.updateOrderStatus(currentViewOrder.id, newStatus);
+
+            // Update tracking info
+            if (trackingCompany || trackingNumber) {
+                await weverseData.updateOrderTracking(currentViewOrder.id, trackingNumber, trackingCompany);
+            }
+
+            closeModal('orderDetailModal');
+            await updateOrderStats();
+            await renderOrders();
+            showToast('주문이 수정되었습니다.');
+        }
+
+        // Open edit order modal
+        async function openEditOrder(orderId) {
+            const order = await weverseData.getOrderById(orderId);
+            if (!order) return;
+
+            document.getElementById('editOrderId').value = order.id;
+            document.getElementById('editOrderCustomerName').value = order.shipping?.fullName || order.customer.name;
+            document.getElementById('editOrderGender').value = order.shipping?.gender || '';
+            document.getElementById('editOrderPhone').value = order.shipping?.phone || '';
+            document.getElementById('editOrderZipcode').value = order.shipping?.zipcode || '';
+            document.getElementById('editOrderAddress').value = order.shipping?.address || '';
+            document.getElementById('editOrderTrackingCompany').value = order.trackingCompany || '';
+            document.getElementById('editOrderTrackingNumber').value = order.trackingNumber || '';
+            document.getElementById('editOrderStatus').value = order.status;
+
+            openModal('editOrderModal');
+        }
+
+        // Save order changes
+        async function saveOrder() {
+            const orderId = document.getElementById('editOrderId').value;
+            const customerName = document.getElementById('editOrderCustomerName').value.trim();
+            const gender = document.getElementById('editOrderGender').value;
+            const phone = document.getElementById('editOrderPhone').value.trim();
+            const zipcode = document.getElementById('editOrderZipcode').value.trim();
+            const address = document.getElementById('editOrderAddress').value.trim();
+            const trackingCompany = document.getElementById('editOrderTrackingCompany').value;
+            const trackingNumber = document.getElementById('editOrderTrackingNumber').value.trim();
+            const status = document.getElementById('editOrderStatus').value;
+
+            if (!customerName) {
+                showToast('이름은 필수입니다.');
+                return;
+            }
+
+            // Update order via weverseData
+            await weverseData.updateOrder(orderId, {
+                customer: { name: customerName },
+                shipping: { fullName: customerName, gender, phone, zipcode, address },
+                trackingCompany,
+                trackingNumber,
+                status
+            });
+
+            closeModal('editOrderModal');
+            await updateOrderStats();
+            await renderOrders();
+            showToast('주문 정보가 수정되었습니다.');
+        }
+
+        // Delete order
+        async function deleteOrder(orderId) {
+            const order = await weverseData.getOrderById(orderId);
+            if (!order) return;
+
+            if (confirm(`주문 #${orderId}을(를) 정말 삭제하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) {
+                await weverseData.deleteOrder(orderId);
+                await updateOrderStats();
+                await renderOrders();
+                showToast('주문이 삭제되었습니다.');
+            }
+        }
+
+        // Export orders to Excel
+        async function exportOrders() {
+            try {
+                // Check if XLSX library is loaded
+                if (typeof XLSX === 'undefined') {
+                    showToast('엑셀 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+                    return;
+                }
+
+                let orders = await weverseData.getOrders();
+
+                // Apply current filters
+                if (statusFilter) {
+                    orders = orders.filter(o => o.status === statusFilter);
+                }
+                if (periodFilter) {
+                    const now = new Date();
+                    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    orders = orders.filter(o => {
+                        const orderDate = new Date(o.orderDate);
+                        switch(periodFilter) {
+                            case 'today': return orderDate >= today;
+                            case 'week':
+                                const weekAgo = new Date(today);
+                                weekAgo.setDate(weekAgo.getDate() - 7);
+                                return orderDate >= weekAgo;
+                            case 'month':
+                                const monthAgo = new Date(today);
+                                monthAgo.setMonth(monthAgo.getMonth() - 1);
+                                return orderDate >= monthAgo;
+                            default: return true;
+                        }
+                    });
+                }
+
+                if (orders.length === 0) {
+                    showToast('내보낼 주문 데이터가 없습니다.');
+                    return;
+                }
+
+                const statusMap = {
+                    'pending': '대기중',
+                    'processing': '처리중',
+                    'shipped': '배송중',
+                    'delivered': '배송완료',
+                    'cancelled': '취소됨'
+                };
+
+                // Get members for fallback phone lookup
+                const members = await weverseData.getMembers();
+                const memberMap = {};
+                members.forEach(m => { memberMap[m.id] = m; });
+
+                // Prepare data for Excel with safe access
+                const data = orders.map(o => {
+                    const shipping = o.shipping || {};
+                    const customer = o.customer || {};
+                    const items = o.items || [];
+
+                    // Fallback to member phone if shipping.phone is empty
+                    let phone = shipping.phone || '';
+                    let gender = shipping.gender || '';
+                    if ((!phone || !gender) && customer.memberId && memberMap[customer.memberId]) {
+                        const member = memberMap[customer.memberId];
+                        if (!phone) phone = member.phone || '';
+                    }
+
+                    const genderText = gender === 'male' ? '남성' : gender === 'female' ? '여성' : '';
+                    return {
+                        '주문번호': o.id || '',
+                        '이름': shipping.fullName || customer.name || '',
+                        '성별': genderText,
+                        '연락처': phone,
+                        '상품': items.map(item => `${item.name} x ${item.quantity}`).join(', '),
+                        '총 PV': o.totalPV || 0,
+                        '주문금액': o.total || 0,
+                        '택배사': o.trackingCompany || '',
+                        '송장번호': o.trackingNumber || '',
+                        '상태': statusMap[o.status] || o.status || '',
+                        '주문일': o.orderDate ? new Date(o.orderDate).toLocaleDateString('ko-KR') : '',
+                        '우편번호': shipping.zipcode || '',
+                        '주소': shipping.address || ''
+                    };
+                });
+
+                // Create workbook
+                const ws = XLSX.utils.json_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, '주문목록');
+
+                // Set column widths
+                ws['!cols'] = [
+                    { wch: 12 }, // 주문번호
+                    { wch: 12 }, // 이름
+                    { wch: 6 },  // 성별
+                    { wch: 15 }, // 연락처
+                    { wch: 35 }, // 상품
+                    { wch: 8 },  // 총 PV
+                    { wch: 12 }, // 주문금액
+                    { wch: 12 }, // 택배사
+                    { wch: 15 }, // 송장번호
+                    { wch: 10 }, // 상태
+                    { wch: 12 }, // 주문일
+                    { wch: 10 }, // 우편번호
+                    { wch: 40 }  // 주소
+                ];
+
+                // Generate filename with date
+                const today = new Date().toISOString().split('T')[0];
+                XLSX.writeFile(wb, `weverse_주문목록_${today}.xlsx`);
+                showToast('주문 목록이 다운로드되었습니다.');
+
+            } catch (error) {
+                console.error('Export error:', error);
+                showToast('내보내기 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initOrdersPage();
+        });
+    </script>
+</body>
+</html>

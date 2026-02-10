@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포인트 관리 - WEVERSE 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">WE<span>V</span>ERSE</a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인</div>
+                </div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    대시보드
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">관리</div>
+                </div>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    상품 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    주문 관리
+                </a>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    회원 관리
+                </a>
+                <a href="points.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    포인트 관리
+                </a>
+                <a href="ppoint-earning.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    P포인트 적립 상세
+                </a>
+                <a href="statistics.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    통계
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">시스템</div>
+                </div>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                    시스템 설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <h1 class="page-title">포인트 관리</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="회원 검색..." id="memberSearch" oninput="searchMembers()">
+                    </div>
+                    <a href="../index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                            <polyline points="15,3 21,3 21,9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-area">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('rpay')">W페이</button>
+                    <button class="tab-btn" onclick="switchTab('ppoint')">P포인트</button>
+                    <button class="tab-btn" onclick="switchTab('cpoint')">C포인트</button>
+                    <button class="tab-btn" onclick="switchTab('tpoint')">T포인트</button>
+                    <button class="tab-btn" onclick="switchTab('withdrawals')">출금관리</button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid" id="pointStats">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 W페이 잔액</h3>
+                            <div class="stat-value" id="statTotalRPay">₩0</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 P포인트 잔액</h3>
+                            <div class="stat-value" id="statTotalPPoint">$0</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 C포인트 잔액</h3>
+                            <div class="stat-value" id="statTotalCPoint">$0</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M8 12h8"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>대기 중 출금</h3>
+                            <div class="stat-value" id="statPendingWithdrawals">0건</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: W페이 -->
+                <div class="tab-content" id="tab-rpay">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">W페이 회원별 잔액</h2>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>회원</th>
+                                            <th>유형</th>
+                                            <th>W페이 잔액</th>
+                                            <th>관리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rpayTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: P포인트 -->
+                <div class="tab-content" id="tab-ppoint" style="display: none;">
+                    <div class="card">
+                        <div class="card-header d-flex justify-between align-center">
+                            <h2 class="card-title">P포인트 적립 대기 주문</h2>
+                            <button class="btn btn-primary btn-sm" onclick="processAllPPoints()">전체 적립 처리</button>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>주문번호</th>
+                                            <th>회원</th>
+                                            <th>총 PV</th>
+                                            <th>예상 적립</th>
+                                            <th>배송완료일</th>
+                                            <th>상태</th>
+                                            <th>관리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ppointTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: C포인트 -->
+                <div class="tab-content" id="tab-cpoint" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">C포인트 직접 부여</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">회원 선택</label>
+                                    <select class="form-control form-select" id="cpointMemberSelect">
+                                        <option value="">회원을 선택하세요</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">부여 금액 (USD)</label>
+                                    <input type="number" class="form-control" id="cpointAmount" placeholder="0" min="1">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">부여 사유</label>
+                                <input type="text" class="form-control" id="cpointReason" placeholder="부여 사유를 입력하세요">
+                            </div>
+                            <button class="btn btn-primary" onclick="grantCPoint()">C포인트 부여</button>
+                        </div>
+                    </div>
+
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <h2 class="card-title">C포인트 회원별 잔액</h2>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>회원</th>
+                                            <th>유형</th>
+                                            <th>C포인트 잔액</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cpointTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: T포인트 -->
+                <div class="tab-content" id="tab-tpoint" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">T포인트 직접 부여</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">회원 선택</label>
+                                    <select class="form-control form-select" id="tpointMemberSelect">
+                                        <option value="">회원을 선택하세요</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">부여 금액 (USD)</label>
+                                    <input type="number" class="form-control" id="tpointAmount" placeholder="0" min="1">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">부여 사유</label>
+                                <input type="text" class="form-control" id="tpointReason" placeholder="부여 사유를 입력하세요">
+                            </div>
+                            <button class="btn btn-primary" onclick="grantTPoint()">T포인트 부여</button>
+                        </div>
+                    </div>
+
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <h2 class="card-title">T포인트 회원별 잔액</h2>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>회원</th>
+                                            <th>유형</th>
+                                            <th>T포인트 잔액</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tpointTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: 출금관리 -->
+                <div class="tab-content" id="tab-withdrawals" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">출금 신청 목록</h2>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>신청번호</th>
+                                            <th>회원</th>
+                                            <th>금액 (USD)</th>
+                                            <th>금액 (KRW)</th>
+                                            <th>은행정보</th>
+                                            <th>신청일</th>
+                                            <th>상태</th>
+                                            <th>관리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="withdrawalsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Log -->
+                <div class="card mt-2">
+                    <div class="card-header">
+                        <h2 class="card-title">최근 포인트 거래 내역</h2>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>회원</th>
+                                        <th>유형</th>
+                                        <th>포인트</th>
+                                        <th>금액</th>
+                                        <th>설명</th>
+                                        <th>일시</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-main);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .tabs {
+                flex-wrap: wrap;
+            }
+            .tab-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        .point-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .point-badge.rpay { background: rgba(76, 175, 80, 0.1); color: #4caf50; }
+        .point-badge.ppoint { background: rgba(33, 150, 243, 0.1); color: #2196f3; }
+        .point-badge.cpoint { background: rgba(255, 152, 0, 0.1); color: #ff9800; }
+        .point-badge.tpoint { background: rgba(156, 39, 176, 0.1); color: #9c27b0; }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        let currentTab = 'rpay';
+        let memberSearchTerm = '';
+
+        async function initPointsPage() {
+            await updatePointStats();
+            await populateMemberSelects();
+            await renderCurrentTab();
+            await renderTransactions();
+        }
+
+        async function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tab).style.display = 'block';
+
+            await renderCurrentTab();
+        }
+
+        async function renderCurrentTab() {
+            switch(currentTab) {
+                case 'rpay': await renderRPayTable(); break;
+                case 'ppoint': await renderPPointTable(); break;
+                case 'cpoint': await renderCPointTable(); break;
+                case 'tpoint': await renderTPointTable(); break;
+                case 'withdrawals': await renderWithdrawalsTable(); break;
+            }
+        }
+
+        async function searchMembers() {
+            memberSearchTerm = document.getElementById('memberSearch').value.trim().toLowerCase();
+            await renderCurrentTab();
+        }
+
+        async function updatePointStats() {
+            const members = await weverseData.getMembers();
+            let totalRPay = 0, totalPPoint = 0, totalCPoint = 0;
+
+            members.forEach(m => {
+                if (m.points) {
+                    totalRPay += m.points.rPay || 0;
+                    totalPPoint += m.points.pPoint || 0;
+                    totalCPoint += m.points.cPoint || 0;
+                }
+            });
+
+            const pendingWithdrawals = (await weverseData.getPendingWithdrawals()).length;
+
+            document.getElementById('statTotalRPay').textContent = '₩' + totalRPay.toLocaleString();
+            document.getElementById('statTotalPPoint').textContent = '$' + totalPPoint.toLocaleString();
+            document.getElementById('statTotalCPoint').textContent = '$' + totalCPoint.toLocaleString();
+            document.getElementById('statPendingWithdrawals').textContent = pendingWithdrawals + '건';
+        }
+
+        async function populateMemberSelects() {
+            const members = await weverseData.getMembers();
+            const options = members.map(m => `<option value="${m.id}">${m.name} (${m.username || m.id})</option>`).join('');
+
+            document.getElementById('cpointMemberSelect').innerHTML = '<option value="">회원을 선택하세요</option>' + options;
+            document.getElementById('tpointMemberSelect').innerHTML = '<option value="">회원을 선택하세요</option>' + options;
+        }
+
+        async function renderRPayTable() {
+            let members = await weverseData.getMembers();
+            if (memberSearchTerm) {
+                members = members.filter(m =>
+                    m.name.toLowerCase().includes(memberSearchTerm) ||
+                    (m.username && m.username.toLowerCase().includes(memberSearchTerm))
+                );
+            }
+
+            const tbody = document.getElementById('rpayTableBody');
+            tbody.innerHTML = members.map(m => {
+                const points = m.points || { rPay: 0 };
+
+                return `
+                    <tr>
+                        <td><span class="fw-500">${m.name}</span><br><small class="text-muted">${m.username || m.id}</small></td>
+                        <td><span class="status-badge" style="background: rgba(100,181,246,0.1); color: #2196f3;">회원</span></td>
+                        <td class="fw-600">₩${(points.rPay || 0).toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-outline btn-sm" onclick="chargeRPay('${m.id}')">충전</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function renderPPointTable() {
+            const allOrders = await weverseData.getOrders();
+            const orders = allOrders.filter(o =>
+                o.status === 'delivered' && !o.pvProcessed
+            );
+
+            const tbody = document.getElementById('ppointTableBody');
+            const settings = await weverseData.getSettings();
+
+            const members = await weverseData.getMembers();
+            const rows = [];
+            for (const o of orders) {
+                const member = members.find(m => m.id === o.customer?.memberId);
+                if (!member) continue;
+
+                const expectedPPoint = (o.totalPV || 0) * (settings.pPointRate / 100);
+
+                rows.push(`
+                    <tr>
+                        <td class="fw-500">${o.id}</td>
+                        <td>${member.name}</td>
+                        <td class="fw-600">${o.totalPV || 0} PV</td>
+                        <td class="fw-600" style="color: var(--primary);">$${expectedPPoint.toFixed(2)}</td>
+                        <td>${o.deliveryDate || '-'}</td>
+                        <td><span class="status-badge pending">대기중</span></td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="processPPoint('${o.id}')">적립처리</button>
+                        </td>
+                    </tr>
+                `);
+            }
+            tbody.innerHTML = rows.join('');
+        }
+
+        async function renderCPointTable() {
+            let members = await weverseData.getMembers();
+            if (memberSearchTerm) {
+                members = members.filter(m =>
+                    m.name.toLowerCase().includes(memberSearchTerm) ||
+                    (m.username && m.username.toLowerCase().includes(memberSearchTerm))
+                );
+            }
+
+            const tbody = document.getElementById('cpointTableBody');
+            tbody.innerHTML = members.map(m => {
+                const points = m.points || { cPoint: 0 };
+
+                return `
+                    <tr>
+                        <td><span class="fw-500">${m.name}</span><br><small class="text-muted">${m.username || m.id}</small></td>
+                        <td><span class="status-badge" style="background: rgba(100,181,246,0.1); color: #2196f3;">회원</span></td>
+                        <td class="fw-600" style="color: #ff9800;">$${(points.cPoint || 0).toLocaleString()}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function renderTPointTable() {
+            let members = await weverseData.getMembers();
+            if (memberSearchTerm) {
+                members = members.filter(m =>
+                    m.name.toLowerCase().includes(memberSearchTerm) ||
+                    (m.username && m.username.toLowerCase().includes(memberSearchTerm))
+                );
+            }
+
+            const tbody = document.getElementById('tpointTableBody');
+            tbody.innerHTML = members.map(m => {
+                const points = m.points || { tPoint: 0 };
+
+                return `
+                    <tr>
+                        <td><span class="fw-500">${m.name}</span><br><small class="text-muted">${m.username || m.id}</small></td>
+                        <td><span class="status-badge" style="background: rgba(100,181,246,0.1); color: #2196f3;">회원</span></td>
+                        <td class="fw-600" style="color: #9c27b0;">$${(points.tPoint || 0).toLocaleString()}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function renderWithdrawalsTable() {
+            const withdrawals = await weverseData.getWithdrawals();
+            const tbody = document.getElementById('withdrawalsTableBody');
+
+            const statusMap = {
+                'pending': { class: 'pending', text: '대기중' },
+                'approved': { class: 'active', text: '승인' },
+                'rejected': { class: 'inactive', text: '거절' }
+            };
+
+            tbody.innerHTML = withdrawals.map(w => {
+                const status = statusMap[w.status] || statusMap['pending'];
+                const bankInfo = w.bankInfo ? `${w.bankInfo.bankName} ${w.bankInfo.accountNumber}` : '-';
+                const requestDate = new Date(w.requestedAt).toLocaleDateString('ko-KR');
+
+                return `
+                    <tr>
+                        <td class="fw-500">${w.id}</td>
+                        <td>${w.memberName}</td>
+                        <td class="fw-600">$${w.amount.toLocaleString()}</td>
+                        <td>₩${w.amountKRW.toLocaleString()}</td>
+                        <td style="font-size: 0.85rem;">${bankInfo}</td>
+                        <td>${requestDate}</td>
+                        <td><span class="status-badge ${status.class}">${status.text}</span></td>
+                        <td>
+                            ${w.status === 'pending' ? `
+                                <button class="btn btn-primary btn-sm" onclick="approveWithdrawal('${w.id}')">승인</button>
+                                <button class="btn btn-outline btn-sm" onclick="rejectWithdrawal('${w.id}')" style="color: #dc3545;">거절</button>
+                            ` : '-'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function renderTransactions() {
+            const allTransactions = await weverseData.getPointTransactions();
+            const transactions = allTransactions.slice(0, 20);
+            const tbody = document.getElementById('transactionsTableBody');
+            const members = await weverseData.getMembers();
+
+            const typeMap = {
+                'rPay': { class: 'rpay', text: 'W페이' },
+                'pPoint': { class: 'ppoint', text: 'P포인트' },
+                'cPoint': { class: 'cpoint', text: 'C포인트' },
+                'tPoint': { class: 'tpoint', text: 'T포인트' }
+            };
+
+            tbody.innerHTML = transactions.map(t => {
+                const member = members.find(m => m.id === t.memberId);
+                const pointType = typeMap[t.pointType] || { class: '', text: t.pointType };
+                const date = new Date(t.createdAt).toLocaleString('ko-KR');
+                const amountPrefix = t.amount >= 0 ? '+' : '';
+                const amountClass = t.amount >= 0 ? 'color: #4caf50;' : 'color: #dc3545;';
+                const unit = t.pointType === 'rPay' ? '₩' : '$';
+
+                return `
+                    <tr>
+                        <td style="font-size: 0.85rem;">${t.id}</td>
+                        <td>${member?.name || '-'}</td>
+                        <td>${t.type}</td>
+                        <td><span class="point-badge ${pointType.class}">${pointType.text}</span></td>
+                        <td class="fw-600" style="${amountClass}">${amountPrefix}${unit}${Math.abs(t.amount).toLocaleString()}</td>
+                        <td style="font-size: 0.85rem;">${t.description || '-'}</td>
+                        <td style="font-size: 0.8rem; color: var(--text-secondary);">${date}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // W페이 충전
+        async function chargeRPay(memberId) {
+            const amount = prompt('충전할 W페이 금액 (원)을 입력하세요:');
+            if (amount && !isNaN(amount) && parseInt(amount) > 0) {
+                const result = await weverseData.chargeRPay(memberId, parseInt(amount));
+                if (result && !result.error) {
+                    showToast('W페이가 충전되었습니다.');
+                    await updatePointStats();
+                    await renderCurrentTab();
+                    await renderTransactions();
+                } else {
+                    showToast(result?.error || '충전에 실패했습니다.');
+                }
+            }
+        }
+
+        // P포인트 적립 처리
+        async function processPPoint(orderId) {
+            if (confirm('이 주문에 대한 P포인트를 적립 처리하시겠습니까?')) {
+                const result = await weverseData.processPPointEarning(orderId);
+                if (result.success) {
+                    showToast(`$${result.pPointAmount.toFixed(2)} P포인트가 적립되었습니다.`);
+                    await updatePointStats();
+                    await renderCurrentTab();
+                    await renderTransactions();
+                } else {
+                    showToast(result.error || '적립 처리에 실패했습니다.');
+                }
+            }
+        }
+
+        // 전체 P포인트 적립 처리
+        async function processAllPPoints() {
+            const allOrders = await weverseData.getOrders();
+            const orders = allOrders.filter(o =>
+                o.status === 'delivered' && !o.pvProcessed
+            );
+
+            if (orders.length === 0) {
+                showToast('적립 처리할 주문이 없습니다.');
+                return;
+            }
+
+            if (confirm(`${orders.length}건의 주문을 모두 적립 처리하시겠습니까?`)) {
+                const members = await weverseData.getMembers();
+                let successCount = 0;
+                for (const o of orders) {
+                    const member = members.find(m => m.id === o.customer?.memberId);
+                    if (member) {
+                        const result = await weverseData.processPPointEarning(o.id);
+                        if (result.success) successCount++;
+                    }
+                }
+
+                showToast(`${successCount}건의 P포인트 적립이 완료되었습니다.`);
+                await updatePointStats();
+                await renderCurrentTab();
+                await renderTransactions();
+            }
+        }
+
+        // C포인트 부여
+        async function grantCPoint() {
+            const memberId = document.getElementById('cpointMemberSelect').value;
+            const amount = parseInt(document.getElementById('cpointAmount').value);
+            const reason = document.getElementById('cpointReason').value.trim();
+
+            if (!memberId) {
+                showToast('회원을 선택해주세요.');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showToast('유효한 금액을 입력해주세요.');
+                return;
+            }
+
+            const result = await weverseData.grantCPoint(memberId, amount, reason || 'C포인트 부여');
+            if (result && !result.error) {
+                showToast('C포인트가 부여되었습니다.');
+                document.getElementById('cpointAmount').value = '';
+                document.getElementById('cpointReason').value = '';
+                await updatePointStats();
+                await renderCurrentTab();
+                await renderTransactions();
+            } else {
+                showToast(result?.error || '부여에 실패했습니다.');
+            }
+        }
+
+        // T포인트 부여
+        async function grantTPoint() {
+            const memberId = document.getElementById('tpointMemberSelect').value;
+            const amount = parseInt(document.getElementById('tpointAmount').value);
+            const reason = document.getElementById('tpointReason').value.trim();
+
+            if (!memberId) {
+                showToast('회원을 선택해주세요.');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showToast('유효한 금액을 입력해주세요.');
+                return;
+            }
+
+            const result = await weverseData.grantTPoint(memberId, amount, reason || 'T포인트 부여');
+            if (result && !result.error) {
+                showToast('T포인트가 부여되었습니다.');
+                document.getElementById('tpointAmount').value = '';
+                document.getElementById('tpointReason').value = '';
+                await updatePointStats();
+                await renderCurrentTab();
+                await renderTransactions();
+            } else {
+                showToast(result?.error || '부여에 실패했습니다.');
+            }
+        }
+
+        // 출금 승인
+        async function approveWithdrawal(withdrawalId) {
+            const note = prompt('승인 메모를 입력하세요 (선택):') || '';
+            const result = await weverseData.processWithdrawal(withdrawalId, 'approve', note);
+            if (result && !result.error) {
+                showToast('출금이 승인되었습니다.');
+                await updatePointStats();
+                await renderCurrentTab();
+                await renderTransactions();
+            } else {
+                showToast(result?.error || '처리에 실패했습니다.');
+            }
+        }
+
+        // 출금 거절
+        async function rejectWithdrawal(withdrawalId) {
+            const note = prompt('거절 사유를 입력하세요:');
+            if (note === null) return;
+
+            const result = await weverseData.processWithdrawal(withdrawalId, 'reject', note);
+            if (result && !result.error) {
+                showToast('출금이 거절되었습니다. P포인트가 환불됩니다.');
+                await updatePointStats();
+                await renderCurrentTab();
+                await renderTransactions();
+            } else {
+                showToast(result?.error || '처리에 실패했습니다.');
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initPointsPage);
+    </script>
+</body>
+</html>

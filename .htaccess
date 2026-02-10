@@ -1,0 +1,9 @@
+# Directory index
+DirectoryIndex index.html
+
+# Add trailing slash to directories
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !/$
+RewriteRule ^(.*)$ %{REQUEST_URI}/ [L,R=301]

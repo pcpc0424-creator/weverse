@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리 - WEVERSE 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">WE<span>V</span>ERSE</a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인</div>
+                </div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    대시보드
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">관리</div>
+                </div>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    상품 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    주문 관리
+                </a>
+                <a href="members.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    회원 관리
+                </a>
+                <a href="points.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    포인트 관리
+                </a>
+                <a href="ppoint-earning.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    P포인트 적립 상세
+                </a>
+                <a href="statistics.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    통계
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">시스템</div>
+                </div>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                    시스템 설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <h1 class="page-title">회원 관리</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="회원 검색..." id="memberSearch" oninput="searchMembers()">
+                    </div>
+                    <a href="../index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                            <polyline points="15,3 21,3 21,9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-area">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 회원</h3>
+                            <div class="stat-value" id="statTotalMembers">0명</div>
+                            <div class="stat-change positive">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/>
+                                    <polyline points="17,6 23,6 23,12"/>
+                                </svg>
+                                활성 회원
+                            </div>
+                        </div>
+                        <div class="stat-icon customers">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 010 7.75"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>활성 회원</h3>
+                            <div class="stat-value" id="statActiveMembers">0명</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                <polyline points="22,4 12,14.01 9,11.01"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>이번 달 신규</h3>
+                            <div class="stat-value" id="statNewMembers">0명</div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/>
+                                <line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="card">
+                    <div class="card-body d-flex align-center justify-between">
+                        <div class="d-flex align-center gap-2">
+                            <select class="form-control form-select" style="width: 140px;" id="memberStatusFilter" onchange="renderMembers()">
+                                <option value="">전체 상태</option>
+                                <option value="active">활성</option>
+                                <option value="inactive">비활성</option>
+                            </select>
+                        </div>
+                        <div class="d-flex align-center gap-2">
+                            <button class="btn btn-outline" onclick="exportMembers()">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                    <polyline points="7,10 12,15 17,10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                내보내기
+                            </button>
+                            <button class="btn btn-primary" onclick="openAddMemberModal()">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                    <circle cx="8.5" cy="7" r="4"/>
+                                    <line x1="20" y1="8" x2="20" y2="14"/>
+                                    <line x1="23" y1="11" x2="17" y2="11"/>
+                                </svg>
+                                회원 추가
+                            </button>
+                            <button class="btn btn-outline" onclick="openExcelUploadModal()" style="margin-left: 0.5rem;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                엑셀 일괄등록
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">전체 회원</h2>
+                        <span class="text-muted" id="memberCount">총 0명</span>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table" id="membersTable">
+                                <thead>
+                                    <tr>
+                                        <th>회원</th>
+                                        <th>아이디</th>
+                                        <th>추천인</th>
+                                        <th>등급</th>
+                                        <th>포인트 잔액</th>
+                                        <th>총 주문</th>
+                                        <th>총 구매액</th>
+                                        <th>가입일</th>
+                                        <th>상태</th>
+                                        <th>관리</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="membersTableBody">
+                                    <!-- Members will be loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="pagination">
+                            <div class="pagination-info" id="memberPaginationInfo">0명 중 0-0 표시</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Member Detail Modal -->
+    <div class="modal-overlay" id="memberDetailModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">회원 상세 정보</h3>
+                <button class="modal-close" onclick="closeModal('memberDetailModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <div class="sidebar-user-avatar" id="modalMemberAvatar" style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 1rem;">-</div>
+                    <h3 style="margin-bottom: 0.25rem;" id="modalMemberName">-</h3>
+                    <span class="status-badge" id="modalMemberTier" style="background: rgba(255,152,0,0.1); color: #ff9800;">-</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="padding: 1rem; background: var(--bg-main); border-radius: var(--radius-sm);">
+                        <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 0.25rem;">총 주문</div>
+                        <div class="fw-600" style="font-size: 1.25rem;" id="modalMemberOrders">0건</div>
+                    </div>
+                    <div style="padding: 1rem; background: var(--bg-main); border-radius: var(--radius-sm);">
+                        <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 0.25rem;">총 구매액</div>
+                        <div class="fw-600" style="font-size: 1.25rem;" id="modalMemberSpent">₩0</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">회원 정보</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.5;">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <span>아이디: <code style="background: var(--bg-main); padding: 0.2rem 0.5rem; border-radius: 4px;" id="modalMemberUsername">-</code></span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.5;">
+                                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <path d="M20 8v6M23 11h-6"/>
+                            </svg>
+                            <span>추천인: <span id="modalMemberReferrer" style="font-weight: 500;">-</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">계정 정보</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
+                        <div class="text-muted">가입일</div>
+                        <div id="modalMemberJoinDate">-</div>
+                        <div class="text-muted">최근 주문</div>
+                        <div id="modalMemberLastOrder">-</div>
+                        <div class="text-muted">상태</div>
+                        <div><span class="status-badge active" id="modalMemberStatus">-</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('memberDetailModal')">닫기</button>
+                <a href="orders.html" class="btn btn-primary">주문 내역 보기</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div class="modal-overlay" id="editMemberModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">회원 정보 수정</h3>
+                <button class="modal-close" onclick="closeModal('editMemberModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editMemberForm">
+                    <input type="hidden" id="editMemberId">
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">이름 *</label>
+                            <input type="text" class="form-control" id="editMemberName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">아이디 *</label>
+                            <input type="text" class="form-control" id="editMemberUsername" required pattern="[a-zA-Z0-9_]+" minlength="4">
+                            <small style="color: var(--text-light); font-size: 0.75rem;">영문, 숫자, 밑줄만 가능</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">추천인</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" class="form-control" id="editMemberReferrer" placeholder="추천인 아이디 입력">
+                            <button type="button" class="btn btn-outline" onclick="verifyEditReferrer()" style="white-space: nowrap;">확인</button>
+                        </div>
+                        <div id="editReferrerResult" style="font-size: 0.8rem; margin-top: 0.5rem;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">등급</label>
+                        <select class="form-control form-select" id="editMemberRank">
+                            <option value="general">일반</option>
+                            <option value="manager">매니저</option>
+                            <option value="diamond">다이아몬드</option>
+                            <option value="blue_diamond">블루다이아몬드</option>
+                            <option value="red_diamond">레드다이아몬드</option>
+                            <option value="crown_diamond">크라운다이아몬드</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상태</label>
+                        <select class="form-control form-select" id="editMemberStatus">
+                            <option value="active">활성</option>
+                            <option value="inactive">비활성</option>
+                        </select>
+                    </div>
+                    <div style="border-top: 1px solid var(--border); margin-top: 1rem; padding-top: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">새 비밀번호 (변경 시에만 입력)</label>
+                            <input type="password" class="form-control" id="editMemberPassword" placeholder="변경하려면 새 비밀번호 입력">
+                            <small style="color: var(--text-light); font-size: 0.75rem;">비워두면 기존 비밀번호가 유지됩니다.</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editMemberModal')">취소</button>
+                <button class="btn btn-primary" onclick="saveMember()">저장</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div class="modal-overlay" id="addMemberModal">
+        <div class="modal" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3 class="modal-title">새 회원 추가</h3>
+                <button class="modal-close" onclick="closeModal('addMemberModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addMemberForm">
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">이름 *</label>
+                            <input type="text" class="form-control" id="addMemberName" placeholder="홍길동" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">아이디 *</label>
+                            <input type="text" class="form-control" id="addMemberUsername" placeholder="ID" required pattern="[a-zA-Z0-9_]+" minlength="4">
+                            <small style="color: var(--text-light); font-size: 0.75rem;">영문, 숫자, 밑줄만 가능 (4자 이상)</small>
+                        </div>
+                    </div>
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">비밀번호 *</label>
+                            <input type="password" class="form-control" id="addMemberPassword" placeholder="********" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">추천인 (아이디)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" class="form-control" id="addMemberReferrer" placeholder="추천인 아이디 입력">
+                            <button type="button" class="btn btn-outline" onclick="verifyAddReferrer()" style="white-space: nowrap;">확인</button>
+                        </div>
+                        <div id="addReferrerResult" style="font-size: 0.8rem; margin-top: 0.5rem;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">등급</label>
+                        <select class="form-control form-select" id="addMemberRank">
+                            <option value="general">일반</option>
+                            <option value="manager">매니저</option>
+                            <option value="diamond">다이아몬드</option>
+                            <option value="blue_diamond">블루다이아몬드</option>
+                            <option value="red_diamond">레드다이아몬드</option>
+                            <option value="crown_diamond">크라운다이아몬드</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상태</label>
+                        <select class="form-control form-select" id="addMemberStatus">
+                            <option value="active">활성</option>
+                            <option value="inactive">비활성</option>
+                        </select>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border); margin: 1.5rem 0; padding-top: 1.5rem;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-secondary);">초기 포인트 설정 (선택사항)</h4>
+                        <div class="form-row" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;">
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.75rem;">W페이 (원)</label>
+                                <input type="number" class="form-control" id="addMemberRPay" placeholder="0" min="0" value="0" style="font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.75rem;">P포인트 ($)</label>
+                                <input type="number" class="form-control" id="addMemberPPoint" placeholder="0" min="0" step="0.01" value="0" style="font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.75rem;">C포인트 ($)</label>
+                                <input type="number" class="form-control" id="addMemberCPoint" placeholder="0" min="0" step="0.01" value="0" style="font-size: 0.9rem;">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="font-size: 0.75rem;">T포인트 ($)</label>
+                                <input type="number" class="form-control" id="addMemberTPoint" placeholder="0" min="0" step="0.01" value="0" style="font-size: 0.9rem;">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('addMemberModal')">취소</button>
+                <button class="btn btn-primary" onclick="addNewMember()">회원 추가</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Excel Upload Modal -->
+    <div class="modal-overlay" id="excelUploadModal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 class="modal-title">엑셀 일괄 등록</h3>
+                <button class="modal-close" onclick="closeModal('excelUploadModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--text-primary);">1. 엑셀 양식 다운로드</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                        아래 버튼을 클릭하여 회원 등록용 엑셀 양식을 다운로드하세요.
+                    </p>
+                    <button class="btn btn-outline" onclick="downloadExcelTemplate()" style="width: 100%;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        엑셀 양식 다운로드 (.xlsx)
+                    </button>
+                </div>
+
+                <div style="border-top: 1px solid var(--border); padding-top: 1.5rem; margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--text-primary);">2. 엑셀 파일 업로드</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                        작성한 엑셀 파일을 선택하여 업로드하세요. (.xlsx, .xls 지원)
+                    </p>
+                    <div id="excelDropZone" style="border: 2px dashed var(--border); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s;"
+                         onclick="document.getElementById('excelFileInput').click()"
+                         ondragover="handleDragOver(event)"
+                         ondragleave="handleDragLeave(event)"
+                         ondrop="handleDrop(event)">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="1.5" style="margin-bottom: 0.75rem;">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <line x1="9" y1="15" x2="15" y2="15"/>
+                        </svg>
+                        <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">파일을 드래그하거나 클릭하여 선택</p>
+                        <p style="font-size: 0.8rem; color: var(--text-light);" id="selectedFileName">선택된 파일 없음</p>
+                    </div>
+                    <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;" onchange="handleFileSelect(event)">
+                </div>
+
+                <div id="excelPreview" style="display: none; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: var(--text-primary);">3. 미리보기</h4>
+                    <div style="background: var(--bg-main); border-radius: 8px; padding: 1rem; max-height: 200px; overflow-y: auto;">
+                        <table class="data-table" id="excelPreviewTable" style="font-size: 0.8rem;">
+                            <thead id="excelPreviewHead"></thead>
+                            <tbody id="excelPreviewBody"></tbody>
+                        </table>
+                    </div>
+                    <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-secondary);">
+                        <span id="excelRowCount">0</span>명의 회원이 등록됩니다.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('excelUploadModal')">취소</button>
+                <button class="btn btn-primary" id="excelUploadBtn" onclick="processExcelUpload()" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    일괄 등록
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grant Points Modal -->
+    <div class="modal-overlay" id="grantPointsModal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3 class="modal-title">포인트 부여</h3>
+                <button class="modal-close" onclick="closeModal('grantPointsModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="grantPointsMemberId">
+
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-main); border-radius: 8px;">
+                    <div class="sidebar-user-avatar" id="grantPointsMemberAvatar" style="width: 60px; height: 60px; font-size: 1.5rem; margin: 0 auto 0.75rem;">-</div>
+                    <h4 style="margin: 0;" id="grantPointsMemberName">-</h4>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                        <code id="grantPointsMemberUsername" style="background: var(--bg-card); padding: 0.15rem 0.4rem; border-radius: 3px;">-</code>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-main); border-radius: 8px;">
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">현재 포인트 잔액</div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.85rem;">
+                        <div>W페이: <span class="fw-600" id="grantPointsCurrentRPay">₩0</span></div>
+                        <div>P포인트: <span class="fw-600" id="grantPointsCurrentPPoint">$0</span></div>
+                        <div>C포인트: <span class="fw-600" id="grantPointsCurrentCPoint">$0</span></div>
+                        <div>T포인트: <span class="fw-600" id="grantPointsCurrentTPoint">$0</span></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">포인트 종류 *</label>
+                    <select class="form-control form-select" id="grantPointsType">
+                        <option value="pPoint">P포인트 ($)</option>
+                        <option value="rPay">W페이 (원)</option>
+                        <option value="cPoint">C포인트 ($)</option>
+                        <option value="tPoint">T포인트 ($)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">부여 금액 *</label>
+                    <input type="number" class="form-control" id="grantPointsAmount" placeholder="0" min="0" step="0.01" required>
+                    <small style="color: var(--text-light); font-size: 0.75rem;">음수 입력 시 차감됩니다.</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">사유 (선택)</label>
+                    <input type="text" class="form-control" id="grantPointsDescription" placeholder="예: 이벤트 보상, 구매 보너스 등">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('grantPointsModal')">취소</button>
+                <button class="btn btn-primary" onclick="grantPoints()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="16"/>
+                        <line x1="8" y1="12" x2="16" y2="12"/>
+                    </svg>
+                    포인트 부여
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SheetJS Library for Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        let currentViewMember = null;
+
+        // Rank display configuration
+        const RANK_DISPLAY = {
+            'general': { name: '일반', color: '#6b7280', bgColor: 'rgba(107,114,128,0.1)', symbol: null },
+            'manager': { name: '매니저', color: '#10b981', bgColor: 'rgba(16,185,129,0.1)', symbol: null },
+            'diamond': { name: '다이아몬드', color: '#a855f7', bgColor: 'rgba(168,85,247,0.1)', symbol: 'diamond' },
+            'blue_diamond': { name: '블루다이아몬드', color: '#3b82f6', bgColor: 'rgba(59,130,246,0.1)', symbol: 'diamond' },
+            'red_diamond': { name: '레드다이아몬드', color: '#ef4444', bgColor: 'rgba(239,68,68,0.1)', symbol: 'diamond' },
+            'crown_diamond': { name: '크라운다이아몬드', color: '#f59e0b', bgColor: 'rgba(245,158,11,0.1)', symbol: 'crown' }
+        };
+
+        // Get rank badge HTML with symbol
+        function getRankBadgeHtml(rank) {
+            const info = RANK_DISPLAY[rank] || RANK_DISPLAY['general'];
+            let symbolHtml = '';
+
+            if (info.symbol === 'diamond') {
+                symbolHtml = `<svg width="12" height="12" viewBox="0 0 24 24" fill="${info.color}" style="margin-right: 4px;">
+                    <path d="M12 2L2 9l10 13 10-13L12 2z"/>
+                </svg>`;
+            } else if (info.symbol === 'crown') {
+                symbolHtml = `<svg width="14" height="14" viewBox="0 0 24 24" fill="${info.color}" style="margin-right: 4px;">
+                    <path d="M2 19h20v3H2v-3zm2-7l3 7h10l3-7-5 3-3-6-3 6-5-3zm3-3c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm8 0c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm-4-4c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z"/>
+                </svg>`;
+            }
+
+            return `<span class="rank-badge" style="display: inline-flex; align-items: center; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 500; background: ${info.bgColor}; color: ${info.color};">
+                ${symbolHtml}${info.name}
+            </span>`;
+        }
+
+        // Initialize members page
+        async function initMembersPage() {
+            console.log('initMembersPage 시작');
+            try {
+                await updateMemberStats();
+                console.log('updateMemberStats 완료');
+                await renderMembers();
+                console.log('renderMembers 완료');
+            } catch (error) {
+                console.error('initMembersPage 에러:', error);
+            }
+        }
+
+        // Update member stats
+        async function updateMemberStats() {
+            const stats = await weverseData.getMemberStats();
+            document.getElementById('statTotalMembers').textContent = stats.total + '명';
+            document.getElementById('statActiveMembers').textContent = stats.active + '명';
+            document.getElementById('statNewMembers').textContent = stats.newThisMonth + '명';
+        }
+
+        // Render members table
+        let memberSearchTerm = '';
+
+        function searchMembers() {
+            memberSearchTerm = document.getElementById('memberSearch').value.trim().toLowerCase();
+            renderMembers();
+        }
+
+        async function renderMembers() {
+            let members = await weverseData.getMembers();
+
+            // Apply search filter
+            if (memberSearchTerm) {
+                members = members.filter(m =>
+                    m.name.toLowerCase().includes(memberSearchTerm) ||
+                    (m.username && m.username.toLowerCase().includes(memberSearchTerm))
+                );
+            }
+
+            // Apply status filter
+            const statusFilter = document.getElementById('memberStatusFilter')?.value;
+            if (statusFilter) {
+                members = members.filter(m => m.status === statusFilter);
+            }
+
+            const tbody = document.getElementById('membersTableBody');
+            const memberCount = document.getElementById('memberCount');
+            const paginationInfo = document.getElementById('memberPaginationInfo');
+
+            if (!tbody) return;
+
+            memberCount.textContent = `총 ${members.length}명`;
+            paginationInfo.textContent = `${members.length}명 중 1-${members.length} 표시`;
+
+            tbody.innerHTML = members.map(member => {
+                const statusClass = member.status === 'active' ? 'active' : 'inactive';
+                const statusText = member.status === 'active' ? '활성' : '비활성';
+                const nameInitials = member.name.substring(0, 2);
+                const joinDate = new Date(member.joinDate).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }).replace(/\. /g, '.').replace('.', '');
+
+                // Points summary
+                const points = member.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
+                const pointsSummary = `R₩${(points.rPay || 0).toLocaleString()} / P$${points.pPoint || 0}`;
+
+                // Rank display
+                const rankHtml = getRankBadgeHtml(member.rank);
+
+                // Referrer display
+                const referrerHtml = member.referrer
+                    ? `<span style="font-size: 0.85rem;">${member.referrer.name}<br><code style="background: var(--bg-main); padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.75rem;">${member.referrer.username}</code></span>`
+                    : '<span style="color: var(--text-light);">-</span>';
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-center gap-1">
+                                <div class="sidebar-user-avatar" style="width: 36px; height: 36px; font-size: 0.8rem;">${nameInitials}</div>
+                                <span class="fw-500">${member.name}</span>
+                            </div>
+                        </td>
+                        <td><code style="background: var(--bg-main); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem;">${member.username || '-'}</code></td>
+                        <td>${referrerHtml}</td>
+                        <td>${rankHtml}</td>
+                        <td style="font-size: 0.85rem;">${pointsSummary}</td>
+                        <td>${member.orderCount}건</td>
+                        <td class="fw-600">₩${member.totalSpent.toLocaleString()}</td>
+                        <td>${joinDate}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" title="상세보기" onclick="viewMemberDetail('${member.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn" title="포인트 부여" onclick="openGrantPointsModal('${member.id}')" style="color: #2196f3;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="12" y1="8" x2="12" y2="16"/>
+                                        <line x1="8" y1="12" x2="16" y2="12"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn" title="정보수정" onclick="openEditMember('${member.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn" title="회원탈퇴" onclick="deleteMember('${member.id}')" style="color: #dc3545;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                                        <line x1="10" y1="11" x2="10" y2="17"/>
+                                        <line x1="14" y1="11" x2="14" y2="17"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // View member detail
+        async function viewMemberDetail(memberId) {
+            currentViewMember = await weverseData.getMemberById(memberId);
+            if (!currentViewMember) return;
+
+            const nameInitials = currentViewMember.name.substring(0, 2);
+            const rankInfo = RANK_DISPLAY[currentViewMember.rank] || RANK_DISPLAY['general'];
+
+            document.getElementById('modalMemberAvatar').textContent = nameInitials;
+            document.getElementById('modalMemberName').textContent = currentViewMember.name;
+            document.getElementById('modalMemberTier').textContent = rankInfo.name;
+            document.getElementById('modalMemberTier').style.background = rankInfo.bgColor;
+            document.getElementById('modalMemberTier').style.color = rankInfo.color;
+            document.getElementById('modalMemberOrders').textContent = currentViewMember.orderCount + '건';
+            document.getElementById('modalMemberSpent').textContent = '₩' + currentViewMember.totalSpent.toLocaleString();
+            document.getElementById('modalMemberUsername').textContent = currentViewMember.username || '-';
+            document.getElementById('modalMemberJoinDate').textContent = currentViewMember.joinDate;
+            document.getElementById('modalMemberLastOrder').textContent = currentViewMember.lastOrder || '-';
+            document.getElementById('modalMemberStatus').textContent = currentViewMember.status === 'active' ? '활성' : '비활성';
+            document.getElementById('modalMemberStatus').className = 'status-badge ' + (currentViewMember.status === 'active' ? 'active' : 'inactive');
+
+            // 추천인 정보 표시
+            const referrerEl = document.getElementById('modalMemberReferrer');
+            if (currentViewMember.referrer) {
+                referrerEl.innerHTML = `${currentViewMember.referrer.name} <code style="background: var(--bg-main); padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.8rem;">${currentViewMember.referrer.username}</code>`;
+            } else {
+                referrerEl.textContent = '-';
+            }
+
+            openModal('memberDetailModal');
+        }
+
+        // Open edit member modal
+        async function openEditMember(memberId) {
+            const member = await weverseData.getMemberById(memberId);
+            if (!member) return;
+
+            document.getElementById('editMemberId').value = member.id;
+            document.getElementById('editMemberName').value = member.name;
+            document.getElementById('editMemberUsername').value = member.username || '';
+            document.getElementById('editMemberRank').value = member.rank || 'general';
+            document.getElementById('editMemberStatus').value = member.status;
+            document.getElementById('editMemberPassword').value = ''; // Clear password field
+
+            // Set referrer info
+            const referrerInput = document.getElementById('editMemberReferrer');
+            const referrerResult = document.getElementById('editReferrerResult');
+
+            if (member.referrer && member.referrer.username) {
+                referrerInput.value = member.referrer.username;
+                editVerifiedReferrer = member.referrer;
+                editOriginalReferrer = member.referrer;
+                referrerResult.innerHTML = `<span style="color: #10b981;">✓ ${member.referrer.name} (${member.referrer.username})</span>`;
+            } else {
+                referrerInput.value = '';
+                editVerifiedReferrer = null;
+                editOriginalReferrer = null;
+                referrerResult.innerHTML = '';
+            }
+
+            openModal('editMemberModal');
+        }
+
+        // Save member changes
+        async function saveMember() {
+            const memberId = document.getElementById('editMemberId').value;
+            const name = document.getElementById('editMemberName').value.trim();
+            const username = document.getElementById('editMemberUsername').value.trim();
+            const rank = document.getElementById('editMemberRank').value;
+            const status = document.getElementById('editMemberStatus').value;
+
+            if (!name || !username) {
+                showToast('이름과 아이디는 필수입니다.');
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showToast('아이디는 영문, 숫자, 밑줄만 사용할 수 있습니다.');
+                return;
+            }
+
+            // Check if username already exists (excluding current member)
+            const existingMember = await weverseData.getMemberByUsername(username);
+            if (existingMember && existingMember.id !== memberId) {
+                showToast('이미 사용 중인 아이디입니다.');
+                return;
+            }
+
+            // Check if referrer was changed and needs verification
+            const referrerInput = document.getElementById('editMemberReferrer').value.trim();
+            let referrerToSave = editOriginalReferrer;
+
+            if (referrerInput === '') {
+                // User cleared referrer
+                referrerToSave = null;
+            } else if (editVerifiedReferrer && editVerifiedReferrer.username === referrerInput) {
+                // Referrer was verified
+                referrerToSave = editVerifiedReferrer;
+            } else if (referrerInput !== (editOriginalReferrer?.username || '')) {
+                // Referrer changed but not verified
+                showToast('추천인 확인 버튼을 클릭해주세요.');
+                return;
+            }
+
+            // Get password if entered
+            const newPassword = document.getElementById('editMemberPassword').value;
+
+            // Build update object
+            const updateData = { name, username, rank, status, referrer: referrerToSave };
+
+            // Update member
+            await weverseData.updateMember(memberId, updateData);
+
+            // Update password if provided
+            if (newPassword && newPassword.length >= 6) {
+                await weverseData.updateMemberPassword(memberId, newPassword);
+            } else if (newPassword && newPassword.length > 0 && newPassword.length < 6) {
+                showToast('비밀번호는 최소 6자 이상이어야 합니다.');
+                return;
+            }
+
+            closeModal('editMemberModal');
+            await updateMemberStats();
+            await renderMembers();
+            showToast('회원 정보가 수정되었습니다.');
+        }
+
+        // Delete member
+        async function deleteMember(memberId) {
+            const member = await weverseData.getMemberById(memberId);
+            if (!member) return;
+
+            if (confirm(`"${member.name}" 회원을 정말 탈퇴 처리하시겠습니까?\n\n이 작업은 되돌릴 수 없습니다.`)) {
+                await weverseData.deleteMember(memberId);
+                await updateMemberStats();
+                await renderMembers();
+                showToast('회원이 탈퇴 처리되었습니다.');
+            }
+        }
+
+        // Verified referrer for edit member
+        let editVerifiedReferrer = null;
+        let editOriginalReferrer = null;
+
+        // Verify referrer for edit member
+        async function verifyEditReferrer() {
+            const referrerUsername = document.getElementById('editMemberReferrer').value.trim();
+            const resultDiv = document.getElementById('editReferrerResult');
+
+            if (!referrerUsername) {
+                editVerifiedReferrer = null;
+                resultDiv.innerHTML = '<span style="color: #6b7280;">추천인 없음</span>';
+                return;
+            }
+
+            const referrerMember = await weverseData.getMemberByUsername(referrerUsername);
+
+            if (referrerMember) {
+                editVerifiedReferrer = {
+                    id: referrerMember.id,
+                    username: referrerMember.username,
+                    name: referrerMember.name
+                };
+                resultDiv.innerHTML = `<span style="color: #10b981;">✓ ${referrerMember.name} (${referrerMember.username})</span>`;
+            } else {
+                editVerifiedReferrer = null;
+                resultDiv.innerHTML = '<span style="color: #ef4444;">✗ 존재하지 않는 아이디입니다.</span>';
+            }
+        }
+
+        // Verified referrer for add member
+        let addVerifiedReferrer = null;
+
+        // Verify referrer for add member
+        async function verifyAddReferrer() {
+            const referrerUsername = document.getElementById('addMemberReferrer').value.trim();
+            const resultDiv = document.getElementById('addReferrerResult');
+
+            if (!referrerUsername) {
+                resultDiv.innerHTML = '<span style="color: #f59e0b;">추천인 아이디를 입력하세요.</span>';
+                addVerifiedReferrer = null;
+                return;
+            }
+
+            const referrerMember = await weverseData.getMemberByUsername(referrerUsername);
+
+            if (referrerMember) {
+                addVerifiedReferrer = {
+                    id: referrerMember.id,
+                    username: referrerMember.username,
+                    name: referrerMember.name
+                };
+                resultDiv.innerHTML = `<span style="color: #10b981;">✓ ${referrerMember.name} (${referrerMember.username})</span>`;
+            } else {
+                addVerifiedReferrer = null;
+                resultDiv.innerHTML = '<span style="color: #ef4444;">✗ 존재하지 않는 아이디입니다.</span>';
+            }
+        }
+
+        // Open add member modal
+        function openAddMemberModal() {
+            // Clear form
+            document.getElementById('addMemberForm').reset();
+            document.getElementById('addMemberRPay').value = '0';
+            document.getElementById('addMemberPPoint').value = '0';
+            document.getElementById('addMemberCPoint').value = '0';
+            document.getElementById('addMemberTPoint').value = '0';
+            document.getElementById('addReferrerResult').innerHTML = '';
+            addVerifiedReferrer = null;
+
+            openModal('addMemberModal');
+        }
+
+        // Add new member
+        async function addNewMember() {
+            const name = document.getElementById('addMemberName').value.trim();
+            const username = document.getElementById('addMemberUsername').value.trim();
+            const password = document.getElementById('addMemberPassword').value;
+            const rank = document.getElementById('addMemberRank').value;
+            const status = document.getElementById('addMemberStatus').value;
+
+            // Get initial points
+            const rPay = parseInt(document.getElementById('addMemberRPay').value) || 0;
+            const pPoint = parseFloat(document.getElementById('addMemberPPoint').value) || 0;
+            const cPoint = parseFloat(document.getElementById('addMemberCPoint').value) || 0;
+            const tPoint = parseFloat(document.getElementById('addMemberTPoint').value) || 0;
+
+            // Validation
+            if (!name || !username || !password) {
+                showToast('이름, 아이디, 비밀번호는 필수입니다.');
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showToast('아이디는 영문, 숫자, 밑줄만 사용할 수 있습니다.');
+                return;
+            }
+
+            if (username.length < 4) {
+                showToast('아이디는 4자 이상이어야 합니다.');
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast('비밀번호는 최소 6자 이상이어야 합니다.');
+                return;
+            }
+
+            // Check if username already exists
+            const existingMember = await weverseData.getMemberByUsername(username);
+            if (existingMember) {
+                showToast('이미 사용 중인 아이디입니다.');
+                return;
+            }
+
+            // Create new member via Supabase
+            const result = await weverseData.addMember({
+                name,
+                username,
+                password,
+                rank,
+                memberType: 'consumer',
+                points: { rPay, pPoint, cPoint, tPoint },
+                referrer: addVerifiedReferrer
+            });
+
+            if (result.error) {
+                showToast(result.error);
+                return;
+            }
+
+            const newMemberId = result.id;
+
+            // Update points in the newly created member
+            if (rPay > 0 || pPoint > 0 || cPoint > 0 || tPoint > 0) {
+                await weverseData.updateMember(newMemberId, {
+                    points: { rPay, pPoint, cPoint, tPoint }
+                });
+            }
+
+            // Add point transactions if initial points were set
+            if (rPay > 0) {
+                await weverseData.addPointTransaction({
+                    memberId: newMemberId,
+                    pointType: 'rPay',
+                    type: '관리자 부여',
+                    amount: rPay,
+                    description: '회원 가입 시 초기 W페이'
+                });
+            }
+            if (pPoint > 0) {
+                await weverseData.addPointTransaction({
+                    memberId: newMemberId,
+                    pointType: 'pPoint',
+                    type: '관리자 부여',
+                    amount: pPoint,
+                    description: '회원 가입 시 초기 P포인트'
+                });
+            }
+            if (cPoint > 0) {
+                await weverseData.addPointTransaction({
+                    memberId: newMemberId,
+                    pointType: 'cPoint',
+                    type: '관리자 부여',
+                    amount: cPoint,
+                    description: '회원 가입 시 초기 C포인트'
+                });
+            }
+            if (tPoint > 0) {
+                await weverseData.addPointTransaction({
+                    memberId: newMemberId,
+                    pointType: 'tPoint',
+                    type: '관리자 부여',
+                    amount: tPoint,
+                    description: '회원 가입 시 초기 T포인트'
+                });
+            }
+
+            closeModal('addMemberModal');
+            await updateMemberStats();
+            await renderMembers();
+            showToast(`"${name}" 회원이 추가되었습니다.`);
+        }
+
+        // ============================================
+        // Excel Upload Functions
+        // ============================================
+
+        let excelData = [];
+
+        function openExcelUploadModal() {
+            excelData = [];
+            document.getElementById('excelFileInput').value = '';
+            document.getElementById('selectedFileName').textContent = '선택된 파일 없음';
+            document.getElementById('excelPreview').style.display = 'none';
+            document.getElementById('excelUploadBtn').disabled = true;
+            openModal('excelUploadModal');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('excelDropZone').style.borderColor = 'var(--primary)';
+            document.getElementById('excelDropZone').style.background = 'rgba(72, 187, 120, 0.05)';
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('excelDropZone').style.borderColor = 'var(--border)';
+            document.getElementById('excelDropZone').style.background = 'transparent';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.getElementById('excelDropZone').style.borderColor = 'var(--border)';
+            document.getElementById('excelDropZone').style.background = 'transparent';
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processExcelFile(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                processExcelFile(files[0]);
+            }
+        }
+
+        function processExcelFile(file) {
+            if (!file.name.match(/\.(xlsx|xls)$/i)) {
+                showToast('엑셀 파일(.xlsx, .xls)만 업로드 가능합니다.');
+                return;
+            }
+
+            document.getElementById('selectedFileName').textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                    if (jsonData.length < 2) {
+                        showToast('데이터가 없습니다. 양식에 맞게 작성해주세요.');
+                        return;
+                    }
+
+                    // Parse data (skip header row)
+                    const headers = jsonData[0];
+                    excelData = [];
+
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (!row || row.length === 0 || !row[0]) continue; // Skip empty rows
+
+                        const member = {
+                            name: row[0] || '',
+                            username: row[1] || '',
+                            password: row[2] || 'password123',
+                            referrerUsername: row[3] || '',
+                            rank: row[4] || 'general',
+                            rPay: parseInt(row[5]) || 0,
+                            pPoint: parseFloat(row[6]) || 0,
+                            cPoint: parseFloat(row[7]) || 0,
+                            tPoint: parseFloat(row[8]) || 0
+                        };
+
+                        // Validate required fields
+                        if (member.name && member.username) {
+                            excelData.push(member);
+                        }
+                    }
+
+                    if (excelData.length === 0) {
+                        showToast('유효한 회원 데이터가 없습니다.');
+                        return;
+                    }
+
+                    // Show preview
+                    showExcelPreview();
+
+                } catch (error) {
+                    console.error('Excel parsing error:', error);
+                    showToast('엑셀 파일 읽기 오류: ' + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showExcelPreview() {
+            const previewHead = document.getElementById('excelPreviewHead');
+            const previewBody = document.getElementById('excelPreviewBody');
+
+            previewHead.innerHTML = `
+                <tr>
+                    <th>이름</th>
+                    <th>아이디</th>
+                    <th>추천인</th>
+                    <th>등급</th>
+                </tr>
+            `;
+
+            const maxPreview = Math.min(excelData.length, 5);
+            previewBody.innerHTML = excelData.slice(0, maxPreview).map(m => `
+                <tr>
+                    <td>${m.name}</td>
+                    <td>${m.username}</td>
+                    <td>${m.referrerUsername || '-'}</td>
+                    <td>${RANK_DISPLAY[m.rank]?.name || '일반'}</td>
+                </tr>
+            `).join('');
+
+            if (excelData.length > 5) {
+                previewBody.innerHTML += `<tr><td colspan="4" style="text-align: center; color: var(--text-light);">... 외 ${excelData.length - 5}명</td></tr>`;
+            }
+
+            document.getElementById('excelRowCount').textContent = excelData.length;
+            document.getElementById('excelPreview').style.display = 'block';
+            document.getElementById('excelUploadBtn').disabled = false;
+        }
+
+        async function processExcelUpload() {
+            if (excelData.length === 0) {
+                showToast('업로드할 데이터가 없습니다.');
+                return;
+            }
+
+            let successCount = 0;
+            let skipCount = 0;
+            let errorCount = 0;
+            let errorMessages = [];
+
+            // 등급 코드 매핑 (한글 → 영문)
+            const rankMapping = {
+                '일반': 'general',
+                '매니저': 'manager',
+                '다이아몬드': 'diamond',
+                '블루다이아몬드': 'blue_diamond',
+                '레드다이아몬드': 'red_diamond',
+                '크라운다이아몬드': 'crown_diamond'
+            };
+
+            // 1단계: 먼저 모든 회원을 추천인 없이 등록
+            const registeredMembers = []; // 등록된 회원 정보 저장
+
+            for (const data of excelData) {
+                // 아이디 유효성 검사
+                if (!data.username || data.username.length < 4) {
+                    errorCount++;
+                    errorMessages.push(`${data.name}: 아이디는 4자 이상이어야 합니다.`);
+                    continue;
+                }
+
+                if (!/^[a-zA-Z0-9_]+$/.test(data.username)) {
+                    errorCount++;
+                    errorMessages.push(`${data.name}: 아이디는 영문, 숫자, 밑줄만 사용 가능합니다.`);
+                    continue;
+                }
+
+                // Check if username already exists
+                const existing = await weverseData.getMemberByUsername(data.username);
+                if (existing) {
+                    skipCount++;
+                    continue;
+                }
+
+                // 등급 코드 변환 (한글이면 영문으로)
+                let rank = data.rank || 'general';
+                if (rankMapping[rank]) {
+                    rank = rankMapping[rank];
+                }
+                // 유효한 등급 코드인지 확인
+                const validRanks = ['general', 'manager', 'diamond', 'blue_diamond', 'red_diamond', 'crown_diamond'];
+                if (!validRanks.includes(rank)) {
+                    rank = 'general';
+                }
+
+                const result = await weverseData.addMember({
+                    name: data.name,
+                    username: data.username,
+                    password: data.password || 'password123',
+                    rank: rank,
+                    memberType: 'consumer',
+                    points: {
+                        rPay: data.rPay || 0,
+                        pPoint: data.pPoint || 0,
+                        cPoint: data.cPoint || 0,
+                        tPoint: data.tPoint || 0
+                    },
+                    referrer: null // 1단계에서는 추천인 없이 등록
+                });
+
+                if (!result.error) {
+                    successCount++;
+                    // 추천인 연결이 필요한 회원 정보 저장
+                    if (data.referrerUsername) {
+                        registeredMembers.push({
+                            id: result.id,
+                            username: data.username,
+                            name: data.name,
+                            referrerUsername: data.referrerUsername
+                        });
+                    }
+
+                    // 포인트 트랜잭션 기록
+                    if (data.rPay > 0) {
+                        await weverseData.addPointTransaction({
+                            memberId: result.id,
+                            pointType: 'rPay',
+                            type: '관리자 부여',
+                            amount: data.rPay,
+                            description: '엑셀 일괄등록 - 초기 W페이'
+                        });
+                    }
+                    if (data.pPoint > 0) {
+                        await weverseData.addPointTransaction({
+                            memberId: result.id,
+                            pointType: 'pPoint',
+                            type: '관리자 부여',
+                            amount: data.pPoint,
+                            description: '엑셀 일괄등록 - 초기 P포인트'
+                        });
+                    }
+                    if (data.cPoint > 0) {
+                        await weverseData.addPointTransaction({
+                            memberId: result.id,
+                            pointType: 'cPoint',
+                            type: '관리자 부여',
+                            amount: data.cPoint,
+                            description: '엑셀 일괄등록 - 초기 C포인트'
+                        });
+                    }
+                    if (data.tPoint > 0) {
+                        await weverseData.addPointTransaction({
+                            memberId: result.id,
+                            pointType: 'tPoint',
+                            type: '관리자 부여',
+                            amount: data.tPoint,
+                            description: '엑셀 일괄등록 - 초기 T포인트'
+                        });
+                    }
+                } else {
+                    errorCount++;
+                    errorMessages.push(`${data.name} (${data.username}): ${result.error}`);
+                }
+            }
+
+            // 2단계: 추천인 연결 (모든 회원이 등록된 후)
+            let referrerLinkedCount = 0;
+            for (const member of registeredMembers) {
+                const referrerMember = await weverseData.getMemberByUsername(member.referrerUsername);
+                if (referrerMember) {
+                    await weverseData.updateMember(member.id, {
+                        referrer: {
+                            id: referrerMember.id,
+                            username: referrerMember.username,
+                            name: referrerMember.name
+                        }
+                    });
+                    referrerLinkedCount++;
+                }
+            }
+
+            closeModal('excelUploadModal');
+            await updateMemberStats();
+            await renderMembers();
+
+            // 결과 메시지 생성
+            let message = `${successCount}명의 회원이 등록되었습니다.`;
+            if (referrerLinkedCount > 0) {
+                message += ` (추천인 연결: ${referrerLinkedCount}명)`;
+            }
+            if (skipCount > 0) {
+                message += ` (중복 제외: ${skipCount}명)`;
+            }
+            if (errorCount > 0) {
+                message += ` (실패: ${errorCount}명)`;
+                console.error('엑셀 등록 오류:', errorMessages);
+                // 오류 상세 표시
+                setTimeout(() => {
+                    alert('등록 실패 항목:\n' + errorMessages.slice(0, 10).join('\n') +
+                          (errorMessages.length > 10 ? `\n... 외 ${errorMessages.length - 10}건` : ''));
+                }, 500);
+            }
+            showToast(message);
+        }
+
+        function downloadExcelTemplate() {
+            // Create template data
+            const templateData = [
+                ['이름*', '아이디*', '비밀번호', '추천인아이디', '등급', 'W페이(원)', 'P포인트($)', 'C포인트($)', 'T포인트($)'],
+                ['홍길동', 'hong123', 'password123', 'admin', 'general', 0, 0, 0, 0],
+                ['김영희', 'kim456', 'password123', 'hong123', 'manager', 10000, 0, 0, 0],
+                ['', '', '', '', '', '', '', '', '', ''],
+                ['[등급 코드]', '', '', '', '', '', '', '', '', ''],
+                ['general', '일반', '', '', '', '', '', '', '', ''],
+                ['manager', '매니저', '', '', '', '', '', '', '', ''],
+                ['diamond', '다이아몬드', '', '', '', '', '', '', '', ''],
+                ['blue_diamond', '블루다이아몬드', '', '', '', '', '', '', '', ''],
+                ['red_diamond', '레드다이아몬드', '', '', '', '', '', '', '', ''],
+                ['crown_diamond', '크라운다이아몬드', '', '', '', '', '', '', '', '']
+            ];
+
+            const ws = XLSX.utils.aoa_to_sheet(templateData);
+
+            // Set column widths
+            ws['!cols'] = [
+                { wch: 12 }, // 이름
+                { wch: 15 }, // 아이디
+                { wch: 15 }, // 비밀번호
+                { wch: 15 }, // 추천인아이디
+                { wch: 18 }, // 등급
+                { wch: 12 }, // W페이
+                { wch: 12 }, // P포인트
+                { wch: 12 }, // C포인트
+                { wch: 12 }  // T포인트
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '회원등록');
+
+            XLSX.writeFile(wb, 'weverse_회원등록_양식.xlsx');
+            showToast('엑셀 양식이 다운로드되었습니다.');
+        }
+
+        // Export members to Excel
+        async function exportMembers() {
+            const members = await weverseData.getMembers();
+
+            if (members.length === 0) {
+                showToast('내보낼 회원 데이터가 없습니다.');
+                return;
+            }
+
+            // Prepare data for Excel
+            const data = members.map(m => ({
+                '이름': m.name,
+                '아이디': m.username || '',
+                '등급': RANK_DISPLAY[m.rank]?.name || '일반',
+                '추천인': m.referrer ? `${m.referrer.name} (${m.referrer.username})` : '',
+                'W페이': m.points?.rPay || 0,
+                'P포인트': m.points?.pPoint || 0,
+                'C포인트': m.points?.cPoint || 0,
+                'T포인트': m.points?.tPoint || 0,
+                '가입일': m.joinDate ? new Date(m.joinDate).toLocaleDateString('ko-KR') : ''
+            }));
+
+            // Create workbook
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '회원목록');
+
+            // Set column widths
+            ws['!cols'] = [
+                { wch: 12 }, // 이름
+                { wch: 15 }, // 아이디
+                { wch: 15 }, // 등급
+                { wch: 20 }, // 추천인
+                { wch: 12 }, // W페이
+                { wch: 12 }, // P포인트
+                { wch: 12 }, // C포인트
+                { wch: 12 }, // T포인트
+                { wch: 12 }  // 가입일
+            ];
+
+            // Generate filename with date
+            const today = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `weverse_회원목록_${today}.xlsx`);
+            showToast('회원 목록이 다운로드되었습니다.');
+        }
+
+        // ============================================
+        // Grant Points Functions
+        // ============================================
+
+        let grantPointsTargetMember = null;
+
+        async function openGrantPointsModal(memberId) {
+            const member = await weverseData.getMemberById(memberId);
+            if (!member) {
+                showToast('회원 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            grantPointsTargetMember = member;
+
+            // Set member info
+            document.getElementById('grantPointsMemberId').value = member.id;
+            document.getElementById('grantPointsMemberAvatar').textContent = member.name.substring(0, 2);
+            document.getElementById('grantPointsMemberName').textContent = member.name;
+            document.getElementById('grantPointsMemberUsername').textContent = member.username || '-';
+
+            // Set current points
+            const points = member.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
+            document.getElementById('grantPointsCurrentRPay').textContent = '₩' + (points.rPay || 0).toLocaleString();
+            document.getElementById('grantPointsCurrentPPoint').textContent = '$' + (points.pPoint || 0).toFixed(2);
+            document.getElementById('grantPointsCurrentCPoint').textContent = '$' + (points.cPoint || 0).toFixed(2);
+            document.getElementById('grantPointsCurrentTPoint').textContent = '$' + (points.tPoint || 0).toFixed(2);
+
+            // Reset form
+            document.getElementById('grantPointsType').value = 'pPoint';
+            document.getElementById('grantPointsAmount').value = '';
+            document.getElementById('grantPointsDescription').value = '';
+
+            openModal('grantPointsModal');
+        }
+
+        async function grantPoints() {
+            if (!grantPointsTargetMember) {
+                showToast('회원 정보가 없습니다.');
+                return;
+            }
+
+            const memberId = document.getElementById('grantPointsMemberId').value;
+            const pointType = document.getElementById('grantPointsType').value;
+            const amount = parseFloat(document.getElementById('grantPointsAmount').value);
+            const description = document.getElementById('grantPointsDescription').value.trim();
+
+            // Validation
+            if (isNaN(amount) || amount === 0) {
+                showToast('부여할 금액을 입력해주세요.');
+                return;
+            }
+
+            // Get current points
+            const currentPoints = grantPointsTargetMember.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
+            const currentValue = currentPoints[pointType] || 0;
+            const newValue = currentValue + amount;
+
+            // Check if result would be negative
+            if (newValue < 0) {
+                showToast('포인트가 부족하여 차감할 수 없습니다.');
+                return;
+            }
+
+            // Update points
+            const newPoints = { ...currentPoints };
+            newPoints[pointType] = newValue;
+
+            try {
+                await weverseData.updateMember(memberId, { points: newPoints });
+
+                // Add point transaction record
+                const pointTypeNames = {
+                    rPay: 'W페이',
+                    pPoint: 'P포인트',
+                    cPoint: 'C포인트',
+                    tPoint: 'T포인트'
+                };
+
+                const transactionType = amount >= 0 ? '관리자 부여' : '관리자 차감';
+                const transactionDesc = description || (amount >= 0 ? '관리자에 의한 포인트 부여' : '관리자에 의한 포인트 차감');
+
+                await weverseData.addPointTransaction({
+                    memberId: memberId,
+                    pointType: pointType,
+                    type: transactionType,
+                    amount: amount,
+                    description: transactionDesc
+                });
+
+                closeModal('grantPointsModal');
+                await renderMembers();
+
+                const formattedAmount = pointType === 'rPay'
+                    ? '₩' + Math.abs(amount).toLocaleString()
+                    : '$' + Math.abs(amount).toFixed(2);
+                const actionText = amount >= 0 ? '부여' : '차감';
+
+                showToast(`${grantPointsTargetMember.name}님에게 ${pointTypeNames[pointType]} ${formattedAmount}이(가) ${actionText}되었습니다.`);
+
+            } catch (error) {
+                console.error('포인트 부여 오류:', error);
+                showToast('포인트 부여 중 오류가 발생했습니다.');
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initMembersPage();
+        });
+    </script>
+</body>
+</html>

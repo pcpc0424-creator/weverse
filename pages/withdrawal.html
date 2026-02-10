@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>출금 신청 - WEVERSE</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .withdrawal-section { padding: 120px 0 60px; min-height: 100vh; }
+        .withdrawal-container { max-width: 600px; margin: 0 auto; }
+        .withdrawal-header { text-align: center; margin-bottom: 2rem; }
+        .withdrawal-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        .ppoint-balance {
+            background: linear-gradient(135deg, #2196f3 0%, #03a9f4 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .ppoint-balance .label { font-size: 0.9rem; opacity: 0.9; }
+        .ppoint-balance .value { font-size: 2.5rem; font-weight: 700; }
+
+        .withdrawal-form {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: var(--bg); color: var(--text); }
+        .form-control:focus { outline: none; border-color: var(--primary); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
+
+        .bank-info-card {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .bank-info-card .title { font-weight: 600; margin-bottom: 0.5rem; }
+        .bank-info-card .info { font-size: 0.9rem; color: var(--text-secondary); }
+
+        .withdrawal-summary {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .withdrawal-summary .row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .withdrawal-summary .row.total { border-top: 1px solid var(--border); padding-top: 0.5rem; font-weight: 600; }
+
+        .btn-withdraw { width: 100%; padding: 1rem; font-size: 1.1rem; }
+
+        .notice { background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 8px; padding: 1rem; font-size: 0.85rem; color: #856404; margin-top: 1.5rem; }
+
+        .pending-withdrawals {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+        .pending-withdrawals h3 { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); margin: 0; }
+        .pending-withdrawals table { width: 100%; border-collapse: collapse; }
+        .pending-withdrawals th, .pending-withdrawals td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+        .pending-withdrawals th { font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; }
+
+        .status-badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .status-badge.pending { background: rgba(255,193,7,0.1); color: #ffc107; }
+        .status-badge.approved { background: rgba(76,175,80,0.1); color: #4caf50; }
+        .status-badge.rejected { background: rgba(244,67,54,0.1); color: #f44336; }
+
+        .dealer-only-notice {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader"><div class="loader-text"><span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span></div></div>
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../index.html">Main</a>
+                    <a href="shopping.html">Shop</a>
+                    <a href="account.html">Account</a>
+                </nav>
+                <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="withdrawal-section">
+        <div class="container">
+            <div class="withdrawal-container">
+                <div class="withdrawal-header">
+                    <h1>P포인트 출금 신청</h1>
+                    <p>P포인트를 현금으로 출금하세요</p>
+                </div>
+
+                <!-- Dealer Only Content -->
+                <div id="dealerContent" style="display: none;">
+                    <div class="ppoint-balance">
+                        <div class="label">현재 P포인트 잔액</div>
+                        <div class="value" id="ppointBalance">$0</div>
+                    </div>
+
+                    <div class="withdrawal-form">
+                        <div class="bank-info-card" id="bankInfoCard">
+                            <div class="title">등록된 은행 정보</div>
+                            <div class="info" id="bankInfoDisplay">은행 정보가 등록되지 않았습니다.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">은행 정보 등록/수정</label>
+                            <div class="form-row">
+                                <input type="text" class="form-control" id="bankName" placeholder="은행명">
+                                <input type="text" class="form-control" id="accountHolder" placeholder="예금주">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">계좌번호</label>
+                            <input type="text" class="form-control" id="accountNumber" placeholder="계좌번호를 입력하세요">
+                        </div>
+
+                        <button class="btn btn-outline" style="margin-bottom: 1.5rem;" onclick="saveBankInfo()">은행 정보 저장</button>
+
+                        <hr style="border: none; border-top: 1px solid var(--border); margin: 1.5rem 0;">
+
+                        <div class="form-group">
+                            <label class="form-label">출금 신청 금액 (USD)</label>
+                            <input type="number" class="form-control" id="withdrawAmount" placeholder="출금할 금액을 입력하세요" min="50" oninput="updateSummary()">
+                            <small style="color: var(--text-secondary);">최소 출금 금액: $<span id="minWithdrawal">50</span></small>
+                        </div>
+
+                        <div class="withdrawal-summary">
+                            <div class="row">
+                                <span>출금 신청 금액</span>
+                                <span id="summaryUSD">$0</span>
+                            </div>
+                            <div class="row">
+                                <span>예상 원화 수령액</span>
+                                <span id="summaryKRW">₩0</span>
+                            </div>
+                            <div class="row">
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">적용 환율</span>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);" id="exchangeRateDisplay">1 USD = ₩1,350</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-withdraw" onclick="submitWithdrawal()">출금 신청</button>
+
+                        <div class="notice">
+                            <strong>안내사항</strong><br>
+                            - 출금 신청 후 관리자 승인을 거쳐 입금됩니다.<br>
+                            - 승인까지 1-3 영업일이 소요될 수 있습니다.<br>
+                            - 거절 시 P포인트는 자동으로 복구됩니다.
+                        </div>
+                    </div>
+
+                    <!-- Pending Withdrawals -->
+                    <div class="pending-withdrawals">
+                        <h3>출금 신청 내역</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>신청일</th>
+                                    <th>금액</th>
+                                    <th>상태</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawalsBody">
+                                <tr><td colspan="3" style="text-align: center; color: var(--text-secondary);">신청 내역이 없습니다.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Non-Dealer Notice -->
+                <div id="nonDealerContent">
+                    <div class="dealer-only-notice">
+                        <h2>대리점 전용</h2>
+                        <p>P포인트 출금은 대리점 회원만 이용할 수 있습니다.</p>
+                        <p style="margin-top: 1rem;">
+                            <a href="points.html" class="btn btn-outline">내 포인트로 돌아가기</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="points.html" style="color: var(--primary);">← 내 포인트로 돌아가기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        let currentMember = null;
+        let settings = null;
+
+        async function initWithdrawalPage() {
+            // Check login (check both localStorage and sessionStorage)
+            let session = null;
+            try {
+                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                session = (storageSession && storageSession.loggedIn) ? storageSession :
+                          (localSession && localSession.loggedIn) ? localSession :
+                          (storageSession || localSession);
+            } catch (e) {}
+            if (!session || (!session.loggedIn && !session.username)) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Find member
+            const members = await weverseData.getMembers();
+            currentMember = members.find(m => m.username === session.username);
+
+            if (!currentMember) {
+                showToast('회원 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // Show withdrawal content for all members
+            document.getElementById('dealerContent').style.display = 'block';
+            const nonDealerEl = document.getElementById('nonDealerContent');
+            if (nonDealerEl) nonDealerEl.style.display = 'none';
+
+            // Load settings
+            settings = await weverseData.getSettings();
+
+            // Display balance
+            const points = currentMember.points || { pPoint: 0 };
+            document.getElementById('ppointBalance').textContent = '$' + (points.pPoint || 0).toLocaleString();
+
+            // Display bank info
+            displayBankInfo();
+
+            // Display settings
+            document.getElementById('minWithdrawal').textContent = settings.minWithdrawal || 50;
+            document.getElementById('exchangeRateDisplay').textContent = `1 USD = ₩${(settings.exchangeRate || 1350).toLocaleString()}`;
+
+            // Load withdrawals
+            await loadWithdrawals();
+        }
+
+        function displayBankInfo() {
+            const bankInfo = currentMember.bankInfo || {};
+
+            if (bankInfo.bankName && bankInfo.accountNumber) {
+                document.getElementById('bankInfoDisplay').textContent =
+                    `${bankInfo.bankName} ${bankInfo.accountNumber} (${bankInfo.accountHolder})`;
+                document.getElementById('bankName').value = bankInfo.bankName || '';
+                document.getElementById('accountNumber').value = bankInfo.accountNumber || '';
+                document.getElementById('accountHolder').value = bankInfo.accountHolder || '';
+            }
+        }
+
+        async function saveBankInfo() {
+            const bankName = document.getElementById('bankName').value.trim();
+            const accountNumber = document.getElementById('accountNumber').value.trim();
+            const accountHolder = document.getElementById('accountHolder').value.trim();
+
+            if (!bankName || !accountNumber || !accountHolder) {
+                showToast('모든 은행 정보를 입력해주세요.');
+                return;
+            }
+
+            // Update member bank info via Supabase
+            await weverseData.updateMember(currentMember.id, {
+                bankInfo: { bankName, accountNumber, accountHolder }
+            });
+
+            currentMember.bankInfo = { bankName, accountNumber, accountHolder };
+            displayBankInfo();
+            showToast('은행 정보가 저장되었습니다.');
+        }
+
+        function updateSummary() {
+            const amount = parseInt(document.getElementById('withdrawAmount').value) || 0;
+            const exchangeRate = settings?.exchangeRate || 1350;
+
+            document.getElementById('summaryUSD').textContent = '$' + amount.toLocaleString();
+            document.getElementById('summaryKRW').textContent = '₩' + (amount * exchangeRate).toLocaleString();
+        }
+
+        async function submitWithdrawal() {
+            const amount = parseInt(document.getElementById('withdrawAmount').value) || 0;
+            const minWithdrawal = settings?.minWithdrawal || 50;
+
+            if (amount < minWithdrawal) {
+                showToast(`최소 출금 금액은 $${minWithdrawal}입니다.`);
+                return;
+            }
+
+            const points = currentMember.points || { pPoint: 0 };
+            if (amount > points.pPoint) {
+                showToast('P포인트 잔액이 부족합니다.');
+                return;
+            }
+
+            if (!currentMember.bankInfo?.accountNumber) {
+                showToast('먼저 은행 정보를 등록해주세요.');
+                return;
+            }
+
+            if (!confirm(`$${amount}의 출금을 신청하시겠습니까?\n\n예상 수령액: ₩${(amount * (settings?.exchangeRate || 1350)).toLocaleString()}`)) {
+                return;
+            }
+
+            // Submit withdrawal
+            const result = await weverseData.requestWithdrawal(currentMember.id, amount);
+
+            if (result && !result.error) {
+                showToast('출금 신청이 완료되었습니다.');
+
+                // Refresh member data
+                const members = await weverseData.getMembers();
+                currentMember = members.find(m => m.id === currentMember.id);
+
+                // Update display
+                document.getElementById('ppointBalance').textContent = '$' + (currentMember.points?.pPoint || 0).toLocaleString();
+                document.getElementById('withdrawAmount').value = '';
+                updateSummary();
+                await loadWithdrawals();
+            } else {
+                showToast(result?.error || '출금 신청에 실패했습니다.');
+            }
+        }
+
+        async function loadWithdrawals() {
+            const withdrawals = await weverseData.getWithdrawalsByMember(currentMember.id);
+            const tbody = document.getElementById('withdrawalsBody');
+
+            if (!withdrawals || withdrawals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-secondary);">신청 내역이 없습니다.</td></tr>';
+                return;
+            }
+
+            const statusMap = {
+                'pending': { class: 'pending', text: '대기중' },
+                'approved': { class: 'approved', text: '승인' },
+                'rejected': { class: 'rejected', text: '거절' }
+            };
+
+            tbody.innerHTML = withdrawals.map(w => {
+                const date = new Date(w.requestedAt).toLocaleDateString('ko-KR');
+                const status = statusMap[w.status] || statusMap['pending'];
+
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td>$${w.amount.toLocaleString()}</td>
+                        <td><span class="status-badge ${status.class}">${status.text}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', initWithdrawalPage);
+    </script>
+</body>
+</html>

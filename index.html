@@ -137,55 +137,8 @@
                 <h2 data-animate><span class="text-light" data-i18n="products.title1">Our</span> <span data-i18n="products.title2">Products</span></h2>
                 <p data-animate data-delay="1" data-i18n="products.subtitle">Science-backed premium healthcare</p>
             </div>
-            <div class="products-grid">
-                <a href="pages/products/new-bornaid.html" class="product-card" data-animate data-delay="1">
-                    <div class="product-card-image">
-                        <img src="images/product-1.jpg" alt="New-BornAid">
-                        <div class="product-card-overlay"></div>
-                    </div>
-                    <div class="product-card-content">
-                        <h4 data-i18n="products.newbornaid">New-BornAid</h4>
-                        <p data-i18n="products.newbornaid.desc">Fermented enzyme with 20 minerals & vitamins</p>
-                        <span class="product-card-link">
-                            <span data-i18n="products.viewdetails">View Details</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </span>
-                    </div>
-                </a>
-                <a href="pages/products/alpha-gpc.html" class="product-card" data-animate data-delay="2">
-                    <div class="product-card-image">
-                        <img src="images/product-2.jpg" alt="Alpha GPC">
-                        <div class="product-card-overlay"></div>
-                    </div>
-                    <div class="product-card-content">
-                        <h4 data-i18n="products.alphagpc">Alpha GPC</h4>
-                        <p data-i18n="products.alphagpc.desc">Brain health & cognitive enhancement</p>
-                        <span class="product-card-link">
-                            <span data-i18n="products.viewdetails">View Details</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </span>
-                    </div>
-                </a>
-                <a href="pages/products/nano-lutein.html" class="product-card" data-animate data-delay="3">
-                    <div class="product-card-image">
-                        <img src="images/product-3.jpg" alt="Nano Lutein">
-                        <div class="product-card-overlay"></div>
-                    </div>
-                    <div class="product-card-content">
-                        <h4 data-i18n="products.nanolutein">Nano Lutein</h4>
-                        <p data-i18n="products.nanolutein.desc">Advanced nano-technology for eye health</p>
-                        <span class="product-card-link">
-                            <span data-i18n="products.viewdetails">View Details</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
-                            </svg>
-                        </span>
-                    </div>
-                </a>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products loaded dynamically -->
             </div>
         </div>
     </section>
@@ -309,6 +262,79 @@
         </button>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // Render featured products on home page
+        async function renderHomeProducts() {
+            const grid = document.getElementById('productsGrid');
+            if (!grid || typeof weverseData === 'undefined') return;
+
+            const products = await weverseData.getProducts();
+            // Show first 3 active products
+            const featuredProducts = products.filter(p => p.status === 'active').slice(0, 3);
+
+            // 기본 6개 상품 정보 (데이터베이스 오류 방지)
+            const DEFAULT_PRODUCT_DATA = {
+                'WV-NB-001': { name: 'New-BornAid', image: 'shop-1.jpg', detailPage: 'pages/products/new-bornaid.html', description: 'Fermented enzyme supplement for detox and daily vitality' },
+                'WV-AG-002': { name: 'Alpha GPC', image: 'shop-2.jpg', detailPage: 'pages/products/alpha-gpc.html', description: 'Brain health supplement for cognitive enhancement' },
+                'WV-NL-003': { name: 'Nano Lutein', image: 'shop-3.jpg', detailPage: 'pages/products/nano-lutein.html', description: 'Eye health supplement with nano technology' },
+                'WV-SP-004': { name: 'Super ProstaAid', image: 'shop-4.jpg', detailPage: 'pages/products/super-prostaid.html', description: 'Prostate health supplement for men' },
+                'WV-JC-005': { name: 'Joint Care', image: 'shop-5.jpg', detailPage: 'pages/products/joint-care.html', description: 'Joint health supplement with glucosamine' },
+                'WV-PP-006': { name: 'Premium Package', image: 'shop-6.jpg', detailPage: 'pages/products/premium-package.html', description: 'Complete health package with all products' }
+            };
+
+            grid.innerHTML = featuredProducts.map((product, index) => {
+                // 기본 6개 상품은 고정값 사용, 새로 등록된 상품은 DB 값 사용
+                const defaultData = DEFAULT_PRODUCT_DATA[product.id];
+
+                let productName, imgSrc, detailPage, description;
+
+                if (defaultData) {
+                    productName = defaultData.name;
+                    imgSrc = `images/${defaultData.image}`;
+                    detailPage = defaultData.detailPage;
+                    description = defaultData.description;
+                } else {
+                    // 새로 등록된 상품: 동적 상세 페이지로 연결
+                    productName = product.name || '';
+                    imgSrc = product.imageData || `images/${product.image || 'shop-1.jpg'}`;
+                    detailPage = `pages/products/detail.html?id=${product.id}`;
+                    description = product.descriptionKo || product.description || '';
+                }
+
+                return `
+                    <a href="${detailPage}" class="product-card" data-animate data-delay="${index + 1}">
+                        <div class="product-card-image">
+                            <img src="${imgSrc}" alt="${productName}">
+                            <div class="product-card-overlay"></div>
+                        </div>
+                        <div class="product-card-content">
+                            <h4>${productName}</h4>
+                            <p>${description}</p>
+                            <span class="product-card-link">
+                                <span>View Details</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+
+            // Trigger animations for new elements
+            setTimeout(() => {
+                grid.querySelectorAll('[data-animate]').forEach((el, index) => {
+                    setTimeout(() => {
+                        el.classList.add('animated');
+                    }, index * 100);
+                });
+            }, 100);
+        }
+
+        document.addEventListener('DOMContentLoaded', renderHomeProducts);
+    </script>
 </body>
 </html>

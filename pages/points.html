@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 포인트 - WEVERSE</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .points-section { padding: 120px 0 60px; min-height: 100vh; }
+        .points-container { max-width: 900px; margin: 0 auto; }
+        .points-header { text-align: center; margin-bottom: 2rem; }
+        .points-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+
+        .points-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        @media (max-width: 768px) { .points-cards { grid-template-columns: 1fr; } }
+
+        .point-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .point-card .point-label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .point-card .point-value { font-size: 2rem; font-weight: 700; }
+        .point-card .point-unit { font-size: 1rem; color: var(--text-secondary); }
+
+        .point-card.rpay .point-value { color: #4caf50; }
+        .point-card.ppoint .point-value { color: #2196f3; }
+        .point-card.cpoint .point-value { color: #ff9800; }
+        .point-card.tpoint .point-value { color: #9c27b0; }
+
+        .points-actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 2rem; }
+        .points-actions .btn { padding: 0.75rem 1.5rem; }
+
+        .transactions-table {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .transactions-table h3 { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); margin: 0; }
+        .transactions-table table { width: 100%; border-collapse: collapse; }
+        .transactions-table th, .transactions-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+        .transactions-table th { font-weight: 600; color: var(--text-secondary); font-size: 0.85rem; }
+        .transactions-table tr:last-child td { border-bottom: none; }
+
+        .amount-positive { color: #4caf50; }
+        .amount-negative { color: #dc3545; }
+
+        .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .badge.rpay { background: rgba(76,175,80,0.1); color: #4caf50; }
+        .badge.ppoint { background: rgba(33,150,243,0.1); color: #2196f3; }
+        .badge.cpoint { background: rgba(255,152,0,0.1); color: #ff9800; }
+        .badge.tpoint { background: rgba(156,39,176,0.1); color: #9c27b0; }
+
+        .member-info { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .member-type { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .member-type.dealer { background: rgba(255,152,0,0.1); color: #ff9800; }
+        .member-type.consumer { background: rgba(33,150,243,0.1); color: #2196f3; }
+
+        @media (max-width: 768px) {
+            .transactions-table { overflow-x: auto; }
+            .transactions-table table { min-width: 600px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader"><div class="loader-text"><span>W</span><span>E</span><span>V</span><span>E</span><span>R</span><span>S</span><span>E</span></div></div>
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-inner">
+                <a href="../index.html" class="logo">WE<span>V</span>ERSE</a>
+                <nav class="nav" id="nav">
+                    <a href="../index.html">Main</a>
+                    <a href="shopping.html">Shop</a>
+                    <a href="account.html">Account</a>
+                </nav>
+                <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="points-section">
+        <div class="container">
+            <div class="points-container">
+                <div class="points-header">
+                    <h1>내 포인트</h1>
+                    <p>포인트 잔액 및 사용 내역을 확인하세요</p>
+                </div>
+
+                <div class="member-info" id="memberInfo">
+                    <div>
+                        <span id="memberName">회원명</span>
+                        <span class="member-type" id="memberType">유형</span>
+                    </div>
+                </div>
+
+                <div class="points-cards">
+                    <div class="point-card rpay">
+                        <div class="point-label">W페이</div>
+                        <div class="point-value" id="rpayBalance">0</div>
+                        <div class="point-unit">원</div>
+                    </div>
+                    <div class="point-card ppoint">
+                        <div class="point-label">P포인트</div>
+                        <div class="point-value" id="ppointBalance">0</div>
+                        <div class="point-unit">USD</div>
+                    </div>
+                    <div class="point-card cpoint">
+                        <div class="point-label">C포인트</div>
+                        <div class="point-value" id="cpointBalance">0</div>
+                        <div class="point-unit">USD</div>
+                    </div>
+                    <div class="point-card tpoint">
+                        <div class="point-label">T포인트</div>
+                        <div class="point-value" id="tpointBalance">0</div>
+                        <div class="point-unit">USD</div>
+                    </div>
+                </div>
+
+                <div class="points-actions">
+                    <a href="rpay-charge.html" class="btn btn-primary">W페이 충전</a>
+                    <a href="point-transfer.html" class="btn btn-outline">포인트 전송</a>
+                    <a href="withdrawal.html" class="btn btn-outline" id="withdrawalBtn" style="display: none;">출금 신청</a>
+                </div>
+
+                <div class="transactions-table">
+                    <h3>최근 거래 내역</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>일시</th>
+                                <th>유형</th>
+                                <th>포인트</th>
+                                <th>금액</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody">
+                            <tr><td colspan="5" style="text-align: center; color: var(--text-secondary);">거래 내역이 없습니다.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2025 WEVERSE. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        async function initPointsPage() {
+            // Check login (check both localStorage and sessionStorage)
+            let session = null;
+            try {
+                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                // Prefer session with loggedIn flag, otherwise use either
+                session = (storageSession && storageSession.loggedIn) ? storageSession :
+                          (localSession && localSession.loggedIn) ? localSession :
+                          (storageSession || localSession);
+            } catch (e) {
+                console.error('Session parse error:', e);
+            }
+            if (!session || (!session.loggedIn && !session.username)) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Find member
+            const members = await weverseData.getMembers();
+            const member = members.find(m => m.username === session.username);
+
+            if (!member) {
+                showToast('회원 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // Display member info
+            document.getElementById('memberName').textContent = member.name;
+
+            const typeEl = document.getElementById('memberType');
+            typeEl.textContent = '회원';
+            typeEl.className = 'member-type consumer';
+
+            // Show withdrawal button for all members
+            document.getElementById('withdrawalBtn').style.display = 'inline-block';
+
+            // Display points
+            const points = member.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
+            document.getElementById('rpayBalance').textContent = (points.rPay || 0).toLocaleString();
+            document.getElementById('ppointBalance').textContent = (points.pPoint || 0).toLocaleString();
+            document.getElementById('cpointBalance').textContent = (points.cPoint || 0).toLocaleString();
+            document.getElementById('tpointBalance').textContent = (points.tPoint || 0).toLocaleString();
+
+            // Load transactions
+            const transactions = await weverseData.getPointTransactionsByMember(member.id);
+            renderTransactions(transactions);
+        }
+
+        function renderTransactions(transactions) {
+            const tbody = document.getElementById('transactionsBody');
+
+            if (!transactions || transactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-secondary);">거래 내역이 없습니다.</td></tr>';
+                return;
+            }
+
+            const typeMap = {
+                'rPay': { class: 'rpay', text: 'W페이' },
+                'pPoint': { class: 'ppoint', text: 'P포인트' },
+                'cPoint': { class: 'cpoint', text: 'C포인트' },
+                'tPoint': { class: 'tpoint', text: 'T포인트' }
+            };
+
+            tbody.innerHTML = transactions.slice(0, 20).map(t => {
+                const date = new Date(t.createdAt).toLocaleString('ko-KR');
+                const pointType = typeMap[t.pointType] || { class: '', text: t.pointType };
+                const amountClass = t.amount >= 0 ? 'amount-positive' : 'amount-negative';
+                const amountPrefix = t.amount >= 0 ? '+' : '';
+                const unit = t.pointType === 'rPay' ? '₩' : '$';
+
+                return `
+                    <tr>
+                        <td style="font-size: 0.85rem;">${date}</td>
+                        <td>${t.type}</td>
+                        <td><span class="badge ${pointType.class}">${pointType.text}</span></td>
+                        <td class="${amountClass}">${amountPrefix}${unit}${Math.abs(t.amount).toLocaleString()}</td>
+                        <td>${t.description || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', initPointsPage);
+    </script>
+</body>
+</html>

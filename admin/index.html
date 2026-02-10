@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드 - WEVERSE 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">WE<span>V</span>ERSE</a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인</div>
+                </div>
+                <a href="index.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    대시보드
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">관리</div>
+                </div>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    상품 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    주문 관리
+                </a>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    회원 관리
+                </a>
+                <a href="points.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    포인트 관리
+                </a>
+                <a href="ppoint-earning.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    P포인트 적립 상세
+                </a>
+                <a href="statistics.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    통계
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">시스템</div>
+                </div>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                    시스템 설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <h1 class="page-title">대시보드</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="주문/상품 검색..." id="dashboardSearch" oninput="searchDashboard()">
+                    </div>
+                    <div class="header-actions">
+                        <div class="notification-wrapper">
+                            <button class="header-btn" id="notificationBtn" onclick="toggleNotifications()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                    <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                                </svg>
+                                <span class="badge" id="notificationBadge">0</span>
+                            </button>
+                            <div class="notification-dropdown" id="notificationDropdown">
+                                <div class="notification-header">
+                                    <h4>알림</h4>
+                                    <button class="btn-text" onclick="markAllAsRead()">모두 읽음</button>
+                                </div>
+                                <div class="notification-list" id="notificationList">
+                                    <!-- Notifications will be loaded here -->
+                                </div>
+                                <div class="notification-footer">
+                                    <button class="btn-text" onclick="clearAllNotifications()">알림 지우기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="../index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                            <polyline points="15,3 21,3 21,9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-area">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 매출</h3>
+                            <div class="stat-value" id="statRevenue">₩0</div>
+                            <div class="stat-change" id="statRevenueChange">
+                                <span class="change-text">계산 중...</span>
+                            </div>
+                        </div>
+                        <div class="stat-icon sales">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 주문</h3>
+                            <div class="stat-value" id="statOrders">0건</div>
+                            <div class="stat-change" id="statOrdersChange">
+                                <span class="change-text">계산 중...</span>
+                            </div>
+                        </div>
+                        <div class="stat-icon orders">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                <path d="M16 10a4 4 0 01-8 0"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 회원</h3>
+                            <div class="stat-value" id="statMembers">0명</div>
+                            <div class="stat-change" id="statMembersChange">
+                                <span class="change-text">계산 중...</span>
+                            </div>
+                        </div>
+                        <div class="stat-icon customers">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 010 7.75"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 상품</h3>
+                            <div class="stat-value" id="statProducts">0개</div>
+                            <div class="stat-change" id="statProductsChange">
+                                <span class="change-text">계산 중...</span>
+                            </div>
+                        </div>
+                        <div class="stat-icon products">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts & Activity -->
+                <div class="charts-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">매출 현황</h2>
+                            <select class="form-control form-select" style="width: auto;" id="salesPeriod" onchange="updateSalesChart()">
+                                <option value="7">최근 7일</option>
+                                <option value="30">최근 30일</option>
+                                <option value="90">최근 3개월</option>
+                            </select>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative; height: 250px;">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">최근 활동</h2>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <ul class="activity-list" style="padding: 0 1.5rem;">
+                                <li class="activity-item">
+                                    <div class="activity-icon order">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-text">새 주문 <strong>#ORD-2024-1234</strong> 접수됨</p>
+                                        <span class="activity-time">2분 전</span>
+                                    </div>
+                                </li>
+                                <li class="activity-item">
+                                    <div class="activity-icon member">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                            <circle cx="12" cy="7" r="4"/>
+                                        </svg>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-text">새 회원 <strong>김민준</strong> 가입</p>
+                                        <span class="activity-time">15분 전</span>
+                                    </div>
+                                </li>
+                                <li class="activity-item">
+                                    <div class="activity-icon product">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-text">상품 <strong>Alpha GPC</strong> 재고 부족</p>
+                                        <span class="activity-time">1시간 전</span>
+                                    </div>
+                                </li>
+                                <li class="activity-item">
+                                    <div class="activity-icon order">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                            <polyline points="22,4 12,14.01 9,11.01"/>
+                                        </svg>
+                                    </div>
+                                    <div class="activity-content">
+                                        <p class="activity-text">주문 <strong>#ORD-2024-1230</strong> 배송 완료</p>
+                                        <span class="activity-time">3시간 전</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visitor & Sales Stats -->
+                <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">접속자 통계</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative; height: 200px;">
+                                <canvas id="visitorChart"></canvas>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; text-align: center;">
+                                <div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">오늘</div>
+                                    <div class="fw-600" style="font-size: 1.25rem;" id="visitorToday">0</div>
+                                </div>
+                                <div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">이번 주</div>
+                                    <div class="fw-600" style="font-size: 1.25rem;" id="visitorWeek">0</div>
+                                </div>
+                                <div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">이번 달</div>
+                                    <div class="fw-600" style="font-size: 1.25rem;" id="visitorMonth">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">상품별 매출</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container" style="position: relative; height: 200px;">
+                                <canvas id="productSalesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">최근 주문</h2>
+                        <a href="orders.html" class="btn btn-sm btn-outline">전체 보기</a>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>주문번호</th>
+                                        <th>고객명</th>
+                                        <th>상품</th>
+                                        <th>금액</th>
+                                        <th>상태</th>
+                                        <th>주문일</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersBody">
+                                    <!-- Orders will be loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        // Dashboard initialization
+        async function initDashboard() {
+            const stats = await weverseData.getDashboardStats();
+
+            // Update stat cards
+            document.getElementById('statRevenue').textContent = '₩' + stats.totalRevenue.toLocaleString();
+            document.getElementById('statOrders').textContent = stats.totalOrders + '건';
+            document.getElementById('statMembers').textContent = stats.totalMembers + '명';
+            document.getElementById('statProducts').textContent = stats.totalProducts + '개';
+
+            // Calculate and display changes
+            const changes = await calculateMonthlyChanges();
+            updateStatChange('statRevenueChange', changes.revenue, '전월 대비');
+            updateStatChange('statOrdersChange', changes.orders, '전월 대비');
+            updateStatChange('statMembersChange', changes.members, '이번 달 신규');
+            updateStatChange('statProductsChange', changes.products, '활성 상품', true);
+
+            // Render recent orders
+            renderRecentOrders(stats.recentOrders);
+
+            // Render recent activity
+            await renderRecentActivity();
+
+            // Initialize charts
+            await initSalesChart();
+            initVisitorChart();
+            await initProductSalesChart();
+
+            // Update visitor stats
+            updateVisitorStats();
+        }
+
+        // Sales Chart
+        let salesChart = null;
+
+        async function initSalesChart() {
+            const ctx = document.getElementById('salesChart');
+            if (!ctx) return;
+
+            const data = await getSalesData(7);
+
+            salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '매출',
+                        data: data.values,
+                        borderColor: '#000',
+                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₩' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function updateSalesChart() {
+            const period = parseInt(document.getElementById('salesPeriod').value);
+            const data = await getSalesData(period);
+
+            if (salesChart) {
+                salesChart.data.labels = data.labels;
+                salesChart.data.datasets[0].data = data.values;
+                salesChart.update();
+            }
+        }
+
+        async function getSalesData(days) {
+            const orders = await weverseData.getOrders();
+            const labels = [];
+            const values = [];
+
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+
+                const dayOrders = orders.filter(o => {
+                    const orderDate = new Date(o.orderDate).toISOString().split('T')[0];
+                    return orderDate === dateStr;
+                });
+
+                const dayTotal = dayOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
+                if (days <= 7) {
+                    labels.push(date.toLocaleDateString('ko-KR', { weekday: 'short' }));
+                } else if (days <= 30) {
+                    labels.push(date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }));
+                } else {
+                    labels.push(date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }));
+                }
+                values.push(dayTotal);
+            }
+
+            return { labels, values };
+        }
+
+        // Visitor Chart
+        function initVisitorChart() {
+            const ctx = document.getElementById('visitorChart');
+            if (!ctx) return;
+
+            const data = getVisitorData();
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: '접속자',
+                        data: data.values,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function getVisitorData() {
+            // Simulated visitor data (in real app, this would come from analytics)
+            const visitors = JSON.parse(localStorage.getItem('weverseVisitors')) || {};
+            const labels = [];
+            const values = [];
+
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+
+                labels.push(date.toLocaleDateString('ko-KR', { weekday: 'short' }));
+                values.push(visitors[dateStr] || 0);
+            }
+
+            return { labels, values };
+        }
+
+        function updateVisitorStats() {
+            const visitors = JSON.parse(localStorage.getItem('weverseVisitors')) || {};
+            const today = new Date().toISOString().split('T')[0];
+
+            // Calculate stats (방문자 추적은 쇼핑몰 main.js에서 처리)
+            let todayCount = visitors[today] || 0;
+            let weekCount = 0;
+            let monthCount = 0;
+
+            const now = new Date();
+            Object.keys(visitors).forEach(dateStr => {
+                const date = new Date(dateStr);
+                const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+                if (diffDays < 7) weekCount += visitors[dateStr];
+                if (diffDays < 30) monthCount += visitors[dateStr];
+            });
+
+            document.getElementById('visitorToday').textContent = todayCount.toLocaleString();
+            document.getElementById('visitorWeek').textContent = weekCount.toLocaleString();
+            document.getElementById('visitorMonth').textContent = monthCount.toLocaleString();
+        }
+
+        // Product Sales Chart
+        async function initProductSalesChart() {
+            const ctx = document.getElementById('productSalesChart');
+            if (!ctx) return;
+
+            const data = await getProductSalesData();
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        data: data.values,
+                        backgroundColor: [
+                            '#000000',
+                            '#333333',
+                            '#666666',
+                            '#999999',
+                            '#cccccc',
+                            '#e0e0e0'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { boxWidth: 12, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function getProductSalesData() {
+            const orders = await weverseData.getOrders();
+            const productSales = {};
+
+            orders.forEach(order => {
+                order.items.forEach(item => {
+                    if (!productSales[item.name]) {
+                        productSales[item.name] = 0;
+                    }
+                    productSales[item.name] += item.price * item.quantity;
+                });
+            });
+
+            // Sort by sales and get top 5
+            const sorted = Object.entries(productSales)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            return {
+                labels: sorted.map(([name]) => name.length > 10 ? name.substring(0, 10) + '...' : name),
+                values: sorted.map(([, value]) => value)
+            };
+        }
+
+        async function calculateMonthlyChanges() {
+            const orders = await weverseData.getOrders();
+            const members = await weverseData.getMembers();
+            const products = await weverseData.getProducts();
+
+            const now = new Date();
+            const thisMonth = now.getMonth();
+            const thisYear = now.getFullYear();
+            const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+            const lastMonthYear = thisMonth === 0 ? thisYear - 1 : thisYear;
+
+            // Orders this month vs last month
+            const ordersThisMonth = orders.filter(o => {
+                const d = new Date(o.orderDate);
+                return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+            });
+            const ordersLastMonth = orders.filter(o => {
+                const d = new Date(o.orderDate);
+                return d.getMonth() === lastMonth && d.getFullYear() === lastMonthYear;
+            });
+
+            // Revenue this month vs last month
+            const revenueThisMonth = ordersThisMonth.reduce((sum, o) => sum + (o.total || 0), 0);
+            const revenueLastMonth = ordersLastMonth.reduce((sum, o) => sum + (o.total || 0), 0);
+
+            // Members joined this month
+            const membersThisMonth = members.filter(m => {
+                const d = new Date(m.joinDate);
+                return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+            }).length;
+
+            // Active products
+            const activeProducts = products.filter(p => p.stock > 0).length;
+
+            // Calculate percentage changes
+            const revenueChange = revenueLastMonth > 0
+                ? ((revenueThisMonth - revenueLastMonth) / revenueLastMonth * 100).toFixed(1)
+                : (revenueThisMonth > 0 ? 100 : 0);
+
+            const ordersChange = ordersLastMonth.length > 0
+                ? ((ordersThisMonth.length - ordersLastMonth.length) / ordersLastMonth.length * 100).toFixed(1)
+                : (ordersThisMonth.length > 0 ? 100 : 0);
+
+            return {
+                revenue: parseFloat(revenueChange),
+                orders: parseFloat(ordersChange),
+                members: membersThisMonth,
+                products: activeProducts
+            };
+        }
+
+        function updateStatChange(elementId, value, label, isCount = false) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            const upIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/>
+                <polyline points="17,6 23,6 23,12"/>
+            </svg>`;
+            const downIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23,18 13.5,8.5 8.5,13.5 1,6"/>
+                <polyline points="17,18 23,18 23,12"/>
+            </svg>`;
+
+            if (isCount) {
+                element.className = 'stat-change positive';
+                element.innerHTML = `${upIcon} ${label} ${value}개`;
+            } else if (typeof value === 'number') {
+                if (value > 0) {
+                    element.className = 'stat-change positive';
+                    element.innerHTML = `${upIcon} ${label} +${value}%`;
+                } else if (value < 0) {
+                    element.className = 'stat-change negative';
+                    element.innerHTML = `${downIcon} ${label} ${value}%`;
+                } else {
+                    element.className = 'stat-change';
+                    element.innerHTML = `${label} 0%`;
+                }
+            } else {
+                element.className = 'stat-change positive';
+                element.innerHTML = `${upIcon} ${label} ${value}명`;
+            }
+        }
+
+        async function renderRecentActivity() {
+            const activityList = document.querySelector('.activity-list');
+            if (!activityList) return;
+
+            const orders = await weverseData.getOrders();
+            const members = await weverseData.getMembers();
+
+            // Combine and sort activities
+            const activities = [];
+
+            // Add recent orders
+            orders.slice(0, 3).forEach(order => {
+                activities.push({
+                    type: 'order',
+                    text: `새 주문 <strong>#${order.id}</strong> 접수됨`,
+                    date: new Date(order.orderDate),
+                    icon: 'order'
+                });
+            });
+
+            // Add recent members
+            members.slice(-3).reverse().forEach(member => {
+                activities.push({
+                    type: 'member',
+                    text: `새 회원 <strong>${member.name}</strong> 가입`,
+                    date: new Date(member.joinDate),
+                    icon: 'member'
+                });
+            });
+
+            // Sort by date
+            activities.sort((a, b) => b.date - a.date);
+
+            // Render
+            activityList.innerHTML = activities.slice(0, 5).map(activity => {
+                const timeAgo = getTimeAgo(activity.date);
+                const iconSvg = activity.icon === 'order'
+                    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>`
+                    : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+
+                return `
+                    <li class="activity-item">
+                        <div class="activity-icon ${activity.icon}">${iconSvg}</div>
+                        <div class="activity-content">
+                            <p class="activity-text">${activity.text}</p>
+                            <span class="activity-time">${timeAgo}</span>
+                        </div>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return '방금 전';
+            if (minutes < 60) return `${minutes}분 전`;
+            if (hours < 24) return `${hours}시간 전`;
+            if (days < 7) return `${days}일 전`;
+            return date.toLocaleDateString('ko-KR');
+        }
+
+        let dashboardSearchTerm = '';
+        let allRecentOrders = [];
+
+        function searchDashboard() {
+            dashboardSearchTerm = document.getElementById('dashboardSearch').value.trim().toLowerCase();
+            renderRecentOrders(allRecentOrders);
+        }
+
+        function renderRecentOrders(orders) {
+            allRecentOrders = orders;
+            const tbody = document.getElementById('recentOrdersBody');
+            if (!tbody) return;
+
+            // Apply search filter
+            let filteredOrders = orders;
+            if (dashboardSearchTerm) {
+                filteredOrders = orders.filter(o =>
+                    o.id.toLowerCase().includes(dashboardSearchTerm) ||
+                    o.customer.name.toLowerCase().includes(dashboardSearchTerm) ||
+                    o.items.some(item => item.name.toLowerCase().includes(dashboardSearchTerm))
+                );
+            }
+
+            const statusMap = {
+                'pending': { class: 'pending', text: '대기중' },
+                'processing': { class: 'processing', text: '처리중' },
+                'shipped': { class: 'shipped', text: '배송중' },
+                'delivered': { class: 'delivered', text: '배송완료' },
+                'cancelled': { class: 'cancelled', text: '취소됨' }
+            };
+
+            tbody.innerHTML = filteredOrders.map(order => {
+                const status = statusMap[order.status] || { class: '', text: order.status };
+                const itemsSummary = order.items.map(item => `${item.name} x ${item.quantity}`).join(', ');
+                const orderDate = new Date(order.orderDate).toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }).replace(/\. /g, '.').replace('.', '');
+
+                return `
+                    <tr>
+                        <td><strong>#${order.id}</strong></td>
+                        <td>${order.customer.name}</td>
+                        <td>${itemsSummary}</td>
+                        <td>₩${order.total.toLocaleString()}</td>
+                        <td><span class="status-badge ${status.class}">${status.text}</span></td>
+                        <td>${orderDate}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ========================================
+        // Notification System
+        // ========================================
+        async function initNotifications() {
+            await generateNotifications();
+            renderNotifications();
+            updateNotificationBadge();
+        }
+
+        async function generateNotifications() {
+            const notifications = JSON.parse(localStorage.getItem('weverseNotifications')) || [];
+            const lastCheck = localStorage.getItem('weverseLastNotificationCheck') || '2000-01-01';
+            const orders = await weverseData.getOrders();
+            const members = await weverseData.getMembers();
+            const products = await weverseData.getProducts();
+
+            // Check for new orders
+            orders.forEach(order => {
+                const orderDate = new Date(order.orderDate).toISOString();
+                if (orderDate > lastCheck) {
+                    const exists = notifications.find(n => n.id === 'order_' + order.id);
+                    if (!exists) {
+                        notifications.unshift({
+                            id: 'order_' + order.id,
+                            type: 'order',
+                            title: '새 주문',
+                            message: `주문 #${order.id}이(가) 접수되었습니다. (₩${order.total.toLocaleString()})`,
+                            date: order.orderDate,
+                            read: false
+                        });
+                    }
+                }
+            });
+
+            // Check for new members
+            members.forEach(member => {
+                const joinDate = new Date(member.joinDate).toISOString();
+                if (joinDate > lastCheck) {
+                    const exists = notifications.find(n => n.id === 'member_' + member.id);
+                    if (!exists) {
+                        notifications.unshift({
+                            id: 'member_' + member.id,
+                            type: 'member',
+                            title: '새 회원',
+                            message: `${member.name}님이 가입하셨습니다.`,
+                            date: member.joinDate,
+                            read: false
+                        });
+                    }
+                }
+            });
+
+            // Check for low stock
+            products.forEach(product => {
+                if (product.stock <= 10 && product.stock > 0) {
+                    const exists = notifications.find(n => n.id === 'stock_low_' + product.id);
+                    if (!exists) {
+                        notifications.unshift({
+                            id: 'stock_low_' + product.id,
+                            type: 'stock',
+                            title: '재고 부족',
+                            message: `${product.name} 재고가 ${product.stock}개 남았습니다.`,
+                            date: new Date().toISOString(),
+                            read: false
+                        });
+                    }
+                }
+            });
+
+            // Keep only last 50 notifications
+            const trimmed = notifications.slice(0, 50);
+            localStorage.setItem('weverseNotifications', JSON.stringify(trimmed));
+            localStorage.setItem('weverseLastNotificationCheck', new Date().toISOString());
+        }
+
+        function renderNotifications() {
+            const notifications = JSON.parse(localStorage.getItem('weverseNotifications')) || [];
+            const list = document.getElementById('notificationList');
+            if (!list) return;
+
+            if (notifications.length === 0) {
+                list.innerHTML = '<div class="notification-empty">알림이 없습니다</div>';
+                return;
+            }
+
+            const icons = {
+                order: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>',
+                member: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+                stock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+                success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>'
+            };
+
+            list.innerHTML = notifications.slice(0, 10).map(notif => {
+                const timeAgo = getTimeAgo(new Date(notif.date));
+                return `
+                    <div class="notification-item ${notif.read ? '' : 'unread'}" onclick="markAsRead('${notif.id}')">
+                        <div class="notification-icon ${notif.type}">
+                            ${icons[notif.type] || icons.success}
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-text"><strong>${notif.title}</strong> - ${notif.message}</div>
+                            <div class="notification-time">${timeAgo}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateNotificationBadge() {
+            const notifications = JSON.parse(localStorage.getItem('weverseNotifications')) || [];
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notificationBadge');
+            if (badge) {
+                badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('active');
+            }
+        }
+
+        function markAsRead(notifId) {
+            const notifications = JSON.parse(localStorage.getItem('weverseNotifications')) || [];
+            const notif = notifications.find(n => n.id === notifId);
+            if (notif) {
+                notif.read = true;
+                localStorage.setItem('weverseNotifications', JSON.stringify(notifications));
+                renderNotifications();
+                updateNotificationBadge();
+            }
+        }
+
+        function markAllAsRead() {
+            const notifications = JSON.parse(localStorage.getItem('weverseNotifications')) || [];
+            const unreadCount = notifications.filter(n => !n.read).length;
+
+            if (unreadCount === 0) {
+                showToast('읽지 않은 알림이 없습니다.');
+                return;
+            }
+
+            notifications.forEach(n => n.read = true);
+            localStorage.setItem('weverseNotifications', JSON.stringify(notifications));
+            renderNotifications();
+            updateNotificationBadge();
+            showToast(`${unreadCount}개의 알림을 읽음 처리했습니다.`);
+        }
+
+        function clearAllNotifications() {
+            localStorage.setItem('weverseNotifications', JSON.stringify([]));
+            renderNotifications();
+            updateNotificationBadge();
+            toggleNotifications();
+        }
+
+        // Close notification dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initDashboard();
+            initNotifications();
+        });
+    </script>
+</body>
+</html>

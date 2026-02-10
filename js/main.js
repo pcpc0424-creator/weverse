@@ -572,6 +572,96 @@ function showToast(message) {
     }, 3000);
 }
 
+// ========================================
+// Dealer-Only Modal
+// ========================================
+function showDealerOnlyModal() {
+    // Remove existing modal
+    const existingModal = document.querySelector('.dealer-modal-overlay');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'dealer-modal-overlay';
+    modal.innerHTML = `
+        <div class="dealer-modal">
+            <div class="dealer-modal-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+            </div>
+            <h3>대리점 전용</h3>
+            <p>상품 주문은 대리점 회원만 가능합니다.</p>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">대리점 가입을 원하시면 관리자에게 문의해주세요.</p>
+            <div class="dealer-modal-buttons">
+                <button class="btn btn-primary" onclick="closeDealerModal()">확인</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Show modal with animation
+    setTimeout(() => modal.classList.add('show'), 10);
+
+    // Close on overlay click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeDealerModal();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function escHandler(e) {
+        if (e.key === 'Escape') {
+            closeDealerModal();
+            document.removeEventListener('keydown', escHandler);
+        }
+    });
+}
+
+function closeDealerModal() {
+    const modal = document.querySelector('.dealer-modal-overlay');
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+    }
+}
+
+function goToLogin() {
+    closeDealerModal();
+    const path = window.location.pathname;
+    if (path.includes('/pages/products/')) {
+        window.location.href = '../login.html';
+    } else if (path.includes('/pages/')) {
+        window.location.href = 'login.html';
+    } else {
+        window.location.href = 'pages/login.html';
+    }
+}
+
+// Check if current user is a dealer
+function isDealer() {
+    let session = null;
+    try {
+        const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+        const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+        session = (storageSession && storageSession.loggedIn) ? storageSession :
+                  (localSession && localSession.loggedIn) ? localSession :
+                  (storageSession || localSession);
+    } catch (e) {}
+
+    if (!session || (!session.loggedIn && !session.username)) {
+        return false;
+    }
+
+    // Check memberType from session (stored during login)
+    return session.memberType === 'dealer';
+}
+
 // Add to cart
 function addToCart(productName, price) {
     const cart = getCart();
@@ -643,9 +733,31 @@ document.addEventListener('DOMContentLoaded', updateCartCount);
 
 // Update auth navigation based on login state
 function updateAuthNav() {
-    const session = JSON.parse(localStorage.getItem('weverseSession')) ||
-                   JSON.parse(sessionStorage.getItem('weverseSession'));
-    const isLoggedIn = session && session.loggedIn;
+    let session = null;
+    try {
+        const localData = localStorage.getItem('weverseSession');
+        const sessionData = sessionStorage.getItem('weverseSession');
+
+        // Parse both and check which one has loggedIn: true
+        const localSession = localData ? JSON.parse(localData) : null;
+        const storageSession = sessionData ? JSON.parse(sessionData) : null;
+
+        // Prefer the one with loggedIn: true, otherwise use whichever exists
+        if (storageSession && storageSession.loggedIn) {
+            session = storageSession;
+        } else if (localSession && localSession.loggedIn) {
+            session = localSession;
+        } else if (localSession || storageSession) {
+            // If neither has loggedIn but data exists, treat as logged in
+            session = localSession || storageSession;
+            if (session && (session.username || session.id)) {
+                session.loggedIn = true;
+            }
+        }
+    } catch (e) {
+        console.error('updateAuthNav parse error:', e);
+    }
+    const isLoggedIn = session && (session.loggedIn || session.username);
 
     // Find auth link
     const authLink = document.querySelector('.nav-auth');
@@ -664,16 +776,23 @@ function updateAuthNav() {
 
         if (isLoggedIn) {
             authLink.href = basePath + 'account.html';
-            authLink.textContent = 'My Account';
+            authLink.textContent = session.fullName || session.name || 'My Account';
+            authLink.setAttribute('data-i18n', 'nav.account');
+            authLink.classList.add('logged-in');
         } else {
             authLink.href = basePath + 'login.html';
             authLink.textContent = 'Login';
+            authLink.setAttribute('data-i18n', 'nav.login');
+            authLink.classList.remove('logged-in');
         }
     }
 }
 
-// Initialize auth nav on page load
-document.addEventListener('DOMContentLoaded', updateAuthNav);
+// Initialize auth nav on page load and after language change
+document.addEventListener('DOMContentLoaded', function() {
+    // Run after a short delay to ensure it runs after i18n
+    setTimeout(updateAuthNav, 100);
+});
 
 // ========================================
 // Floating Action Button (FAB)
@@ -746,6 +865,7 @@ const translations = {
         'nav.product': 'Product',
         'nav.shop': 'Shop',
         'nav.login': 'Login',
+        'nav.account': 'My Account',
         'nav.myaccount': 'My Account',
 
         // Hero Section
@@ -915,6 +1035,8 @@ const translations = {
         // Login Page
         'login.title': 'Welcome Back',
         'login.subtitle': 'Sign in to your account to continue',
+        'login.username': 'ID',
+        'login.username.placeholder': 'Enter your ID',
         'login.email': 'Email Address',
         'login.email.placeholder': 'Enter your email',
         'login.password': 'Password',
@@ -929,6 +1051,8 @@ const translations = {
         // Signup Page
         'signup.title': 'Create Account',
         'signup.subtitle': 'Join Weverse for a healthier tomorrow',
+        'signup.username': 'ID',
+        'signup.username.placeholder': 'Enter your ID',
         'signup.name': 'Full Name',
         'signup.name.placeholder': 'Enter your name',
         'signup.email': 'Email Address',
@@ -967,6 +1091,7 @@ const translations = {
         'nav.product': '产品',
         'nav.shop': '商城',
         'nav.login': '登录',
+        'nav.account': '我的账户',
         'nav.myaccount': '我的账户',
 
         // Hero Section
@@ -1136,6 +1261,8 @@ const translations = {
         // Login Page
         'login.title': '欢迎回来',
         'login.subtitle': '登录您的账户以继续',
+        'login.username': 'ID',
+        'login.username.placeholder': '请输入ID',
         'login.email': '邮箱地址',
         'login.email.placeholder': '请输入邮箱',
         'login.password': '密码',
@@ -1150,6 +1277,8 @@ const translations = {
         // Signup Page
         'signup.title': '创建账户',
         'signup.subtitle': '加入Weverse，开启健康明天',
+        'signup.username': 'ID',
+        'signup.username.placeholder': '请输入ID',
         'signup.name': '姓名',
         'signup.name.placeholder': '请输入姓名',
         'signup.email': '邮箱地址',
@@ -1193,6 +1322,8 @@ function setLang(lang) {
     localStorage.setItem('weverseLang', lang);
     applyTranslations(lang);
     updateLangButton(lang);
+    // Re-apply auth nav after translations
+    setTimeout(updateAuthNav, 50);
 }
 
 // Toggle language
@@ -1251,3 +1382,22 @@ function initLanguage() {
 
 // Initialize language when DOM is ready
 document.addEventListener('DOMContentLoaded', initLanguage);
+
+// ========================================
+// Visitor Tracking
+// ========================================
+function trackVisitor() {
+    const today = new Date().toISOString().split('T')[0];
+    const sessionKey = 'weverseVisitorTracked_' + today;
+
+    // Only track once per day per session
+    if (sessionStorage.getItem(sessionKey)) return;
+
+    const visitors = JSON.parse(localStorage.getItem('weverseVisitors')) || {};
+    visitors[today] = (visitors[today] || 0) + 1;
+    localStorage.setItem('weverseVisitors', JSON.stringify(visitors));
+    sessionStorage.setItem(sessionKey, 'true');
+}
+
+// Track visitor on page load
+document.addEventListener('DOMContentLoaded', trackVisitor);

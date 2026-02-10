@@ -51,23 +51,23 @@
     </header>
 
     <!-- Product Detail Hero -->
-    <section class="product-hero">
+    <section class="product-hero" data-product-id="WV-PP-006">
         <div class="container">
             <div class="product-hero-grid">
                 <div class="product-hero-content">
-                    <p class="tagline" data-animate>Best Value</p>
-                    <h1 data-animate data-delay="1">Premium Package</h1>
-                    <p data-animate data-delay="2">
+                    <p class="tagline" data-animate id="productTagline">Best Value</p>
+                    <h1 data-animate data-delay="1" id="productName">Premium Package</h1>
+                    <p data-animate data-delay="2" id="productDescription">
                         The ultimate healthcare bundle featuring our best-selling products. Experience the complete Weverse wellness journey with our carefully curated premium package, designed to support your overall health and vitality.
                     </p>
-                    <p class="product-price" data-animate data-delay="3">$299.00 <span class="price-original">$465.00</span></p>
+                    <p class="product-price" data-animate data-delay="3" id="productPrice">$299.00 <span style="font-size: 0.6em; color: #9c27b0; margin-left: 0.75rem; font-weight: 500;">PV150</span> <span class="price-original">$465.00</span></p>
                     <div class="product-actions" data-animate data-delay="4">
-                        <button class="btn btn-outline btn-cart" onclick="addToCart('Premium Package', 299)" data-i18n="common.addtocart">Add to Cart</button>
-                        <button class="btn btn-primary btn-buy" onclick="buyNow('Premium Package', 299)" data-i18n="common.buynow">Buy Now</button>
+                        <button class="btn btn-outline btn-cart" id="btnAddCart" data-i18n="common.addtocart">Add to Cart</button>
+                        <button class="btn btn-primary btn-buy" id="btnBuyNow" data-i18n="common.buynow">Buy Now</button>
                     </div>
                 </div>
                 <div class="product-hero-image" data-animate="slide-right" data-delay="2">
-                    <img src="../../images/shop-6.jpg" alt="Premium Package">
+                    <img src="../../images/shop-6.jpg" alt="Premium Package" id="productImage">
                 </div>
             </div>
         </div>
@@ -182,6 +182,29 @@
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/supabase.js"></script>
     <script src="../../js/main.js"></script>
+    <script>
+        // 이 페이지의 고정 상품 정보 (데이터베이스 오류 방지)
+        const PRODUCT_INFO = {
+            id: 'WV-PP-006',
+            name: 'Premium Package',
+            priceUSD: 299,
+            pv: 150,
+            image: 'shop-6.jpg'
+        };
+
+        async function loadProductData() {
+            const btnAddCart = document.getElementById('btnAddCart');
+            const btnBuyNow = document.getElementById('btnBuyNow');
+
+            // 버튼 이벤트는 고정 상품 정보 사용
+            if (btnAddCart) btnAddCart.onclick = () => addToCart(PRODUCT_INFO.name, PRODUCT_INFO.priceUSD);
+            if (btnBuyNow) btnBuyNow.onclick = () => buyNow(PRODUCT_INFO.name, PRODUCT_INFO.priceUSD);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProductData);
+    </script>
 </body>
 </html>

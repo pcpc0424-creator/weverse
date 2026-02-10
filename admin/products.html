@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 관리 - WEVERSE 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">WE<span>V</span>ERSE</a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인</div>
+                </div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    대시보드
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">관리</div>
+                </div>
+                <a href="products.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    상품 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    주문 관리
+                </a>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    회원 관리
+                </a>
+                <a href="points.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    포인트 관리
+                </a>
+                <a href="ppoint-earning.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    P포인트 적립 상세
+                </a>
+                <a href="statistics.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    통계
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">시스템</div>
+                </div>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                    시스템 설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <h1 class="page-title">상품 관리</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="상품 검색..." id="productSearch" oninput="searchProducts()">
+                    </div>
+                    <a href="../index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                            <polyline points="15,3 21,3 21,9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-area">
+                <!-- Action Bar -->
+                <div class="card">
+                    <div class="card-body d-flex align-center justify-between">
+                        <div class="d-flex align-center gap-2">
+                            <select class="form-control form-select" style="width: 120px;" id="statusFilter" onchange="filterProducts()">
+                                <option value="">전체 상태</option>
+                                <option value="active">판매중</option>
+                                <option value="inactive">판매중지</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="openModal('addProductModal')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            상품 추가
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">전체 상품</h2>
+                        <span class="text-muted" id="productCount">총 0개 상품</span>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table" id="productsTable">
+                                <thead>
+                                    <tr>
+                                        <th>상품</th>
+                                        <th>상품코드</th>
+                                        <th>가격</th>
+                                        <th>PV</th>
+                                        <th>재고</th>
+                                        <th>상태</th>
+                                        <th>관리</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody">
+                                    <!-- Products will be loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="pagination">
+                            <div class="pagination-info" id="paginationInfo">0개 상품 중 0-0 표시</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal-overlay" id="addProductModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">새 상품 추가</h3>
+                <button class="modal-close" onclick="closeModal('addProductModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">상품명</label>
+                            <input type="text" class="form-control" id="addProductName" placeholder="상품명을 입력하세요">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">상품코드</label>
+                            <input type="text" class="form-control" id="addProductCode" placeholder="WV-XX-000">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">가격 ($)</label>
+                            <input type="number" class="form-control" id="addProductPrice" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">PV</label>
+                            <input type="number" class="form-control" id="addProductPV" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">재고</label>
+                            <input type="number" class="form-control" id="addProductStock" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">상태</label>
+                            <select class="form-control form-select" id="addProductStatus">
+                                <option>판매중</option>
+                                <option>판매중지</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">뱃지</label>
+                        <input type="text" class="form-control" id="addProductBadge" placeholder="Best, New, Premium 등">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상품 설명</label>
+                        <textarea class="form-control" id="addProductDesc" placeholder="상품 설명을 입력하세요"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상품 이미지</label>
+                        <div class="image-upload-area" id="addImageUploadArea" onclick="document.getElementById('addProductImage').click()">
+                            <input type="file" class="form-control" id="addProductImage" accept="image/*" onchange="previewImage(this, 'addImagePreview')" style="display:none;">
+                            <div class="image-preview" id="addImagePreview">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21,15 16,10 5,21"/>
+                                </svg>
+                                <p>클릭하여 이미지 업로드</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('addProductModal')">취소</button>
+                <button class="btn btn-primary" onclick="addNewProduct()">상품 추가</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="modal-overlay" id="editProductModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">상품 수정</h3>
+                <button class="modal-close" onclick="closeModal('editProductModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">상품명</label>
+                            <input type="text" class="form-control" id="editProductName">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">상품코드</label>
+                            <input type="text" class="form-control" id="editProductCode" readonly>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">가격 ($)</label>
+                            <input type="number" class="form-control" id="editProductPrice">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">PV</label>
+                            <input type="number" class="form-control" id="editProductPV">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">재고</label>
+                            <input type="number" class="form-control" id="editProductStock">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">상태</label>
+                            <select class="form-control form-select" id="editProductStatus">
+                                <option>판매중</option>
+                                <option>판매중지</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">뱃지</label>
+                        <input type="text" class="form-control" id="editProductBadge" placeholder="Best, New, Premium 등">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상품 설명</label>
+                        <textarea class="form-control" id="editProductDesc"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">상품 이미지</label>
+                        <div class="image-upload-area" id="editImageUploadArea" onclick="document.getElementById('editProductImage').click()">
+                            <input type="file" class="form-control" id="editProductImage" accept="image/*" onchange="previewImage(this, 'editImagePreview')" style="display:none;">
+                            <div class="image-preview" id="editImagePreview">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21,15 16,10 5,21"/>
+                                </svg>
+                                <p>클릭하여 이미지 변경</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editProductModal')">취소</button>
+                <button class="btn btn-primary" onclick="saveEditProduct()">변경사항 저장</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        let currentEditProduct = null;
+        let currentFilter = '';
+        let addImageData = null;
+        let editImageData = null;
+
+        // Initialize products page
+        async function initProductsPage() {
+            await renderProducts();
+        }
+
+        // Filter products by status
+        async function filterProducts() {
+            currentFilter = document.getElementById('statusFilter').value;
+            await renderProducts();
+        }
+
+        // Image preview function
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64 = e.target.result;
+                    preview.innerHTML = `<img src="${base64}" alt="미리보기">`;
+
+                    // Store the base64 data
+                    if (previewId === 'addImagePreview') {
+                        addImageData = base64;
+                    } else if (previewId === 'editImagePreview') {
+                        editImageData = base64;
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Reset image preview
+        function resetImagePreview(previewId) {
+            const preview = document.getElementById(previewId);
+            preview.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21,15 16,10 5,21"/>
+                </svg>
+                <p>클릭하여 이미지 업로드</p>
+            `;
+        }
+
+        // Get product image URL (base64 or file path)
+        function getProductImageUrl(product) {
+            if (product.imageData) {
+                return product.imageData;
+            }
+            return `../images/${product.image}`;
+        }
+
+        // Render products table
+        let currentSearchTerm = '';
+
+        async function searchProducts() {
+            currentSearchTerm = document.getElementById('productSearch').value.trim().toLowerCase();
+            await renderProducts();
+        }
+
+        async function renderProducts() {
+            let products = await weverseData.getProducts();
+
+            // Apply search filter
+            if (currentSearchTerm) {
+                products = products.filter(p =>
+                    p.name.toLowerCase().includes(currentSearchTerm) ||
+                    (p.nameKo && p.nameKo.includes(currentSearchTerm)) ||
+                    p.id.toLowerCase().includes(currentSearchTerm) ||
+                    (p.description && p.description.toLowerCase().includes(currentSearchTerm))
+                );
+            }
+            const tbody = document.getElementById('productsTableBody');
+            const productCount = document.getElementById('productCount');
+            const paginationInfo = document.getElementById('paginationInfo');
+
+            if (!tbody) return;
+
+            // Apply filter
+            if (currentFilter) {
+                products = products.filter(p => p.status === currentFilter);
+            }
+
+            productCount.textContent = `총 ${products.length}개 상품`;
+            paginationInfo.textContent = `${products.length}개 상품 중 1-${products.length} 표시`;
+
+            const statusMap = {
+                'active': { class: 'active', text: '판매중' },
+                'inactive': { class: 'inactive', text: '판매중지' },
+                'outofstock': { class: 'inactive', text: '품절' }
+            };
+
+            tbody.innerHTML = products.map(product => {
+                const status = statusMap[product.status] || { class: '', text: product.status };
+                const stockStatus = product.stock === 0 ? statusMap['outofstock'] : status;
+                const desc = (product.descriptionKo || product.description || '').substring(0, 30);
+                const imgUrl = getProductImageUrl(product);
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <img src="${imgUrl}" alt="${product.name}" class="product-thumb">
+                                <div>
+                                    <div class="product-name">${product.name}</div>
+                                    <div class="product-sku">${desc}${desc.length >= 30 ? '...' : ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${product.id}</td>
+                        <td>$${product.priceUsd || product.priceUSD || 0}</td>
+                        <td class="fw-600" style="color: var(--primary);">${product.pv || 0}</td>
+                        <td>${product.stock}</td>
+                        <td><span class="status-badge ${stockStatus.class}">${stockStatus.text}</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" title="수정" onclick="openEditProduct('${product.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn delete" title="삭제" onclick="deleteProduct('${product.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3,6 5,6 21,6"/>
+                                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Open edit product modal
+        async function openEditProduct(productId) {
+            currentEditProduct = await weverseData.getProductById(productId);
+            if (!currentEditProduct) return;
+
+            document.getElementById('editProductName').value = currentEditProduct.name;
+            document.getElementById('editProductCode').value = currentEditProduct.id;
+            document.getElementById('editProductStatus').value = currentEditProduct.status === 'active' ? '판매중' : '판매중지';
+            document.getElementById('editProductPrice').value = currentEditProduct.priceUsd || currentEditProduct.priceUSD || 0;
+            document.getElementById('editProductPV').value = currentEditProduct.pv || 0;
+            document.getElementById('editProductStock').value = currentEditProduct.stock;
+            document.getElementById('editProductBadge').value = currentEditProduct.badge || '';
+            document.getElementById('editProductDesc').value = currentEditProduct.descriptionKo || currentEditProduct.description || '';
+
+            // Show current image
+            const imgUrl = getProductImageUrl(currentEditProduct);
+            document.getElementById('editImagePreview').innerHTML = `<img src="${imgUrl}" alt="${currentEditProduct.name}">`;
+            editImageData = null; // Reset so we only save if changed
+
+            openModal('editProductModal');
+        }
+
+        // Save edited product
+        async function saveEditProduct() {
+            if (!currentEditProduct) return;
+
+            const status = document.getElementById('editProductStatus').value === '판매중' ? 'active' : 'inactive';
+            const priceUSD = parseInt(document.getElementById('editProductPrice').value);
+            const descText = document.getElementById('editProductDesc').value;
+            const updates = {
+                name: document.getElementById('editProductName').value,
+                status: status,
+                priceUSD: priceUSD,
+                price: priceUSD * 1300,
+                pv: parseInt(document.getElementById('editProductPV').value) || 0,
+                stock: parseInt(document.getElementById('editProductStock').value),
+                badge: document.getElementById('editProductBadge').value,
+                description: descText,
+                descriptionKo: descText
+            };
+
+            // Add image data if new image was uploaded
+            if (editImageData) {
+                updates.imageData = editImageData;
+            }
+
+            await weverseData.updateProduct(currentEditProduct.id, updates);
+            closeModal('editProductModal');
+            await renderProducts();
+            showToast('상품이 수정되었습니다.');
+        }
+
+        // Delete product
+        async function deleteProduct(productId) {
+            const product = await weverseData.getProductById(productId);
+            if (confirm(`"${product.name}" 상품을 삭제하시겠습니까?`)) {
+                await weverseData.deleteProduct(productId);
+                await renderProducts();
+                showToast('상품이 삭제되었습니다.', 'error');
+            }
+        }
+
+        // Add new product
+        async function addNewProduct() {
+            const status = document.getElementById('addProductStatus').value === '판매중' ? 'active' : 'inactive';
+            const priceUSD = parseInt(document.getElementById('addProductPrice').value) || 0;
+            const descText = document.getElementById('addProductDesc').value;
+
+            const productName = document.getElementById('addProductName').value;
+            // 상품명 기반으로 detailPage 자동 생성
+            const detailPageName = 'products/' + productName.toLowerCase().replace(/\s+/g, '-') + '.html';
+
+            const newProduct = {
+                id: document.getElementById('addProductCode').value || 'WV-' + Date.now().toString().slice(-6),
+                name: productName,
+                description: descText,
+                descriptionKo: descText,
+                priceUSD: priceUSD,
+                price: priceUSD * 1300,
+                pv: parseInt(document.getElementById('addProductPV').value) || 0,
+                stock: parseInt(document.getElementById('addProductStock').value) || 0,
+                status: status,
+                badge: document.getElementById('addProductBadge').value || '',
+                image: 'shop-1.jpg',
+                imageData: addImageData || null,
+                detailPage: detailPageName,
+                features: []
+            };
+
+            await weverseData.addProduct(newProduct);
+            closeModal('addProductModal');
+            await renderProducts();
+            showToast('새 상품이 추가되었습니다.');
+
+            // Reset form and image
+            document.getElementById('addProductForm').reset();
+            resetImagePreview('addImagePreview');
+            addImageData = null;
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initProductsPage();
+        });
+    </script>
+</body>
+</html>
