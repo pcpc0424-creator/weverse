@@ -5,6 +5,173 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account - WEVERSE</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* 산하 조직도 스타일 */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .downline-node {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .downline-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0;
+            min-width: 160px;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .downline-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .downline-card-header {
+            background: #1a1f2e;
+            color: #fff;
+            padding: 0.4rem 0.6rem;
+            border-radius: 7px 7px 0 0;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .downline-card-body {
+            padding: 0.6rem;
+        }
+
+        .downline-card-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .downline-card-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .downline-card-label {
+            color: var(--text-secondary);
+        }
+
+        .downline-card-value {
+            font-weight: 500;
+        }
+
+        .downline-rank {
+            display: inline-block;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+
+        /* 등급별 색상 */
+        .rank-crown_diamond { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .rank-red_diamond { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .rank-blue_diamond { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .rank-diamond { background: rgba(168,85,247,0.15); color: #a855f7; }
+        .rank-manager { background: rgba(16,185,129,0.15); color: #10b981; }
+        .rank-general { background: rgba(107,114,128,0.15); color: #6b7280; }
+
+        /* 아코디언 스타일 */
+        .downline-children {
+            margin-left: 1.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border);
+            margin-top: 0.5rem;
+        }
+
+        .downline-children.collapsed {
+            display: none;
+        }
+
+        /* 전체 접기/펼치기 버튼 스타일 */
+        .downline-toggle-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .downline-toggle-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .downline-toggle-btn.expand {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: #ffffff !important;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .downline-toggle-btn.expand svg {
+            stroke: #ffffff !important;
+        }
+
+        .downline-toggle-btn.expand:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .downline-toggle-btn.collapse {
+            background: #2a2f3e;
+            color: #e5e7eb !important;
+            border: 1px solid #3f4451;
+        }
+
+        .downline-toggle-btn.collapse svg {
+            stroke: #e5e7eb !important;
+        }
+
+        .downline-toggle-btn.collapse:hover {
+            background: #353a4a;
+            border-color: #8b5cf6;
+            color: #8b5cf6 !important;
+        }
+
+        .downline-toggle-btn.collapse:hover svg {
+            stroke: #8b5cf6 !important;
+        }
+
+        .downline-expand-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            border: none;
+        }
+
+        .downline-expand-btn:hover {
+            opacity: 0.8;
+        }
+
+        .pv-personal { color: #3b82f6; }
+        .pv-group { color: #10b981; }
+    </style>
 </head>
 <body>
     <!-- Scroll Progress Bar -->
@@ -108,6 +275,15 @@
                                 <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
                             </svg>
                             Wishlist
+                        </button>
+                        <button class="account-nav-item" data-tab="downline">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            조직도
                         </button>
                         <button class="account-nav-item logout-btn" onclick="handleLogout()">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -353,6 +529,69 @@
                             <h3>Your wishlist is empty</h3>
                             <p>Save products you like for later.</p>
                             <a href="shopping.html" class="btn btn-primary">Browse Products</a>
+                        </div>
+                    </div>
+
+                    <!-- Downline Tab (내 산하) -->
+                    <div class="account-tab" id="tab-downline">
+                        <div class="account-tab-header">
+                            <h2>내 산하</h2>
+                            <p>나의 산하 조직 현황</p>
+                        </div>
+
+                        <!-- 산하 통계 -->
+                        <div class="downline-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);" id="downlineTotalCount">0</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">산하 회원수</div>
+                            </div>
+                            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;" id="downlinePersonalPV">0</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">개인 PV</div>
+                            </div>
+                            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center;">
+                                <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;" id="downlineGroupPV">0</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">산하 PV</div>
+                            </div>
+                        </div>
+
+                        <!-- 전체 접기/펼치기 버튼 -->
+                        <div class="downline-toggle-btns">
+                            <button class="downline-toggle-btn expand" onclick="expandAllDownlines()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                                전체 펼치기
+                            </button>
+                            <button class="downline-toggle-btn collapse" onclick="collapseAllDownlines()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M5 12h14"/>
+                                </svg>
+                                전체 접기
+                            </button>
+                        </div>
+
+                        <!-- 산하 조직도 컨테이너 -->
+                        <div class="downline-tree-container" style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; min-height: 300px;">
+                            <div id="downlineTree" style="overflow-x: auto;">
+                                <!-- 조직도가 여기에 렌더링됩니다 -->
+                                <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                    <div class="loading-spinner" style="width: 30px; height: 30px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                                    로딩 중...
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 빈 상태 -->
+                        <div class="account-empty" id="downlineEmpty" style="display: none;">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            <h3>산하 회원이 없습니다</h3>
+                            <p>아직 추천한 회원이 없습니다.</p>
                         </div>
                     </div>
                 </main>
@@ -936,6 +1175,271 @@
             }, 500);
         }
 
+        // =====================================
+        // 산하 조직도 관련 코드
+        // =====================================
+
+        // 등급 표시 정보
+        const RANK_DISPLAY = {
+            'general': { name: '일반', color: '#6b7280' },
+            'manager': { name: '매니저', color: '#10b981' },
+            'diamond': { name: '다이아몬드', color: '#a855f7' },
+            'blue_diamond': { name: '블루다이아몬드', color: '#3b82f6' },
+            'red_diamond': { name: '레드다이아몬드', color: '#ef4444' },
+            'crown_diamond': { name: '크라운다이아몬드', color: '#f59e0b' }
+        };
+
+        let allMembersForDownline = [];
+        let memberPVMap = {};
+        let downlineExpandedNodes = new Set();
+
+        // 산하 조직도 로드
+        async function loadDownlineData() {
+            if (!currentMember) {
+                document.getElementById('downlineTree').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        로그인이 필요합니다.
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                // 모든 회원 데이터 로드
+                allMembersForDownline = await weverseData.getMembers();
+
+                // 주문 데이터로 PV 계산
+                const orders = await weverseData.getOrders();
+                calculateMemberPVForDownline(orders);
+
+                // 내 산하 회원 찾기
+                const myDownlines = findDownlines(currentMember.id);
+
+                // 통계 업데이트
+                updateDownlineStats(myDownlines);
+
+                // 조직도 렌더링
+                renderDownlineTree(myDownlines);
+            } catch (error) {
+                console.error('산하 조직도 로드 오류:', error);
+                document.getElementById('downlineTree').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        데이터를 불러오는 중 오류가 발생했습니다.
+                    </div>
+                `;
+            }
+        }
+
+        // 회원별 PV 계산
+        function calculateMemberPVForDownline(orders) {
+            memberPVMap = {};
+
+            orders.filter(o => o.status !== 'cancelled').forEach(order => {
+                const memberId = order.customer?.memberId;
+                if (memberId) {
+                    if (!memberPVMap[memberId]) {
+                        memberPVMap[memberId] = { personal: 0, group: 0 };
+                    }
+                    memberPVMap[memberId].personal += order.totalPv || 0;
+                }
+            });
+        }
+
+        // 산하 회원 찾기 (재귀)
+        function findDownlines(memberId) {
+            const downlines = allMembersForDownline.filter(m =>
+                m.referrer && m.referrer.id === memberId
+            );
+
+            return downlines.map(member => ({
+                ...member,
+                children: findDownlines(member.id)
+            }));
+        }
+
+        // 산하 회원 수 계산 (재귀)
+        function countDownlines(downlines) {
+            let count = downlines.length;
+            downlines.forEach(d => {
+                count += countDownlines(d.children || []);
+            });
+            return count;
+        }
+
+        // 산하 PV 계산 (재귀)
+        function calculateGroupPVForMember(memberId, downlines) {
+            let groupPV = memberPVMap[memberId]?.personal || 0;
+
+            downlines.forEach(child => {
+                groupPV += calculateGroupPVForMember(child.id, child.children || []);
+            });
+
+            return groupPV;
+        }
+
+        // 통계 업데이트
+        function updateDownlineStats(myDownlines) {
+            const totalCount = countDownlines(myDownlines);
+            const personalPV = memberPVMap[currentMember.id]?.personal || 0;
+            const groupPV = calculateGroupPVForMember(currentMember.id, myDownlines);
+
+            document.getElementById('downlineTotalCount').textContent = totalCount;
+            document.getElementById('downlinePersonalPV').textContent = personalPV.toLocaleString() + ' PV';
+            document.getElementById('downlineGroupPV').textContent = groupPV.toLocaleString() + ' PV';
+        }
+
+        // 산하 조직도 렌더링
+        function renderDownlineTree(downlines) {
+            const container = document.getElementById('downlineTree');
+            const emptyEl = document.getElementById('downlineEmpty');
+
+            if (downlines.length === 0) {
+                container.style.display = 'none';
+                emptyEl.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'block';
+            emptyEl.style.display = 'none';
+
+            let html = '';
+            downlines.forEach(member => {
+                html += renderDownlineNode(member);
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 노드 렌더링
+        function renderDownlineNode(member) {
+            const pv = memberPVMap[member.id] || { personal: 0, group: 0 };
+            const hasChildren = (member.children || []).length > 0;
+            const isExpanded = downlineExpandedNodes.has(member.id);
+
+            const rankInfo = RANK_DISPLAY[member.rank] || RANK_DISPLAY['general'];
+            const joinDate = member.joinDate ? new Date(member.joinDate).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }) : '-';
+
+            // 산하 PV 계산
+            const groupPV = calculateGroupPVForMember(member.id, member.children || []);
+
+            let html = `
+                <div class="downline-node" data-member-id="${member.id}">
+                    <div class="downline-card">
+                        <div class="downline-card-header">
+                            ${member.id}/${member.name}
+                        </div>
+                        <div class="downline-card-body">
+                            <div class="downline-card-row">
+                                <span class="downline-card-label">가입일</span>
+                                <span class="downline-card-value">${joinDate}</span>
+                            </div>
+                            <div class="downline-card-row">
+                                <span class="downline-card-label">등급</span>
+                                <span class="downline-rank rank-${member.rank}">${rankInfo.name}</span>
+                            </div>
+                            <div class="downline-card-row">
+                                <span class="downline-card-label">개인PV</span>
+                                <span class="downline-card-value pv-personal">${pv.personal.toLocaleString()}PV</span>
+                            </div>
+                            <div class="downline-card-row">
+                                <span class="downline-card-label">산하PV</span>
+                                <span class="downline-card-value pv-group">${groupPV.toLocaleString()}PV</span>
+                            </div>
+                        </div>
+                    </div>
+            `;
+
+            // 자식이 있으면 확장 버튼과 자식 표시 (기본 펼침)
+            if (hasChildren) {
+                // 처음 로드 시 기본으로 펼쳐진 상태
+                if (!downlineExpandedNodes.has(member.id) && !downlineExpandedNodes.has('_initialized_' + member.id)) {
+                    downlineExpandedNodes.add(member.id);
+                    downlineExpandedNodes.add('_initialized_' + member.id);
+                }
+                const isNodeExpanded = downlineExpandedNodes.has(member.id);
+
+                html += `
+                    <button class="downline-expand-btn" onclick="toggleDownlineNode('${member.id}')">
+                        ${isNodeExpanded ? '-' : '+'}
+                    </button>
+                `;
+
+                const collapsedClass = isNodeExpanded ? '' : 'collapsed';
+                html += `<div class="downline-children ${collapsedClass}" id="downline-children-${member.id}">`;
+                member.children.forEach(child => {
+                    html += renderDownlineNode(child);
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        // 노드 확장/축소
+        function toggleDownlineNode(memberId) {
+            if (downlineExpandedNodes.has(memberId)) {
+                downlineExpandedNodes.delete(memberId);
+            } else {
+                downlineExpandedNodes.add(memberId);
+            }
+
+            // 해당 노드의 자식만 토글
+            const childrenEl = document.getElementById('downline-children-' + memberId);
+            const btn = document.querySelector(`[data-member-id="${memberId}"] .downline-expand-btn`);
+
+            if (childrenEl) {
+                childrenEl.classList.toggle('collapsed');
+            }
+            if (btn) {
+                btn.textContent = downlineExpandedNodes.has(memberId) ? '-' : '+';
+            }
+        }
+
+        // 전체 펼치기
+        function expandAllDownlines() {
+            const container = document.getElementById('downlineTree');
+            if (!container) return;
+
+            const allChildrenEls = container.querySelectorAll('.downline-children');
+            const allBtns = container.querySelectorAll('.downline-expand-btn');
+
+            allChildrenEls.forEach(el => {
+                el.classList.remove('collapsed');
+                el.style.display = 'block';
+                const memberId = el.id.replace('downline-children-', '');
+                downlineExpandedNodes.add(memberId);
+            });
+
+            allBtns.forEach(btn => {
+                btn.textContent = '-';
+            });
+        }
+
+        // 전체 접기
+        function collapseAllDownlines() {
+            const container = document.getElementById('downlineTree');
+            if (!container) return;
+
+            const allChildrenEls = container.querySelectorAll('.downline-children');
+            const allBtns = container.querySelectorAll('.downline-expand-btn');
+
+            allChildrenEls.forEach(el => {
+                el.classList.add('collapsed');
+                el.style.display = 'none';
+                const memberId = el.id.replace('downline-children-', '');
+                downlineExpandedNodes.delete(memberId);
+            });
+
+            allBtns.forEach(btn => {
+                btn.textContent = '+';
+            });
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             // Debug: Check session state
@@ -954,6 +1458,16 @@
                     }, index * 100);
                 });
             }, 100);
+        });
+
+        // 탭 전환 시 산하 데이터 로드
+        document.querySelectorAll('.account-nav-item').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.dataset.tab;
+                if (tabId === 'downline') {
+                    loadDownlineData();
+                }
+            });
         });
     </script>
 </body>

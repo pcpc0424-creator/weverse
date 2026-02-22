@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>조직도 - WEVERSE 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        /* 조직도 스타일 - 세로 리스트 형태 */
+        .org-container {
+            padding: 1.5rem;
+            overflow: auto;
+            max-height: calc(100vh - 280px);
+        }
+
+        .org-tree {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .org-node {
+            position: relative;
+            margin-left: 0;
+        }
+
+        .org-node-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .org-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0;
+            width: 320px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .org-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .org-card-rank-bar {
+            width: 4px;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .org-card-main {
+            flex: 1;
+            padding: 0.6rem 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .org-card-info {
+            flex: 1;
+        }
+
+        .org-card-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .org-card-meta {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .org-card-stats {
+            text-align: right;
+            font-size: 0.75rem;
+        }
+
+        .org-card-pv {
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .org-card-group-pv {
+            color: #10b981;
+            font-size: 0.7rem;
+        }
+
+        .org-rank {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+
+        /* 등급별 색상 */
+        .rank-crown_diamond { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .rank-red_diamond { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .rank-blue_diamond { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .rank-diamond { background: rgba(168,85,247,0.15); color: #a855f7; }
+        .rank-manager { background: rgba(16,185,129,0.15); color: #10b981; }
+        .rank-general { background: rgba(107,114,128,0.15); color: #6b7280; }
+
+        .bar-crown_diamond { background: #f59e0b; }
+        .bar-red_diamond { background: #ef4444; }
+        .bar-blue_diamond { background: #3b82f6; }
+        .bar-diamond { background: #a855f7; }
+        .bar-manager { background: #10b981; }
+        .bar-general { background: #6b7280; }
+
+        /* 확장/축소 버튼 */
+        .expand-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .expand-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* 자식 컨테이너 - 들여쓰기 */
+        .org-children {
+            margin-left: 1.5rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--border);
+        }
+
+        .org-children.collapsed {
+            display: none;
+        }
+
+        /* 레벨 표시 */
+        .org-level-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            font-size: 0.65rem;
+            color: var(--text-light);
+            flex-shrink: 0;
+        }
+
+        /* 검색/필터 영역 */
+        .org-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .org-search {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .org-search input {
+            border: none;
+            background: none;
+            outline: none;
+            color: var(--text-primary);
+            width: 100%;
+        }
+
+        .org-search svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-light);
+        }
+
+        /* 확장/축소 버튼 */
+        .expand-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        .expand-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* 숨김 상태 */
+        .org-children.collapsed {
+            display: none;
+        }
+
+        /* 통계 카드 */
+        .org-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .org-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .org-stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .org-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        /* PV 하이라이트 */
+        .pv-personal {
+            color: #3b82f6;
+        }
+
+        .pv-group {
+            color: #10b981;
+        }
+
+        /* 로딩 상태 */
+        .loading-overlay {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            min-width: 32px;
+        }
+
+        /* 회원 상세 모달 */
+        .member-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .member-detail-item {
+            padding: 0.75rem;
+            background: var(--bg-main);
+            border-radius: 6px;
+        }
+
+        .member-detail-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .member-detail-value {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">WE<span>V</span>ERSE</a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인</div>
+                </div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    대시보드
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">관리</div>
+                </div>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    상품 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    주문 관리
+                </a>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    회원 관리
+                </a>
+                <a href="organization.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    조직도
+                </a>
+                <a href="settlement.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                    </svg>
+                    마감 관리
+                </a>
+                <a href="points.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    포인트 관리
+                </a>
+                <a href="ppoint-earning.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    P포인트 적립 상세
+                </a>
+                <a href="statistics.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    통계
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">시스템</div>
+                </div>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                    시스템 설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <h1 class="page-title">조직도</h1>
+                </div>
+                <div class="header-right">
+                    <a href="../index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                            <polyline points="15,3 21,3 21,9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-area">
+                <!-- 조직도 통계 -->
+                <div class="org-stats" id="orgStats">
+                    <div class="org-stat-card">
+                        <div class="org-stat-value" id="statTotalMembers">0</div>
+                        <div class="org-stat-label">전체 회원</div>
+                    </div>
+                    <div class="org-stat-card">
+                        <div class="org-stat-value" id="statTotalPV">0</div>
+                        <div class="org-stat-label">전체 PV</div>
+                    </div>
+                    <div class="org-stat-card">
+                        <div class="org-stat-value" id="statTopLevel">0</div>
+                        <div class="org-stat-label">최상위 회원</div>
+                    </div>
+                    <div class="org-stat-card">
+                        <div class="org-stat-value" id="statMaxDepth">0</div>
+                        <div class="org-stat-label">최대 레벨</div>
+                    </div>
+                </div>
+
+                <!-- 컨트롤 영역 -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="org-controls">
+                            <div class="org-search">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                                <input type="text" id="memberSearch" placeholder="회원 검색 (이름/아이디)..." oninput="searchMember()">
+                            </div>
+                            <button class="btn btn-outline" onclick="expandAll()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15 3 21 3 21 9"/>
+                                    <polyline points="9 21 3 21 3 15"/>
+                                    <line x1="21" y1="3" x2="14" y2="10"/>
+                                    <line x1="3" y1="21" x2="10" y2="14"/>
+                                </svg>
+                                전체 펼치기
+                            </button>
+                            <button class="btn btn-outline" onclick="collapseAll()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="4 14 10 14 10 20"/>
+                                    <polyline points="20 10 14 10 14 4"/>
+                                    <line x1="14" y1="10" x2="21" y2="3"/>
+                                    <line x1="3" y1="21" x2="10" y2="14"/>
+                                </svg>
+                                전체 접기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 조직도 컨테이너 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">조직 구조</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="org-container" id="orgContainer">
+                            <div class="loading-overlay">
+                                <div class="loading-spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 회원 상세 모달 -->
+    <div class="modal-overlay" id="memberDetailModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">회원 상세 정보</h3>
+                <button class="modal-close" onclick="closeModal('memberDetailModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <div class="sidebar-user-avatar" id="modalMemberAvatar" style="width: 60px; height: 60px; font-size: 1.5rem; margin: 0 auto 0.75rem;">-</div>
+                    <h3 style="margin-bottom: 0.25rem;" id="modalMemberName">-</h3>
+                    <code style="background: var(--bg-main); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.85rem;" id="modalMemberUsername">-</code>
+                </div>
+
+                <div class="member-detail-grid">
+                    <div class="member-detail-item">
+                        <div class="member-detail-label">등급</div>
+                        <div class="member-detail-value" id="modalMemberRank">-</div>
+                    </div>
+                    <div class="member-detail-item">
+                        <div class="member-detail-label">가입일</div>
+                        <div class="member-detail-value" id="modalMemberJoinDate">-</div>
+                    </div>
+                    <div class="member-detail-item">
+                        <div class="member-detail-label">개인 PV</div>
+                        <div class="member-detail-value pv-personal" id="modalPersonalPV">0 PV</div>
+                    </div>
+                    <div class="member-detail-item">
+                        <div class="member-detail-label">산하 PV</div>
+                        <div class="member-detail-value pv-group" id="modalGroupPV">0 PV</div>
+                    </div>
+                    <div class="member-detail-item">
+                        <div class="member-detail-label">추천인</div>
+                        <div class="member-detail-value" id="modalMemberReferrer">-</div>
+                    </div>
+                    <div class="member-detail-item">
+                        <div class="member-detail-label">산하 회원수</div>
+                        <div class="member-detail-value" id="modalDownlineCount">0명</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('memberDetailModal')">닫기</button>
+                <a href="#" class="btn btn-primary" id="modalMemberLink">회원 관리로 이동</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        // 전역 데이터
+        let allMembers = [];
+        let memberPVMap = {};
+        let orgTree = {};
+        let expandedNodes = new Set();
+
+        // 등급 표시 정보
+        const RANK_DISPLAY = {
+            'general': { name: '일반', color: '#6b7280' },
+            'manager': { name: '매니저', color: '#10b981' },
+            'diamond': { name: '다이아몬드', color: '#a855f7' },
+            'blue_diamond': { name: '블루다이아몬드', color: '#3b82f6' },
+            'red_diamond': { name: '레드다이아몬드', color: '#ef4444' },
+            'crown_diamond': { name: '크라운다이아몬드', color: '#f59e0b' }
+        };
+
+        // 초기화 - weverseData가 준비될 때까지 대기
+        document.addEventListener('DOMContentLoaded', async function() {
+            // weverseData가 초기화될 때까지 잠시 대기
+            let retryCount = 0;
+            while (typeof weverseData === 'undefined' && retryCount < 10) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                retryCount++;
+            }
+
+            if (typeof weverseData === 'undefined') {
+                console.error('weverseData가 초기화되지 않았습니다.');
+                document.getElementById('orgContainer').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                        데이터 스토어를 초기화하는 중 오류가 발생했습니다.
+                    </div>
+                `;
+                return;
+            }
+
+            await loadOrganizationData();
+        });
+
+        // 조직도 데이터 로드
+        async function loadOrganizationData() {
+            try {
+                console.log('조직도 데이터 로딩 시작...');
+
+                // 회원 데이터 로드
+                allMembers = await weverseData.getMembers();
+                console.log('회원 데이터 로드됨:', allMembers.length, '명');
+                console.log('회원 샘플:', allMembers[0]);
+
+                // 주문 데이터로 PV 계산
+                const orders = await weverseData.getOrders();
+                console.log('주문 데이터 로드됨:', orders.length, '건');
+                calculateMemberPV(orders);
+
+                // 조직 트리 구성
+                buildOrgTree();
+                console.log('조직 트리 구성됨 - 최상위:', orgTree.roots.length, '명');
+                console.log('최상위 회원 IDs:', orgTree.roots);
+
+                // 통계 업데이트
+                updateOrgStats();
+
+                // 초기에 2단계까지 자동으로 펼치기
+                expandToLevel(2);
+
+                // 조직도 렌더링
+                renderOrgChart();
+            } catch (error) {
+                console.error('조직도 데이터 로드 오류:', error);
+                document.getElementById('orgContainer').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                        데이터를 불러오는 중 오류가 발생했습니다: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // 회원별 PV 계산
+        function calculateMemberPV(orders) {
+            memberPVMap = {};
+
+            // 완료된 주문의 PV만 계산
+            orders.filter(o => o.status !== 'cancelled').forEach(order => {
+                const memberId = order.customer?.memberId;
+                if (memberId) {
+                    if (!memberPVMap[memberId]) {
+                        memberPVMap[memberId] = { personal: 0, group: 0 };
+                    }
+                    memberPVMap[memberId].personal += order.totalPv || 0;
+                }
+            });
+        }
+
+        // 조직 트리 구성
+        function buildOrgTree() {
+            orgTree = {
+                roots: [],
+                children: {},
+                memberMap: {}
+            };
+
+            // 회원 맵 생성
+            allMembers.forEach(member => {
+                orgTree.memberMap[member.id] = member;
+                orgTree.children[member.id] = [];
+            });
+
+            // 부모-자식 관계 설정
+            allMembers.forEach(member => {
+                if (member.referrer && member.referrer.id && orgTree.memberMap[member.referrer.id]) {
+                    orgTree.children[member.referrer.id].push(member.id);
+                } else {
+                    // 추천인이 없으면 최상위
+                    orgTree.roots.push(member.id);
+                }
+            });
+
+            // 산하 PV 계산 (재귀적으로)
+            orgTree.roots.forEach(rootId => {
+                calculateGroupPV(rootId);
+            });
+        }
+
+        // 산하 PV 재귀 계산
+        function calculateGroupPV(memberId) {
+            if (!memberPVMap[memberId]) {
+                memberPVMap[memberId] = { personal: 0, group: 0 };
+            }
+
+            let groupPV = memberPVMap[memberId].personal;
+
+            const children = orgTree.children[memberId] || [];
+            children.forEach(childId => {
+                groupPV += calculateGroupPV(childId);
+            });
+
+            memberPVMap[memberId].group = groupPV;
+            return groupPV;
+        }
+
+        // 산하 회원 수 계산
+        function getDownlineCount(memberId) {
+            const children = orgTree.children[memberId] || [];
+            let count = children.length;
+            children.forEach(childId => {
+                count += getDownlineCount(childId);
+            });
+            return count;
+        }
+
+        // 최대 깊이 계산
+        function getMaxDepth(memberId, currentDepth = 1) {
+            const children = orgTree.children[memberId] || [];
+            if (children.length === 0) return currentDepth;
+
+            let maxChildDepth = currentDepth;
+            children.forEach(childId => {
+                const childDepth = getMaxDepth(childId, currentDepth + 1);
+                if (childDepth > maxChildDepth) maxChildDepth = childDepth;
+            });
+            return maxChildDepth;
+        }
+
+        // 통계 업데이트
+        function updateOrgStats() {
+            document.getElementById('statTotalMembers').textContent = allMembers.length;
+
+            const totalPV = Object.values(memberPVMap).reduce((sum, pv) => sum + (pv.personal || 0), 0);
+            document.getElementById('statTotalPV').textContent = totalPV.toLocaleString();
+
+            document.getElementById('statTopLevel').textContent = orgTree.roots.length;
+
+            let maxDepth = 0;
+            orgTree.roots.forEach(rootId => {
+                const depth = getMaxDepth(rootId);
+                if (depth > maxDepth) maxDepth = depth;
+            });
+            document.getElementById('statMaxDepth').textContent = maxDepth;
+        }
+
+        // 조직도 렌더링
+        function renderOrgChart() {
+            const container = document.getElementById('orgContainer');
+
+            if (orgTree.roots.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-light);">
+                        등록된 회원이 없습니다.
+                    </div>
+                `;
+                return;
+            }
+
+            // 최상위 회원들부터 트리 렌더링
+            let html = '<div class="org-tree">';
+
+            orgTree.roots.forEach(rootId => {
+                html += renderOrgNode(rootId, 1);
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // 노드 렌더링 - 세로 리스트 형태
+        function renderOrgNode(memberId, level) {
+            const member = orgTree.memberMap[memberId];
+            if (!member) return '';
+
+            const pv = memberPVMap[memberId] || { personal: 0, group: 0 };
+            const children = orgTree.children[memberId] || [];
+            const hasChildren = children.length > 0;
+            const isExpanded = expandedNodes.has(memberId);
+
+            const rankInfo = RANK_DISPLAY[member.rank] || RANK_DISPLAY['general'];
+            const downlineCount = getDownlineCount(memberId);
+
+            let html = `
+                <div class="org-node" data-member-id="${memberId}">
+                    <div class="org-node-content">
+                        ${hasChildren ? `
+                            <span class="expand-btn" onclick="event.stopPropagation(); toggleNode('${memberId}')">
+                                ${isExpanded ? '−' : '+'}
+                            </span>
+                        ` : `<span class="org-level-badge">${level}</span>`}
+                        <div class="org-card" onclick="showMemberDetail('${memberId}')">
+                            <div class="org-card-rank-bar bar-${member.rank}"></div>
+                            <div class="org-card-main">
+                                <div class="org-card-info">
+                                    <div class="org-card-name">${member.name} <span style="font-weight: 400; color: var(--text-light);">(${member.username || member.id})</span></div>
+                                    <div class="org-card-meta">
+                                        <span class="org-rank rank-${member.rank}">${rankInfo.name}</span>
+                                        · ${member.memberType === 'dealer' ? '딜러' : '소비자'}
+                                        ${hasChildren ? ` · 산하 ${downlineCount}명` : ''}
+                                    </div>
+                                </div>
+                                <div class="org-card-stats">
+                                    <div class="org-card-pv">${pv.personal.toLocaleString()} PV</div>
+                                    ${pv.group > pv.personal ? `<div class="org-card-group-pv">그룹 ${pv.group.toLocaleString()} PV</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            `;
+
+            // 자식 노드가 있으면 자식 렌더링
+            if (hasChildren) {
+                const collapsedClass = isExpanded ? '' : 'collapsed';
+
+                html += `<div class="org-children ${collapsedClass}" id="children-${memberId}">`;
+                children.forEach(childId => {
+                    html += renderOrgNode(childId, level + 1);
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        // 노드 확장/축소
+        function toggleNode(memberId) {
+            if (expandedNodes.has(memberId)) {
+                expandedNodes.delete(memberId);
+            } else {
+                expandedNodes.add(memberId);
+            }
+            renderOrgChart();
+        }
+
+        // 특정 레벨까지 펼치기
+        function expandToLevel(maxLevel) {
+            function expandNode(memberId, currentLevel) {
+                if (currentLevel >= maxLevel) return;
+
+                const children = orgTree.children[memberId] || [];
+                if (children.length > 0) {
+                    expandedNodes.add(memberId);
+                    children.forEach(childId => {
+                        expandNode(childId, currentLevel + 1);
+                    });
+                }
+            }
+
+            orgTree.roots.forEach(rootId => {
+                expandNode(rootId, 0);
+            });
+        }
+
+        // 전체 펼치기
+        function expandAll() {
+            allMembers.forEach(member => {
+                if ((orgTree.children[member.id] || []).length > 0) {
+                    expandedNodes.add(member.id);
+                }
+            });
+            renderOrgChart();
+        }
+
+        // 전체 접기
+        function collapseAll() {
+            expandedNodes.clear();
+            renderOrgChart();
+        }
+
+        // 회원 검색
+        function searchMember() {
+            const searchTerm = document.getElementById('memberSearch').value.trim().toLowerCase();
+
+            if (!searchTerm) {
+                // 검색어가 없으면 하이라이트 제거
+                document.querySelectorAll('.org-card').forEach(card => {
+                    card.style.boxShadow = '';
+                    card.style.border = '';
+                });
+                return;
+            }
+
+            // 검색어와 일치하는 회원 찾기
+            let foundMemberId = null;
+            for (const member of allMembers) {
+                if (member.name.toLowerCase().includes(searchTerm) ||
+                    (member.username && member.username.toLowerCase().includes(searchTerm))) {
+                    foundMemberId = member.id;
+                    break;
+                }
+            }
+
+            if (foundMemberId) {
+                // 해당 회원까지의 경로 펼치기
+                expandPathTo(foundMemberId);
+                renderOrgChart();
+
+                // 하이라이트
+                setTimeout(() => {
+                    const node = document.querySelector(`[data-member-id="${foundMemberId}"] .org-card`);
+                    if (node) {
+                        node.style.boxShadow = '0 0 0 3px var(--primary)';
+                        node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 100);
+            }
+        }
+
+        // 특정 회원까지 경로 펼치기
+        function expandPathTo(memberId) {
+            const member = orgTree.memberMap[memberId];
+            if (!member) return;
+
+            // 상위 회원들 모두 펼치기
+            if (member.referrer && member.referrer.id) {
+                expandedNodes.add(member.referrer.id);
+                expandPathTo(member.referrer.id);
+            }
+        }
+
+        // 회원 상세 보기
+        function showMemberDetail(memberId) {
+            const member = orgTree.memberMap[memberId];
+            if (!member) return;
+
+            const pv = memberPVMap[memberId] || { personal: 0, group: 0 };
+            const rankInfo = RANK_DISPLAY[member.rank] || RANK_DISPLAY['general'];
+
+            document.getElementById('modalMemberAvatar').textContent = member.name.substring(0, 2);
+            document.getElementById('modalMemberName').textContent = member.name;
+            document.getElementById('modalMemberUsername').textContent = member.username || member.id;
+            document.getElementById('modalMemberRank').innerHTML = `<span style="color: ${rankInfo.color};">${rankInfo.name}</span>`;
+            document.getElementById('modalMemberJoinDate').textContent = member.joinDate || '-';
+            document.getElementById('modalPersonalPV').textContent = pv.personal.toLocaleString() + ' PV';
+            document.getElementById('modalGroupPV').textContent = pv.group.toLocaleString() + ' PV';
+            document.getElementById('modalMemberReferrer').textContent = member.referrer ? `${member.referrer.name} (${member.referrer.username})` : '-';
+            document.getElementById('modalDownlineCount').textContent = getDownlineCount(memberId) + '명';
+            document.getElementById('modalMemberLink').href = `members.html?search=${member.username || member.id}`;
+
+            openModal('memberDetailModal');
+        }
+
+    </script>
+</body>
+</html>

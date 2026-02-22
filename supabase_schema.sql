@@ -151,13 +151,72 @@ INSERT INTO products (id, name, name_ko, description, description_ko, category, 
 ('WV-PP-006', 'Premium Package', '프리미엄 패키지', 'All-in-one health package', '올인원 건강 패키지', 'package', '세트', 299000, 299, 150, 45, 'active', 'Premium', 'shop-6.jpg', 'products/premium-package.html', '[{"title": "Complete Package", "desc": "Includes all 5 premium health supplements"}]');
 
 -- 기본 회원 데이터 (테스트용)
-INSERT INTO members (id, name, username, email, phone, password, member_type, rank, total_spent, order_count, status, join_date, points, bank_info) VALUES
-('M001', '김민준', 'minjun', 'minjun.kim@example.com', '010-1234-5678', 'test1234', 'dealer', 'crown_diamond', 1250000, 15, 'active', '2023-06-15', '{"rPay": 50000, "pPoint": 125, "cPoint": 50, "tPoint": 20}', '{"bankName": "신한은행", "accountNumber": "110-123-456789", "accountHolder": "김민준"}'),
-('M002', '이서연', 'seoyeon', 'seoyeon.lee@example.com', '010-2345-6789', 'test1234', 'dealer', 'red_diamond', 890000, 10, 'active', '2023-08-22', '{"rPay": 30000, "pPoint": 89, "cPoint": 30, "tPoint": 10}', '{"bankName": "국민은행", "accountNumber": "123-45-678901", "accountHolder": "이서연"}'),
-('M003', '박지훈', 'jihun', 'jihun.park@example.com', '010-3456-7890', 'test1234', 'consumer', 'diamond', 450000, 5, 'active', '2023-10-05', '{"rPay": 10000, "pPoint": 0, "cPoint": 0, "tPoint": 15}', '{"bankName": "", "accountNumber": "", "accountHolder": ""}'),
-('M004', '최수아', 'sua', 'sua.choi@example.com', '010-4567-8901', 'test1234', 'consumer', 'manager', 189000, 2, 'active', '2023-12-01', '{"rPay": 5000, "pPoint": 0, "cPoint": 0, "tPoint": 5}', '{"bankName": "", "accountNumber": "", "accountHolder": ""}'),
-('M005', '정예준', 'yejun', 'yejun.jung@example.com', '010-5678-9012', 'test1234', 'consumer', 'general', 89000, 1, 'inactive', '2024-01-02', '{"rPay": 0, "pPoint": 0, "cPoint": 0, "tPoint": 0}', '{"bankName": "", "accountNumber": "", "accountHolder": ""}');
+-- 조직도: M001 (김민준) → M002 (이서연), M003 (박지훈)
+--         M002 (이서연) → M004 (최수아)
+--         M003 (박지훈) → M005 (정예준)
+INSERT INTO members (id, name, username, email, phone, password, member_type, rank, total_spent, order_count, status, join_date, points, bank_info, referrer) VALUES
+('M001', '김민준', 'minjun', 'minjun.kim@example.com', '010-1234-5678', 'test1234', 'dealer', 'crown_diamond', 1250000, 15, 'active', '2023-06-15', '{"rPay": 50000, "pPoint": 125, "cPoint": 50, "tPoint": 20}', '{"bankName": "신한은행", "accountNumber": "110-123-456789", "accountHolder": "김민준"}', NULL),
+('M002', '이서연', 'seoyeon', 'seoyeon.lee@example.com', '010-2345-6789', 'test1234', 'dealer', 'red_diamond', 890000, 10, 'active', '2023-08-22', '{"rPay": 30000, "pPoint": 89, "cPoint": 30, "tPoint": 10}', '{"bankName": "국민은행", "accountNumber": "123-45-678901", "accountHolder": "이서연"}', '{"id": "M001", "username": "minjun", "name": "김민준"}'),
+('M003', '박지훈', 'jihun', 'jihun.park@example.com', '010-3456-7890', 'test1234', 'consumer', 'diamond', 450000, 5, 'active', '2023-10-05', '{"rPay": 10000, "pPoint": 0, "cPoint": 0, "tPoint": 15}', '{"bankName": "", "accountNumber": "", "accountHolder": ""}', '{"id": "M001", "username": "minjun", "name": "김민준"}'),
+('M004', '최수아', 'sua', 'sua.choi@example.com', '010-4567-8901', 'test1234', 'consumer', 'manager', 189000, 2, 'active', '2023-12-01', '{"rPay": 5000, "pPoint": 0, "cPoint": 0, "tPoint": 5}', '{"bankName": "", "accountNumber": "", "accountHolder": ""}', '{"id": "M002", "username": "seoyeon", "name": "이서연"}'),
+('M005', '정예준', 'yejun', 'yejun.jung@example.com', '010-5678-9012', 'test1234', 'consumer', 'general', 89000, 1, 'inactive', '2024-01-02', '{"rPay": 0, "pPoint": 0, "cPoint": 0, "tPoint": 0}', '{"bankName": "", "accountNumber": "", "accountHolder": ""}', '{"id": "M003", "username": "jihun", "name": "박지훈"}');
 
 -- 관리자 계정
 INSERT INTO members (id, name, username, password, member_type, rank, status) VALUES
 ('ADMIN', '관리자', 'admin', 'admin', 'admin', 'admin', 'active');
+
+-- =============================================
+-- 7. Settlements (마감 이력) 테이블
+-- =============================================
+CREATE TABLE settlements (
+    id TEXT PRIMARY KEY,
+    type TEXT NOT NULL,                    -- 'weekly' | 'monthly'
+    period_start DATE NOT NULL,
+    period_end DATE NOT NULL,
+    status TEXT DEFAULT 'completed',       -- 'completed' | 'rolled_back'
+    total_pv INTEGER DEFAULT 0,
+    total_bonus INTEGER DEFAULT 0,
+    total_referral_bonus INTEGER DEFAULT 0,
+    total_incentive INTEGER DEFAULT 0,
+    total_nurturing_bonus INTEGER DEFAULT 0,
+    total_crown_bonus INTEGER DEFAULT 0,
+    members_processed INTEGER DEFAULT 0,
+    members_promoted INTEGER DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    rolled_back_at TIMESTAMPTZ,
+    note TEXT
+);
+
+-- 8. Settlement Details (마감 상세) 테이블
+CREATE TABLE settlement_details (
+    id TEXT PRIMARY KEY,
+    settlement_id TEXT REFERENCES settlements(id) ON DELETE CASCADE,
+    member_id TEXT REFERENCES members(id) ON DELETE CASCADE,
+    rank_before TEXT,                      -- 마감 전 직급
+    rank_after TEXT,                       -- 마감 후 직급
+    personal_pv INTEGER DEFAULT 0,         -- 본인 PV
+    cumulative_pv INTEGER DEFAULT 0,       -- 누적 PV
+    group_pv INTEGER DEFAULT 0,            -- 그룹 PV
+    direct_referral_pv INTEGER DEFAULT 0,  -- 직추천 PV
+    referral_bonus INTEGER DEFAULT 0,      -- 추천보너스
+    incentive INTEGER DEFAULT 0,           -- 인센티브
+    nurturing_bonus INTEGER DEFAULT 0,     -- 육성보너스
+    crown_bonus INTEGER DEFAULT 0,         -- 크라운보너스
+    total_bonus INTEGER DEFAULT 0,         -- 총 보너스
+    rollup_to TEXT,                        -- 롤업된 상위회원 ID
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- RLS 설정
+ALTER TABLE settlements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE settlement_details ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow all for settlements" ON settlements FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all for settlement_details" ON settlement_details FOR ALL USING (true) WITH CHECK (true);
+
+-- 인덱스 생성
+CREATE INDEX idx_settlements_type ON settlements(type);
+CREATE INDEX idx_settlements_status ON settlements(status);
+CREATE INDEX idx_settlements_period ON settlements(period_start, period_end);
+CREATE INDEX idx_settlement_details_settlement_id ON settlement_details(settlement_id);
+CREATE INDEX idx_settlement_details_member_id ON settlement_details(member_id);

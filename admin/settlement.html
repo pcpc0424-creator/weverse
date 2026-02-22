@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마감 관리 - WEVERSE 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">WE<span>V</span>ERSE</a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">메인</div>
+                </div>
+                <a href="index.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    대시보드
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">관리</div>
+                </div>
+                <a href="products.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    상품 관리
+                </a>
+                <a href="orders.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 01-8 0"/>
+                    </svg>
+                    주문 관리
+                </a>
+                <a href="members.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    회원 관리
+                </a>
+                <a href="organization.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    조직도
+                </a>
+                <a href="settlement.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                    </svg>
+                    마감 관리
+                </a>
+                <a href="points.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    포인트 관리
+                </a>
+                <a href="ppoint-earning.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    P포인트 적립 상세
+                </a>
+                <a href="statistics.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    통계
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">시스템</div>
+                </div>
+                <a href="settings.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+                    </svg>
+                    시스템 설정
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminUserName">관리자</div>
+                        <div class="sidebar-user-role">최고 관리자</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    로그아웃
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <h1 class="page-title">마감 관리</h1>
+                </div>
+                <div class="header-right">
+                    <a href="../index.html" class="back-to-site">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                            <polyline points="15,3 21,3 21,9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        사이트 보기
+                    </a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-area">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>이번 주 PV</h3>
+                            <div class="stat-value" id="statWeeklyPV">0 PV</div>
+                            <div class="stat-change positive" id="statWeeklyOrders">
+                                0건 주문
+                            </div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>이번 달 PV</h3>
+                            <div class="stat-value" id="statMonthlyPV">0 PV</div>
+                            <div class="stat-change positive" id="statMonthlyOrders">
+                                0건 주문
+                            </div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 마감 횟수</h3>
+                            <div class="stat-value" id="statTotalSettlements">0회</div>
+                            <div class="stat-change" id="statLastSettlement">
+                                -
+                            </div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>총 지급 보너스</h3>
+                            <div class="stat-value" id="statTotalBonus">$0</div>
+                            <div class="stat-change positive" id="statBonusMembers">
+                                0명 수령
+                            </div>
+                        </div>
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settlement Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">마감 실행</h2>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                            <!-- Weekly Settlement -->
+                            <div style="padding: 1.5rem; background: var(--bg-main); border-radius: 12px; border: 1px solid var(--border);">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                                    <div style="width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); display: flex; align-items: center; justify-content: center;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="16" y1="2" x2="16" y2="6"/>
+                                            <line x1="8" y1="2" x2="8" y2="6"/>
+                                            <line x1="3" y1="10" x2="21" y2="10"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 1.1rem;">주마감</h3>
+                                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">추천보너스 + 직급 승급</p>
+                                    </div>
+                                </div>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5;">
+                                    지난 주 매출 PV 기준으로 추천보너스(30%)를 정산하고, 직급 승급 조건을 평가합니다.
+                                </p>
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                                        <label class="form-label" style="font-size: 0.75rem;">시작일</label>
+                                        <input type="date" class="form-control" id="weeklyStartDate">
+                                    </div>
+                                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                                        <label class="form-label" style="font-size: 0.75rem;">종료일</label>
+                                        <input type="date" class="form-control" id="weeklyEndDate">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%;" onclick="executeWeeklySettlement()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                        <polyline points="9 11 12 14 22 4"/>
+                                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                                    </svg>
+                                    주마감 실행
+                                </button>
+                            </div>
+
+                            <!-- Monthly Settlement -->
+                            <div style="padding: 1.5rem; background: var(--bg-main); border-radius: 12px; border: 1px solid var(--border);">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                                    <div style="width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: flex; align-items: center; justify-content: center;">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="16" y1="2" x2="16" y2="6"/>
+                                            <line x1="8" y1="2" x2="8" y2="6"/>
+                                            <line x1="3" y1="10" x2="21" y2="10"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 style="margin: 0; font-size: 1.1rem;">월마감</h3>
+                                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">인센티브 + 육성보너스 + 크라운보너스</p>
+                                    </div>
+                                </div>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5;">
+                                    지난 달 매출 PV 기준으로 인센티브, 육성보너스, 크라운다이아 보너스를 정산합니다.
+                                </p>
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                                        <label class="form-label" style="font-size: 0.75rem;">시작일</label>
+                                        <input type="date" class="form-control" id="monthlyStartDate">
+                                    </div>
+                                    <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                                        <label class="form-label" style="font-size: 0.75rem;">종료일</label>
+                                        <input type="date" class="form-control" id="monthlyEndDate">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" style="width: 100%; background: #10b981;" onclick="executeMonthlySettlement()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                        <polyline points="9 11 12 14 22 4"/>
+                                        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                                    </svg>
+                                    월마감 실행
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bonus Verification (수당 검수용 조회) -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">수당 검수용 조회</h2>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                            회원의 직추천(1레벨) 회원들의 주문/PV 정보 조회
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                            <div class="form-group" style="flex: 0 0 200px; margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">회원 아이디</label>
+                                <input type="text" class="form-control" id="verifyMemberUsername" placeholder="아이디 입력">
+                            </div>
+                            <div class="form-group" style="flex: 0 0 150px; margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">시작일</label>
+                                <input type="date" class="form-control" id="verifyStartDate">
+                            </div>
+                            <div class="form-group" style="flex: 0 0 150px; margin-bottom: 0;">
+                                <label class="form-label" style="font-size: 0.75rem;">종료일</label>
+                                <input type="date" class="form-control" id="verifyEndDate">
+                            </div>
+                            <button class="btn btn-primary" onclick="searchBonusVerification()" style="height: 42px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                                조회
+                            </button>
+                        </div>
+
+                        <!-- Search Result Info -->
+                        <div id="verifyResultInfo" style="display: none; margin-top: 1.5rem; padding: 1rem; background: var(--bg-main); border-radius: 8px; border: 1px solid var(--border);">
+                            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                                <div>
+                                    <span style="color: var(--text-secondary); font-size: 0.85rem;">조회 대상:</span>
+                                    <span class="fw-600" id="verifyTargetMember">-</span>
+                                </div>
+                                <div>
+                                    <span style="color: var(--text-secondary); font-size: 0.85rem;">조회 기간:</span>
+                                    <span class="fw-500" id="verifyPeriod">-</span>
+                                </div>
+                                <div>
+                                    <span style="color: var(--text-secondary); font-size: 0.85rem;">직추천 회원 수:</span>
+                                    <span class="fw-600" id="verifyReferralCount">0명</span>
+                                </div>
+                                <div>
+                                    <span style="color: var(--text-secondary); font-size: 0.85rem;">총 주문 PV:</span>
+                                    <span class="fw-600" style="color: #10b981;" id="verifyTotalPV">0 PV</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Result Table -->
+                        <div id="verifyResultTable" style="display: none; margin-top: 1rem;">
+                            <div style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem;">
+                                <button class="btn btn-outline" onclick="exportVerificationResults()" style="font-size: 0.85rem;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                        <polyline points="7,10 12,15 17,10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                    엑셀 내보내기
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="data-table" style="font-size: 0.9rem;">
+                                    <thead>
+                                        <tr>
+                                            <th>아이디</th>
+                                            <th>이름</th>
+                                            <th>직급</th>
+                                            <th>주문 건수</th>
+                                            <th>기간 내 주문금액</th>
+                                            <th>기간 내 주문 PV</th>
+                                            <th>누적 PV</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="verifyResultBody">
+                                        <!-- Results will be loaded dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- No Result -->
+                        <div id="verifyNoResult" style="display: none; margin-top: 1.5rem; text-align: center; padding: 2rem; color: var(--text-light);">
+                            직추천 회원이 없거나 기간 내 주문이 없습니다.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settlement History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">마감 이력</h2>
+                        <div class="d-flex align-center gap-2">
+                            <select class="form-control form-select" style="width: 120px;" id="settlementTypeFilter" onchange="renderSettlements()">
+                                <option value="">전체</option>
+                                <option value="weekly">주마감</option>
+                                <option value="monthly">월마감</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="data-table" id="settlementsTable">
+                                <thead>
+                                    <tr>
+                                        <th>마감 ID</th>
+                                        <th>유형</th>
+                                        <th>기간</th>
+                                        <th>총 PV</th>
+                                        <th>총 보너스</th>
+                                        <th>처리 회원</th>
+                                        <th>승급</th>
+                                        <th>상태</th>
+                                        <th>생성일</th>
+                                        <th>관리</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="settlementsTableBody">
+                                    <!-- Settlements will be loaded dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="pagination">
+                            <div class="pagination-info" id="settlementPaginationInfo">0건</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settlement Detail Modal -->
+    <div class="modal-overlay" id="settlementDetailModal">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title">마감 상세 정보</h3>
+                <button class="modal-close" onclick="closeModal('settlementDetailModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="padding: 1rem; background: var(--bg-main); border-radius: 8px; text-align: center;">
+                        <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 0.25rem;">총 PV</div>
+                        <div class="fw-600" style="font-size: 1.25rem;" id="modalSettlementPV">0</div>
+                    </div>
+                    <div style="padding: 1rem; background: var(--bg-main); border-radius: 8px; text-align: center;">
+                        <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 0.25rem;">추천보너스</div>
+                        <div class="fw-600" style="font-size: 1.25rem;" id="modalReferralBonus">$0</div>
+                    </div>
+                    <div style="padding: 1rem; background: var(--bg-main); border-radius: 8px; text-align: center;">
+                        <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 0.25rem;">인센티브</div>
+                        <div class="fw-600" style="font-size: 1.25rem;" id="modalIncentive">$0</div>
+                    </div>
+                    <div style="padding: 1rem; background: var(--bg-main); border-radius: 8px; text-align: center;">
+                        <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 0.25rem;">총 보너스</div>
+                        <div class="fw-600" style="font-size: 1.25rem; color: #10b981;" id="modalTotalBonus">$0</div>
+                    </div>
+                </div>
+
+                <h4 style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem;">회원별 상세 내역</h4>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="data-table" style="font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>회원</th>
+                                <th>직급 변화</th>
+                                <th>본인 PV</th>
+                                <th>추천보너스</th>
+                                <th>인센티브</th>
+                                <th>육성보너스</th>
+                                <th>크라운보너스</th>
+                                <th>총 보너스</th>
+                            </tr>
+                        </thead>
+                        <tbody id="settlementDetailsBody">
+                            <!-- Details will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('settlementDetailModal')">닫기</button>
+                <button class="btn btn-outline" onclick="exportSettlementDetails()" style="margin-left: 0.5rem;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                        <polyline points="7,10 12,15 17,10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    엑셀 내보내기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirmModalTitle">확인</h3>
+                <button class="modal-close" onclick="closeModal('confirmModal')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmModalMessage" style="text-align: center; color: var(--text-secondary);"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('confirmModal')">취소</button>
+                <button class="btn btn-primary" id="confirmModalBtn" style="background: #ef4444;">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js?v=5"></script>
+    <script src="../js/settlement.js?v=5"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        // Rank display configuration
+        const RANK_DISPLAY = {
+            'general': { name: '일반', color: '#6b7280' },
+            'manager': { name: '매니저', color: '#10b981' },
+            'diamond': { name: '다이아몬드', color: '#a855f7' },
+            'blue_diamond': { name: '블루다이아몬드', color: '#3b82f6' },
+            'red_diamond': { name: '레드다이아몬드', color: '#ef4444' },
+            'crown_diamond': { name: '크라운다이아몬드', color: '#f59e0b' }
+        };
+
+        let currentSettlement = null;
+        let currentSettlementDetails = [];
+        let currentVerificationResults = [];
+        let currentVerificationMember = null;
+
+        // Initialize page
+        async function initSettlementPage() {
+            // Set default dates
+            setDefaultDates();
+
+            // Set default dates for verification (same as weekly)
+            setVerifyDefaultDates();
+
+            // Load stats
+            await updateStats();
+
+            // Load settlements
+            await renderSettlements();
+        }
+
+        // Set default dates for verification section
+        function setVerifyDefaultDates() {
+            // Default to last week (same as weekly settlement)
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            const lastSunday = new Date(today);
+            lastSunday.setDate(today.getDate() - dayOfWeek);
+            const lastMonday = new Date(lastSunday);
+            lastMonday.setDate(lastSunday.getDate() - 6);
+
+            document.getElementById('verifyStartDate').value = formatDate(lastMonday);
+            document.getElementById('verifyEndDate').value = formatDate(lastSunday);
+        }
+
+        // Search bonus verification (수당 검수용 조회)
+        async function searchBonusVerification() {
+            const username = document.getElementById('verifyMemberUsername').value.trim();
+            const startDate = document.getElementById('verifyStartDate').value;
+            const endDate = document.getElementById('verifyEndDate').value;
+
+            // Validation
+            if (!username) {
+                showToast('회원 아이디를 입력해주세요.');
+                return;
+            }
+
+            if (!startDate || !endDate) {
+                showToast('조회 기간을 선택해주세요.');
+                return;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                showToast('시작일이 종료일보다 클 수 없습니다.');
+                return;
+            }
+
+            // Find member by username
+            const member = await weverseSettlement.findMemberByUsername(username);
+            if (!member) {
+                showToast('해당 아이디의 회원을 찾을 수 없습니다.');
+                return;
+            }
+
+            try {
+                showToast('조회 중...');
+
+                // Get direct referrals order data
+                const results = await weverseSettlement.getDirectReferralsOrderData(member.id, startDate, endDate);
+
+                // Save for export
+                currentVerificationResults = results;
+                currentVerificationMember = member;
+
+                // Update result info
+                document.getElementById('verifyTargetMember').textContent = `${member.name} (${member.username})`;
+                document.getElementById('verifyPeriod').textContent = `${startDate} ~ ${endDate}`;
+                document.getElementById('verifyReferralCount').textContent = results.length + '명';
+
+                const totalPV = results.reduce((sum, r) => sum + r.periodPV, 0);
+                document.getElementById('verifyTotalPV').textContent = totalPV.toLocaleString() + ' PV';
+
+                // Show/hide elements
+                document.getElementById('verifyResultInfo').style.display = 'block';
+
+                if (results.length === 0) {
+                    document.getElementById('verifyResultTable').style.display = 'none';
+                    document.getElementById('verifyNoResult').style.display = 'block';
+                } else {
+                    document.getElementById('verifyNoResult').style.display = 'none';
+                    document.getElementById('verifyResultTable').style.display = 'block';
+
+                    // Render results table
+                    const tbody = document.getElementById('verifyResultBody');
+                    tbody.innerHTML = results.map(r => {
+                        const rankInfo = RANK_DISPLAY[r.rank] || { name: r.rank, color: '#6b7280' };
+                        return `
+                            <tr>
+                                <td class="fw-500">${r.username}</td>
+                                <td>${r.name}</td>
+                                <td><span style="color: ${rankInfo.color};">${rankInfo.name}</span></td>
+                                <td>${r.orderCount}건</td>
+                                <td>$${r.periodOrderAmount.toLocaleString()}</td>
+                                <td class="fw-600" style="color: #3b82f6;">${r.periodPV.toLocaleString()} PV</td>
+                                <td>${r.cumulativePV.toLocaleString()} PV</td>
+                            </tr>
+                        `;
+                    }).join('');
+
+                    // Add total row
+                    const totalAmount = results.reduce((sum, r) => sum + r.periodOrderAmount, 0);
+                    const totalOrders = results.reduce((sum, r) => sum + r.orderCount, 0);
+                    const totalCumulativePV = results.reduce((sum, r) => sum + r.cumulativePV, 0);
+
+                    tbody.innerHTML += `
+                        <tr style="background: var(--bg-main); font-weight: 600;">
+                            <td colspan="3">합계</td>
+                            <td>${totalOrders}건</td>
+                            <td>$${totalAmount.toLocaleString()}</td>
+                            <td style="color: #10b981;">${totalPV.toLocaleString()} PV</td>
+                            <td>${totalCumulativePV.toLocaleString()} PV</td>
+                        </tr>
+                    `;
+                }
+
+                showToast('조회 완료');
+
+            } catch (error) {
+                console.error('검수 조회 오류:', error);
+                showToast('조회 중 오류가 발생했습니다.');
+            }
+        }
+
+        // Export verification results to Excel
+        function exportVerificationResults() {
+            if (!currentVerificationResults || currentVerificationResults.length === 0) {
+                showToast('내보낼 데이터가 없습니다.');
+                return;
+            }
+
+            const startDate = document.getElementById('verifyStartDate').value;
+            const endDate = document.getElementById('verifyEndDate').value;
+
+            // Prepare data for Excel
+            const data = currentVerificationResults.map(r => {
+                const rankInfo = RANK_DISPLAY[r.rank] || { name: r.rank };
+                return {
+                    '아이디': r.username,
+                    '이름': r.name,
+                    '직급': rankInfo.name,
+                    '주문 건수': r.orderCount,
+                    '기간 내 주문금액': r.periodOrderAmount,
+                    '기간 내 주문 PV': r.periodPV,
+                    '누적 PV': r.cumulativePV
+                };
+            });
+
+            // Add totals row
+            const totalOrders = currentVerificationResults.reduce((sum, r) => sum + r.orderCount, 0);
+            const totalAmount = currentVerificationResults.reduce((sum, r) => sum + r.periodOrderAmount, 0);
+            const totalPV = currentVerificationResults.reduce((sum, r) => sum + r.periodPV, 0);
+            const totalCumulativePV = currentVerificationResults.reduce((sum, r) => sum + r.cumulativePV, 0);
+
+            data.push({
+                '아이디': '합계',
+                '이름': '',
+                '직급': '',
+                '주문 건수': totalOrders,
+                '기간 내 주문금액': totalAmount,
+                '기간 내 주문 PV': totalPV,
+                '누적 PV': totalCumulativePV
+            });
+
+            // Create workbook
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '수당검수');
+
+            // Generate filename
+            const memberName = currentVerificationMember ? currentVerificationMember.username : 'unknown';
+            const fileName = `수당검수_${memberName}_${startDate}_${endDate}.xlsx`;
+
+            // Download
+            XLSX.writeFile(wb, fileName);
+            showToast('엑셀 파일이 다운로드되었습니다.');
+        }
+
+        // Set default dates for settlement periods
+        function setDefaultDates() {
+            // Weekly: last week (Monday to Sunday)
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            const lastSunday = new Date(today);
+            lastSunday.setDate(today.getDate() - dayOfWeek);
+            const lastMonday = new Date(lastSunday);
+            lastMonday.setDate(lastSunday.getDate() - 6);
+
+            document.getElementById('weeklyStartDate').value = formatDate(lastMonday);
+            document.getElementById('weeklyEndDate').value = formatDate(lastSunday);
+
+            // Monthly: last month
+            const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+
+            document.getElementById('monthlyStartDate').value = formatDate(lastMonth);
+            document.getElementById('monthlyEndDate').value = formatDate(lastDayOfMonth);
+        }
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        // Update stats
+        async function updateStats() {
+            // This week's PV
+            const thisWeek = weverseSettlement.getCurrentWeekPeriod();
+            const weeklyStats = await weverseData.getPVStatsForPeriod(thisWeek.start, thisWeek.end);
+            document.getElementById('statWeeklyPV').textContent = weeklyStats.totalPV.toLocaleString() + ' PV';
+            document.getElementById('statWeeklyOrders').textContent = weeklyStats.orderCount + '건 주문';
+
+            // This month's PV
+            const thisMonth = weverseSettlement.getCurrentMonthPeriod();
+            const monthlyStats = await weverseData.getPVStatsForPeriod(thisMonth.start, thisMonth.end);
+            document.getElementById('statMonthlyPV').textContent = monthlyStats.totalPV.toLocaleString() + ' PV';
+            document.getElementById('statMonthlyOrders').textContent = monthlyStats.orderCount + '건 주문';
+
+            // Settlement stats
+            const settlements = weverseSettlement.getSettlements();
+            document.getElementById('statTotalSettlements').textContent = settlements.length + '회';
+
+            if (settlements.length > 0) {
+                const lastSettlement = settlements[0];
+                const lastDate = new Date(lastSettlement.created_at).toLocaleDateString('ko-KR');
+                document.getElementById('statLastSettlement').textContent = '최근: ' + lastDate;
+
+                const totalBonus = settlements.reduce((sum, s) => sum + (s.total_bonus || 0), 0);
+                document.getElementById('statTotalBonus').textContent = '$' + totalBonus.toLocaleString();
+
+                const membersWithBonus = weverseSettlement.getAllSettlementDetails()
+                    .filter(d => d.total_bonus > 0)
+                    .length;
+                document.getElementById('statBonusMembers').textContent = membersWithBonus + '명 수령';
+            }
+        }
+
+        // Render settlements list
+        async function renderSettlements() {
+            let settlements = weverseSettlement.getSettlements();
+
+            // Apply filter
+            const typeFilter = document.getElementById('settlementTypeFilter').value;
+            if (typeFilter) {
+                settlements = settlements.filter(s => s.type === typeFilter);
+            }
+
+            const tbody = document.getElementById('settlementsTableBody');
+            const paginationInfo = document.getElementById('settlementPaginationInfo');
+
+            paginationInfo.textContent = settlements.length + '건';
+
+            if (settlements.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 2rem; color: var(--text-light);">마감 이력이 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = settlements.map(settlement => {
+                const typeLabel = settlement.type === 'weekly' ? '주마감' : '월마감';
+                const typeClass = settlement.type === 'weekly' ? 'processing' : 'shipped';
+                const statusLabel = settlement.status === 'completed' ? '완료' : '롤백됨';
+                const statusClass = settlement.status === 'completed' ? 'active' : 'cancelled';
+                const createdDate = new Date(settlement.created_at).toLocaleDateString('ko-KR');
+                const periodText = `${settlement.period_start} ~ ${settlement.period_end}`;
+
+                return `
+                    <tr>
+                        <td><code style="background: var(--bg-main); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">${settlement.id}</code></td>
+                        <td><span class="status-badge ${typeClass}">${typeLabel}</span></td>
+                        <td style="font-size: 0.85rem;">${periodText}</td>
+                        <td class="fw-500">${(settlement.total_pv || 0).toLocaleString()} PV</td>
+                        <td class="fw-600" style="color: #10b981;">$${(settlement.total_bonus || 0).toLocaleString()}</td>
+                        <td>${settlement.members_processed || 0}명</td>
+                        <td>${settlement.members_promoted || 0}명</td>
+                        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                        <td>${createdDate}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="action-btn" title="상세보기" onclick="viewSettlementDetail('${settlement.id}')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                                ${settlement.status === 'completed' ? `
+                                <button class="action-btn" title="롤백" onclick="confirmRollback('${settlement.id}')" style="color: #f59e0b;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="1 4 1 10 7 10"/>
+                                        <path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+                                    </svg>
+                                </button>
+                                ` : ''}
+                                <button class="action-btn" title="삭제" onclick="confirmDelete('${settlement.id}')" style="color: #dc3545;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Execute weekly settlement
+        async function executeWeeklySettlement() {
+            const startDate = document.getElementById('weeklyStartDate').value;
+            const endDate = document.getElementById('weeklyEndDate').value;
+
+            if (!startDate || !endDate) {
+                showToast('기간을 선택해주세요.');
+                return;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                showToast('시작일이 종료일보다 클 수 없습니다.');
+                return;
+            }
+
+            if (!confirm(`주마감을 실행하시겠습니까?\n\n기간: ${startDate} ~ ${endDate}\n\n이 작업은 추천보너스를 정산하고 직급 승급을 처리합니다.`)) {
+                return;
+            }
+
+            try {
+                showToast('주마감 처리 중...');
+                console.log('주마감 시작:', startDate, endDate);
+
+                const result = await weverseSettlement.executeWeeklySettlement(startDate, endDate);
+                console.log('주마감 결과:', result);
+
+                await updateStats();
+                await renderSettlements();
+
+                // 마감 완료 후 다음 주 기간으로 자동 갱신
+                const nextWeekStart = new Date(endDate);
+                nextWeekStart.setDate(nextWeekStart.getDate() + 1); // 다음 주 월요일
+                const nextWeekEnd = new Date(nextWeekStart);
+                nextWeekEnd.setDate(nextWeekStart.getDate() + 6); // 다음 주 일요일
+
+                document.getElementById('weeklyStartDate').value = formatDate(nextWeekStart);
+                document.getElementById('weeklyEndDate').value = formatDate(nextWeekEnd);
+
+                showToast(`주마감 완료!\n처리 회원: ${result.settlement.members_processed}명\n승급: ${result.settlement.members_promoted}명\n총 보너스: $${result.settlement.total_bonus.toLocaleString()}`);
+
+            } catch (error) {
+                console.error('주마감 오류:', error);
+                console.error('오류 스택:', error.stack);
+                showToast('주마감 처리 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        // Execute monthly settlement
+        async function executeMonthlySettlement() {
+            const startDate = document.getElementById('monthlyStartDate').value;
+            const endDate = document.getElementById('monthlyEndDate').value;
+
+            if (!startDate || !endDate) {
+                showToast('기간을 선택해주세요.');
+                return;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                showToast('시작일이 종료일보다 클 수 없습니다.');
+                return;
+            }
+
+            if (!confirm(`월마감을 실행하시겠습니까?\n\n기간: ${startDate} ~ ${endDate}\n\n이 작업은 인센티브, 육성보너스, 크라운보너스를 정산합니다.`)) {
+                return;
+            }
+
+            try {
+                showToast('월마감 처리 중...');
+
+                const result = await weverseSettlement.executeMonthlySettlement(startDate, endDate);
+
+                await updateStats();
+                await renderSettlements();
+
+                // 마감 완료 후 다음 달 기간으로 자동 갱신
+                const endDateObj = new Date(endDate);
+                const nextMonthStart = new Date(endDateObj.getFullYear(), endDateObj.getMonth() + 1, 1);
+                const nextMonthEnd = new Date(endDateObj.getFullYear(), endDateObj.getMonth() + 2, 0);
+
+                document.getElementById('monthlyStartDate').value = formatDate(nextMonthStart);
+                document.getElementById('monthlyEndDate').value = formatDate(nextMonthEnd);
+
+                showToast(`월마감 완료!\n처리 회원: ${result.settlement.members_processed}명\n인센티브: $${result.settlement.total_incentive.toLocaleString()}\n육성보너스: $${result.settlement.total_nurturing_bonus.toLocaleString()}\n크라운보너스: $${result.settlement.total_crown_bonus.toLocaleString()}`);
+
+            } catch (error) {
+                console.error('월마감 오류:', error);
+                showToast('월마감 처리 중 오류가 발생했습니다.');
+            }
+        }
+
+        // View settlement detail
+        async function viewSettlementDetail(settlementId) {
+            currentSettlement = await weverseSettlement.getSettlementById(settlementId);
+            currentSettlementDetails = await weverseSettlement.getSettlementDetails(settlementId);
+
+            if (!currentSettlement) {
+                showToast('마감 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // Update summary
+            document.getElementById('modalSettlementPV').textContent = (currentSettlement.total_pv || 0).toLocaleString() + ' PV';
+            document.getElementById('modalReferralBonus').textContent = '$' + (currentSettlement.total_referral_bonus || 0).toLocaleString();
+            document.getElementById('modalIncentive').textContent = '$' + (currentSettlement.total_incentive || 0).toLocaleString();
+            document.getElementById('modalTotalBonus').textContent = '$' + (currentSettlement.total_bonus || 0).toLocaleString();
+
+            // Render details table
+            const tbody = document.getElementById('settlementDetailsBody');
+            const members = await weverseData.getMembers();
+
+            const detailsWithBonus = currentSettlementDetails.filter(d => d.total_bonus > 0 || d.rank_before !== d.rank_after);
+
+            if (detailsWithBonus.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 1rem; color: var(--text-light);">보너스 수령자 또는 승급자가 없습니다.</td></tr>';
+            } else {
+                tbody.innerHTML = detailsWithBonus.map(detail => {
+                    const member = members.find(m => m.id === detail.member_id);
+                    const memberName = member ? member.name : '(삭제됨)';
+
+                    const rankBefore = RANK_DISPLAY[detail.rank_before] || { name: detail.rank_before, color: '#6b7280' };
+                    const rankAfter = RANK_DISPLAY[detail.rank_after] || { name: detail.rank_after, color: '#6b7280' };
+
+                    const promoted = detail.rank_before !== detail.rank_after;
+                    const rankChangeHtml = promoted
+                        ? `<span style="color: ${rankBefore.color};">${rankBefore.name}</span> <span style="color: #10b981;">→</span> <span style="color: ${rankAfter.color}; font-weight: 600;">${rankAfter.name}</span>`
+                        : `<span style="color: ${rankBefore.color};">${rankBefore.name}</span>`;
+
+                    return `
+                        <tr>
+                            <td class="fw-500">${memberName}</td>
+                            <td>${rankChangeHtml}</td>
+                            <td>${detail.personal_pv || 0} PV</td>
+                            <td>${detail.referral_bonus > 0 ? '$' + detail.referral_bonus : '-'}</td>
+                            <td>${detail.incentive > 0 ? '$' + detail.incentive : '-'}</td>
+                            <td>${detail.nurturing_bonus > 0 ? '$' + detail.nurturing_bonus : '-'}</td>
+                            <td>${detail.crown_bonus > 0 ? '$' + detail.crown_bonus : '-'}</td>
+                            <td class="fw-600" style="color: #10b981;">${detail.total_bonus > 0 ? '$' + detail.total_bonus : '-'}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            openModal('settlementDetailModal');
+        }
+
+        // Export settlement details to Excel
+        function exportSettlementDetails() {
+            if (!currentSettlement || currentSettlementDetails.length === 0) {
+                showToast('내보낼 데이터가 없습니다.');
+                return;
+            }
+
+            const members = weverseData.getMembers();
+
+            const data = currentSettlementDetails.map(d => {
+                const member = members.find(m => m.id === d.member_id);
+                return {
+                    '회원명': member ? member.name : '(삭제됨)',
+                    '회원 ID': d.member_id,
+                    '직급 (전)': RANK_DISPLAY[d.rank_before]?.name || d.rank_before,
+                    '직급 (후)': RANK_DISPLAY[d.rank_after]?.name || d.rank_after,
+                    '본인 PV': d.personal_pv || 0,
+                    '누적 PV': d.cumulative_pv || 0,
+                    '그룹 PV': d.group_pv || 0,
+                    '추천보너스': d.referral_bonus || 0,
+                    '인센티브': d.incentive || 0,
+                    '육성보너스': d.nurturing_bonus || 0,
+                    '크라운보너스': d.crown_bonus || 0,
+                    '총 보너스': d.total_bonus || 0
+                };
+            });
+
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, '마감상세');
+
+            const fileName = `마감상세_${currentSettlement.id}_${currentSettlement.period_start}_${currentSettlement.period_end}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+
+            showToast('엑셀 파일이 다운로드되었습니다.');
+        }
+
+        // Confirm rollback
+        function confirmRollback(settlementId) {
+            document.getElementById('confirmModalTitle').textContent = '마감 롤백';
+            document.getElementById('confirmModalMessage').innerHTML = `
+                정말로 이 마감을 롤백하시겠습니까?<br><br>
+                <strong style="color: #f59e0b;">주의:</strong> 지급된 보너스 포인트가 차감됩니다.<br>
+                직급 변경은 강등 없음 원칙에 따라 유지됩니다.
+            `;
+            document.getElementById('confirmModalBtn').onclick = async () => {
+                closeModal('confirmModal');
+                await rollbackSettlement(settlementId);
+            };
+            openModal('confirmModal');
+        }
+
+        // Rollback settlement
+        async function rollbackSettlement(settlementId) {
+            try {
+                const result = await weverseSettlement.rollbackSettlement(settlementId);
+
+                if (result.error) {
+                    showToast(result.error);
+                    return;
+                }
+
+                await updateStats();
+                await renderSettlements();
+                showToast('마감이 롤백되었습니다.');
+
+            } catch (error) {
+                console.error('롤백 오류:', error);
+                showToast('롤백 처리 중 오류가 발생했습니다.');
+            }
+        }
+
+        // Confirm delete
+        function confirmDelete(settlementId) {
+            document.getElementById('confirmModalTitle').textContent = '마감 삭제';
+            document.getElementById('confirmModalMessage').innerHTML = `
+                정말로 이 마감을 삭제하시겠습니까?<br><br>
+                <strong style="color: #ef4444;">주의:</strong> 이 작업은 되돌릴 수 없습니다.<br>
+                마감이 완료 상태인 경우 먼저 롤백이 진행됩니다.
+            `;
+            document.getElementById('confirmModalBtn').onclick = async () => {
+                closeModal('confirmModal');
+                await deleteSettlement(settlementId);
+            };
+            openModal('confirmModal');
+        }
+
+        // Delete settlement
+        async function deleteSettlement(settlementId) {
+            try {
+                const result = await weverseSettlement.deleteSettlement(settlementId);
+
+                if (result.error) {
+                    showToast(result.error);
+                    return;
+                }
+
+                await updateStats();
+                await renderSettlements();
+                showToast('마감이 삭제되었습니다.');
+
+            } catch (error) {
+                console.error('삭제 오류:', error);
+                showToast('삭제 처리 중 오류가 발생했습니다.');
+            }
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initSettlementPage();
+        });
+    </script>
+</body>
+</html>

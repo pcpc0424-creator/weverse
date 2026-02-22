@@ -1356,6 +1356,161 @@ class WeverseDataStore {
         });
         return totalPV;
     }
+
+    // ==================== SETTLEMENTS ====================
+
+    getSettlements() {
+        const data = localStorage.getItem('weverseSettlements');
+        return data ? JSON.parse(data) : [];
+    }
+
+    getSettlementById(id) {
+        const settlements = this.getSettlements();
+        return settlements.find(s => s.id === id);
+    }
+
+    addSettlement(settlement) {
+        const settlements = this.getSettlements();
+        settlements.unshift(settlement);
+        localStorage.setItem('weverseSettlements', JSON.stringify(settlements));
+        return settlement;
+    }
+
+    updateSettlement(id, updates) {
+        const settlements = this.getSettlements();
+        const index = settlements.findIndex(s => s.id === id);
+        if (index !== -1) {
+            settlements[index] = { ...settlements[index], ...updates };
+            localStorage.setItem('weverseSettlements', JSON.stringify(settlements));
+            return settlements[index];
+        }
+        return null;
+    }
+
+    deleteSettlement(id) {
+        let settlements = this.getSettlements();
+        settlements = settlements.filter(s => s.id !== id);
+        localStorage.setItem('weverseSettlements', JSON.stringify(settlements));
+
+        // Also delete related details
+        let details = this.getSettlementDetails();
+        details = details.filter(d => d.settlement_id !== id);
+        localStorage.setItem('weverseSettlementDetails', JSON.stringify(details));
+        return true;
+    }
+
+    getSettlementDetails(settlementId = null) {
+        const data = localStorage.getItem('weverseSettlementDetails');
+        const details = data ? JSON.parse(data) : [];
+        if (settlementId) {
+            return details.filter(d => d.settlement_id === settlementId);
+        }
+        return details;
+    }
+
+    addSettlementDetails(details) {
+        const allDetails = this.getSettlementDetails();
+        allDetails.push(...details);
+        localStorage.setItem('weverseSettlementDetails', JSON.stringify(allDetails));
+        return details;
+    }
+
+    // ==================== PV STATS ====================
+
+    // Get member's PV in a specific period
+    getMemberPVInPeriod(memberId, startDate, endDate) {
+        const orders = this.getOrders();
+        let totalPV = 0;
+
+        orders.forEach(order => {
+            if (order.customer?.memberId !== memberId) return;
+            if (order.status === 'cancelled') return;
+
+            const orderDate = new Date(order.orderDate);
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999);
+
+            if (orderDate >= start && orderDate <= end) {
+                totalPV += order.totalPV || 0;
+            }
+        });
+
+        return totalPV;
+    }
+
+    // Get member's cumulative (all-time) PV
+    getMemberCumulativePV(memberId) {
+        const orders = this.getOrders();
+        let totalPV = 0;
+
+        orders.forEach(order => {
+            if (order.customer?.memberId !== memberId) return;
+            if (order.status === 'cancelled') return;
+            totalPV += order.totalPV || 0;
+        });
+
+        return totalPV;
+    }
+
+    // Get all direct referrals of a member
+    getDirectReferrals(memberId) {
+        const members = this.getMembers();
+        return members.filter(m => m.referrer?.id === memberId);
+    }
+
+    // Get all downline members recursively
+    getAllDownlineIds(memberId, visited = new Set()) {
+        if (visited.has(memberId)) return [];
+        visited.add(memberId);
+
+        const members = this.getMembers();
+        const directReferrals = members.filter(m => m.referrer?.id === memberId);
+
+        const downlineIds = [];
+        for (const referral of directReferrals) {
+            downlineIds.push(referral.id);
+            const subDownline = this.getAllDownlineIds(referral.id, visited);
+            downlineIds.push(...subDownline);
+        }
+
+        return downlineIds;
+    }
+
+    // Get total PV stats for period
+    getPVStatsForPeriod(startDate, endDate) {
+        const orders = this.getOrders();
+        let totalPV = 0;
+        let orderCount = 0;
+
+        orders.forEach(order => {
+            if (order.status === 'cancelled') return;
+
+            const orderDate = new Date(order.orderDate);
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999);
+
+            if (orderDate >= start && orderDate <= end) {
+                totalPV += order.totalPV || 0;
+                orderCount++;
+            }
+        });
+
+        return { totalPV, orderCount };
+    }
+
+    // Update member's password
+    async updateMemberPassword(memberId, newPassword) {
+        const members = this.getMembers();
+        const index = members.findIndex(m => m.id === memberId);
+        if (index !== -1) {
+            members[index].password = newPassword;
+            localStorage.setItem(STORAGE_KEYS.MEMBERS, JSON.stringify(members));
+            return true;
+        }
+        return false;
+    }
 }
 
 // Create global instance
