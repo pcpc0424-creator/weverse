@@ -663,7 +663,7 @@ function isDealer() {
 }
 
 // Add to cart
-function addToCart(productName, price) {
+function addToCart(productName, price, productId = null) {
     const cart = getCart();
 
     // Check if product already exists
@@ -672,11 +672,15 @@ function addToCart(productName, price) {
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        cart.push({
+        const cartItem = {
             name: productName,
             price: price,
             quantity: 1
-        });
+        };
+        if (productId) {
+            cartItem.productId = productId;
+        }
+        cart.push(cartItem);
     }
 
     saveCart(cart);
@@ -685,13 +689,17 @@ function addToCart(productName, price) {
 }
 
 // Buy now - redirect to checkout with product
-function buyNow(productName, price) {
+function buyNow(productName, price, productId = null) {
     // Clear cart and add only this product
-    const cart = [{
+    const cartItem = {
         name: productName,
         price: price,
         quantity: 1
-    }];
+    };
+    if (productId) {
+        cartItem.productId = productId;
+    }
+    const cart = [cartItem];
 
     saveCart(cart);
     updateCartCount();

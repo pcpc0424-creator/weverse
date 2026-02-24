@@ -72,8 +72,9 @@ class WeverseSupabaseStore {
         const result = {};
         for (const key in obj) {
             let camelKey = key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-            // 특수 케이스: priceUsd → priceUSD, originalPriceUsd → originalPriceUSD
+            // 특수 케이스: priceUsd → priceUSD, totalPv → totalPV
             camelKey = camelKey.replace(/Usd$/, 'USD');
+            camelKey = camelKey.replace(/Pv$/, 'PV');
             result[camelKey] = this.toCamelCase(obj[key]);
         }
         return result;

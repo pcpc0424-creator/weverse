@@ -51,7 +51,7 @@
     </header>
 
     <!-- Product Detail Hero -->
-    <section class="product-hero" data-product-id="WV-SP-004">
+    <section class="product-hero" data-product-id="WV-SP-003">
         <div class="container">
             <div class="product-hero-grid">
                 <div class="product-hero-content">
@@ -129,7 +129,6 @@
                 <div class="footer-col">
                     <h4 class="footer-title" data-i18n="footer.products">Products</h4>
                     <div class="footer-links">
-                        <a href="new-bornaid.html">New-BornAid</a>
                         <a href="alpha-gpc.html">Alpha GPC</a>
                         <a href="nano-lutein.html">Nano Lutein</a>
                         <a href="super-prostaid.html">Super Prost Aid</a>
@@ -188,10 +187,10 @@
     <script>
         // 이 페이지의 고정 상품 정보 (데이터베이스 오류 방지)
         const PRODUCT_INFO = {
-            id: 'WV-SP-004',
-            name: 'Super ProstaAid',
-            priceUSD: 99,
-            pv: 50,
+            id: 'WV-SP-003',
+            name: 'Super Prost Aid',
+            priceUSD: 150,
+            pv: 135,
             image: 'shop-4.jpg'
         };
 
@@ -200,8 +199,8 @@
             const btnBuyNow = document.getElementById('btnBuyNow');
 
             // 버튼 이벤트는 고정 상품 정보 사용
-            if (btnAddCart) btnAddCart.onclick = () => addToCart(PRODUCT_INFO.name, PRODUCT_INFO.priceUSD);
-            if (btnBuyNow) btnBuyNow.onclick = () => buyNow(PRODUCT_INFO.name, PRODUCT_INFO.priceUSD);
+            if (btnAddCart) btnAddCart.onclick = () => addToCart(PRODUCT_INFO.name, PRODUCT_INFO.priceUSD, PRODUCT_INFO.id);
+            if (btnBuyNow) btnBuyNow.onclick = () => buyNow(PRODUCT_INFO.name, PRODUCT_INFO.priceUSD, PRODUCT_INFO.id);
         }
 
         document.addEventListener('DOMContentLoaded', loadProductData);

@@ -262,6 +262,38 @@ class WeverseSettlement {
     }
 
     /**
+     * 독립 조직(다이아몬드+) 제외한 하선 ID 조회
+     * 다이아몬드 이상 회원을 만나면 해당 회원과 그 하선은 제외
+     */
+    getDownlineIdsExcludingIndependent(memberId, visited = new Set()) {
+        if (visited.has(memberId)) return { includedIds: [], independentMembers: [] };
+        visited.add(memberId);
+
+        const members = this.getCachedMembers();
+        const directReferrals = members.filter(m => m.referrer?.id === memberId);
+
+        const includedIds = [];
+        const independentMembers = []; // 독립 조직장 목록 (다이아몬드+)
+
+        for (const referral of directReferrals) {
+            // 다이아몬드 이상이면 독립 조직으로 처리
+            if (this.isRankAtLeast(referral.rank, RANKS.DIAMOND)) {
+                independentMembers.push(referral);
+                // 독립 조직장과 그 하선은 includedIds에 포함하지 않음
+            } else {
+                // 일반/매니저는 포함
+                includedIds.push(referral.id);
+                // 하선 재귀 탐색
+                const subResult = this.getDownlineIdsExcludingIndependent(referral.id, visited);
+                includedIds.push(...subResult.includedIds);
+                independentMembers.push(...subResult.independentMembers);
+            }
+        }
+
+        return { includedIds, independentMembers };
+    }
+
+    /**
      * 라인별 하선 PV 조회 (각 직추천 라인별 산하 전체 PV)
      */
     getDownlinePVByLine(memberId, days = null, endDate = null) {
@@ -446,7 +478,7 @@ class WeverseSettlement {
         const qualifiedLines = downlineLines.filter(l => l.pv >= 308000);
 
         if (qualifiedLines.length >= 3) {
-            // 각 라인에서 레드다이아+ 배출 확인
+            // 각 라인에서 레드다이아+ 배출 확인 (3개 라인 필요)
             let linesWithRedDiamond = 0;
             for (const line of directReferrals) {
                 const lineDownlineIds = this.getAllDownlineIds(line.id);
@@ -460,7 +492,8 @@ class WeverseSettlement {
                 if (hasRedDiamond) linesWithRedDiamond++;
             }
 
-            if (linesWithRedDiamond >= 1) {
+            // 3개 라인에서 레드다이아 배출 필요
+            if (linesWithRedDiamond >= 3) {
                 const totalPV = qualifiedLines.reduce((sum, l) => sum + l.pv, 0);
                 if (totalPV >= 3080000) return true;
             }
@@ -473,37 +506,52 @@ class WeverseSettlement {
      * 회원의 새 직급 평가 (현재 직급에서 승급 가능한 최고 직급 반환)
      */
     evaluateNewRank(memberId, currentRank, checkDate = null) {
-        // 강등 없음 - 현재 직급에서 승급만 가능
-        let newRank = currentRank;
+        // rank가 없거나 잘못된 값이면 'general'로 기본 처리
+        const normalizedRank = currentRank && RANK_ORDER.hasOwnProperty(currentRank)
+            ? currentRank
+            : RANKS.GENERAL;
 
-        // 순서대로 승급 조건 확인
-        if (currentRank === RANKS.GENERAL) {
+        // 강등 없음 - 현재 직급에서 승급만 가능
+        let newRank = normalizedRank;
+
+        // 순서대로 승급 조건 확인 (한 번의 마감에서 여러 단계 승급 가능)
+        // 일반 → 매니저
+        if (newRank === RANKS.GENERAL || !RANK_ORDER.hasOwnProperty(newRank)) {
             if (this.checkManagerPromotion(memberId)) {
                 newRank = RANKS.MANAGER;
+                console.log(`[Promotion] ${memberId}: 일반 → 매니저`);
             }
         }
 
+        // 매니저 → 다이아몬드
         if (newRank === RANKS.MANAGER) {
             if (this.checkDiamondPromotion(memberId, RANKS.MANAGER, checkDate)) {
                 newRank = RANKS.DIAMOND;
+                console.log(`[Promotion] ${memberId}: 매니저 → 다이아몬드`);
             }
         }
 
+        // 다이아몬드 → 블루다이아몬드
         if (newRank === RANKS.DIAMOND) {
             if (this.checkBlueDiamondPromotion(memberId, RANKS.DIAMOND, checkDate)) {
                 newRank = RANKS.BLUE_DIAMOND;
+                console.log(`[Promotion] ${memberId}: 다이아몬드 → 블루다이아몬드`);
             }
         }
 
+        // 블루다이아몬드 → 레드다이아몬드
         if (newRank === RANKS.BLUE_DIAMOND) {
             if (this.checkRedDiamondPromotion(memberId, RANKS.BLUE_DIAMOND, checkDate)) {
                 newRank = RANKS.RED_DIAMOND;
+                console.log(`[Promotion] ${memberId}: 블루다이아몬드 → 레드다이아몬드`);
             }
         }
 
+        // 레드다이아몬드 → 크라운다이아몬드
         if (newRank === RANKS.RED_DIAMOND) {
             if (this.checkCrownDiamondPromotion(memberId, RANKS.RED_DIAMOND, checkDate)) {
                 newRank = RANKS.CROWN_DIAMOND;
+                console.log(`[Promotion] ${memberId}: 레드다이아몬드 → 크라운다이아몬드`);
             }
         }
 
@@ -527,28 +575,58 @@ class WeverseSettlement {
     }
 
     /**
-     * 인센티브 계산 (월마감) - 롤업 구조
+     * 인센티브 계산 (월마감) - 롤업 구조 + 독립조직 제외 + 차등 인센티브
      * 대상: 다이아몬드 이상
-     * 재원: 본인 매출 제외 하선 전체 매출 PV
+     * 재원: 본인 매출 제외 하선 전체 매출 PV (단, 독립조직 PV 제외)
      * 롤업 조건: 최대실적 라인 제외, 나머지 라인 합계 기준
+     * 독립조직: 다이아몬드 이상 회원이 있으면 해당 회원과 그 하선의 PV는 제외
+     *           단, 차등 인센티브(본인 비율 - 하선 비율)는 발생
      */
     calculateIncentive(memberId, memberRank, startDate, endDate) {
         // 다이아몬드 이상만 대상
         if (!this.isRankAtLeast(memberRank, RANKS.DIAMOND)) {
-            return { incentive: 0, rollupTo: null };
+            return { incentive: 0, rollupTo: null, differentialIncentive: 0 };
         }
 
-        // 하선 전체 PV (본인 제외)
-        const downlineIds = this.getAllDownlineIds(memberId);
+        const members = this.getCachedMembers();
+        const myRate = INCENTIVE_RATES[memberRank] || 0;
+
+        // 독립 조직 제외한 하선 조회
+        const { includedIds, independentMembers } = this.getDownlineIdsExcludingIndependent(memberId);
+
+        // 1. 독립 조직 제외한 하선 PV 합계 (인센티브 전액 적용 대상)
+        let nonIndependentPV = 0;
+        for (const id of includedIds) {
+            nonIndependentPV += this.getMemberPVInPeriod(id, startDate, endDate);
+        }
+
+        // 2. 독립 조직(다이아몬드+)에 대한 차등 인센티브 계산
+        //    독립 조직의 전체 PV × (본인 비율 - 독립 조직장 비율)
+        let differentialIncentive = 0;
+        for (const indMember of independentMembers) {
+            const indRate = INCENTIVE_RATES[indMember.rank] || 0;
+            const diffRate = myRate - indRate; // 차등률
+
+            if (diffRate > 0) {
+                // 독립 조직장 본인 + 그 하선 전체 PV
+                const indDownlineIds = this.getAllDownlineIds(indMember.id);
+                let indTotalPV = this.getMemberPVInPeriod(indMember.id, startDate, endDate);
+                for (const id of indDownlineIds) {
+                    indTotalPV += this.getMemberPVInPeriod(id, startDate, endDate);
+                }
+                differentialIncentive += Math.floor(indTotalPV * diffRate);
+            }
+        }
+
+        // 총 하선 PV (롤업 조건 확인용 - 독립조직 포함)
+        const allDownlineIds = this.getAllDownlineIds(memberId);
         let totalDownlinePV = 0;
-        for (const id of downlineIds) {
+        for (const id of allDownlineIds) {
             totalDownlinePV += this.getMemberPVInPeriod(id, startDate, endDate);
         }
 
-        // 라인별 PV 계산 (직추천 라인별)
-        const members = this.getCachedMembers();
+        // 라인별 PV 계산 (직추천 라인별, 롤업 조건 확인용)
         const directReferrals = members.filter(m => m.referrer?.id === memberId);
-
         const linesPV = [];
         for (const referral of directReferrals) {
             const lineIds = this.getAllDownlineIds(referral.id);
@@ -563,10 +641,10 @@ class WeverseSettlement {
 
         // 2개 라인 이상 필요
         if (linesPV.length < 2) {
-            return { incentive: 0, rollupTo: memberId, totalPV: totalDownlinePV };
+            return { incentive: 0, rollupTo: memberId, totalPV: totalDownlinePV, differentialIncentive: 0 };
         }
 
-        // 최대 실적 라인 제외한 합계
+        // 최대 실적 라인 제외한 합계 (롤업 조건 확인용)
         linesPV.sort((a, b) => b.pv - a.pv);
         const pvExcludingMax = linesPV.slice(1).reduce((sum, l) => sum + l.pv, 0);
 
@@ -576,14 +654,17 @@ class WeverseSettlement {
             // 롤업 - 상위 라인으로
             const member = members.find(m => m.id === memberId);
             const referrerId = member?.referrer?.id || null;
-            return { incentive: 0, rollupTo: referrerId, totalPV: totalDownlinePV };
+            return { incentive: 0, rollupTo: referrerId, totalPV: totalDownlinePV, differentialIncentive: 0 };
         }
 
         // 인센티브 계산
-        const rate = INCENTIVE_RATES[memberRank] || 0;
-        const incentive = Math.floor(totalDownlinePV * rate);
+        // 독립조직 제외 PV × 본인 비율 + 차등 인센티브
+        const baseIncentive = Math.floor(nonIndependentPV * myRate);
+        const incentive = baseIncentive + differentialIncentive;
 
-        return { incentive, rollupTo: null, totalPV: totalDownlinePV };
+        console.log(`[Incentive] ${memberId}: 독립조직제외PV=${nonIndependentPV}, 기본인센티브=${baseIncentive}, 차등인센티브=${differentialIncentive}, 총=${incentive}`);
+
+        return { incentive, rollupTo: null, totalPV: totalDownlinePV, differentialIncentive, nonIndependentPV };
     }
 
     /**
@@ -751,22 +832,23 @@ class WeverseSettlement {
                 const cumulativePV = this.getMemberCumulativePV(member.id);
                 const directRefPV = this.getDirectReferralPVInPeriod(member.id, periodStart, periodEnd);
 
-                // 추천 보너스 계산 (동기)
-                const referralBonus = this.calculateReferralBonus(
-                    member.id, member.rank, periodStart, periodEnd
-                );
-
-                // 승급 평가 (동기)
-                const newRank = this.evaluateNewRank(member.id, member.rank, periodEnd);
-                const promoted = newRank !== member.rank;
+                // 승급 평가 (동기) - 먼저 승급 여부를 판단
+                const currentRank = member.rank || RANKS.GENERAL;
+                const newRank = this.evaluateNewRank(member.id, currentRank, periodEnd);
+                const promoted = newRank !== currentRank;
                 if (promoted) membersPromoted++;
+
+                // 추천 보너스 계산 (동기) - 승급 후 직급으로 계산
+                const referralBonus = this.calculateReferralBonus(
+                    member.id, newRank, periodStart, periodEnd
+                );
 
                 // 상세 기록 생성
                 const detail = {
                     id: this.generateId('WSD'),
                     settlement_id: settlementId,
                     member_id: member.id,
-                    rank_before: member.rank,
+                    rank_before: currentRank,
                     rank_after: newRank,
                     personal_pv: personalPV,
                     cumulative_pv: cumulativePV,

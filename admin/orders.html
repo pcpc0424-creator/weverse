@@ -523,13 +523,21 @@
         async function renderOrders() {
             let orders = await weverseData.getOrders();
 
+            // 회원 목록 조회 (회원 정보 표시용)
+            const members = await weverseData.getMembers();
+            const memberMap = {};
+            members.forEach(m => { memberMap[m.id] = m; });
+
             // Apply search filter
             if (orderSearchTerm) {
-                orders = orders.filter(o =>
-                    o.id.toLowerCase().includes(orderSearchTerm) ||
-                    o.customer.name.toLowerCase().includes(orderSearchTerm) ||
-                    o.items.some(item => item.name.toLowerCase().includes(orderSearchTerm))
-                );
+                orders = orders.filter(o => {
+                    const member = o.customer?.memberId ? memberMap[o.customer.memberId] : null;
+                    const username = member?.username || '';
+                    return o.id.toLowerCase().includes(orderSearchTerm) ||
+                        (o.customer?.name || '').toLowerCase().includes(orderSearchTerm) ||
+                        username.toLowerCase().includes(orderSearchTerm) ||
+                        o.items.some(item => item.name.toLowerCase().includes(orderSearchTerm));
+                });
             }
 
             // Apply status filter
@@ -591,12 +599,21 @@
                     ? `<span style="font-size: 0.75rem;">${order.trackingCompany || ''}<br>${order.trackingNumber}</span>`
                     : '<span class="text-muted" style="font-size: 0.75rem;">-</span>';
 
+                // 회원 정보 조회
+                const member = order.customer?.memberId ? memberMap[order.customer.memberId] : null;
+                const customerName = order.customer?.name || order.shipping?.fullName || '-';
+                const memberUsername = member?.username || '';
+                const memberLink = member
+                    ? `<a href="members.html?id=${member.id}" style="color: var(--primary); font-size: 0.75rem;">@${memberUsername}</a>`
+                    : '<span style="color: var(--text-light); font-size: 0.75rem;">비회원</span>';
+
                 return `
                     <tr>
                         <td><strong>#${order.id}</strong></td>
                         <td>
                             <div>
-                                <div class="fw-500">${order.customer.name}</div>
+                                <div class="fw-500">${customerName}</div>
+                                <div>${memberLink}</div>
                             </div>
                         </td>
                         <td>${itemsSummary}</td>
@@ -641,12 +658,25 @@
 
             document.getElementById('modalOrderId').textContent = '주문 #' + currentViewOrder.id;
             const genderText = currentViewOrder.shipping?.gender === 'male' ? '남성' : currentViewOrder.shipping?.gender === 'female' ? '여성' : '-';
-            document.getElementById('modalCustomerName').textContent = currentViewOrder.shipping?.fullName || currentViewOrder.customer.name;
+
+            // 회원 정보 조회
+            let memberInfo = '';
+            if (currentViewOrder.customer?.memberId) {
+                const member = await weverseData.getMemberById(currentViewOrder.customer.memberId);
+                if (member) {
+                    memberInfo = `<span style="color: var(--primary); font-size: 0.85rem;">@${member.username}</span>`;
+                }
+            }
+
+            const customerNameHtml = (currentViewOrder.shipping?.fullName || currentViewOrder.customer?.name || '-')
+                + (memberInfo ? `<br>${memberInfo}` : '<br><span style="color: var(--text-light); font-size: 0.85rem;">비회원</span>');
+
+            document.getElementById('modalCustomerName').innerHTML = customerNameHtml;
             document.getElementById('modalShippingAddress').innerHTML = `
                 성별: ${genderText}<br>
-                연락처: ${currentViewOrder.shipping.phone || '-'}<br>
-                우편번호: ${currentViewOrder.shipping.zipcode || '-'}<br>
-                주소: ${currentViewOrder.shipping.address || '-'}
+                연락처: ${currentViewOrder.shipping?.phone || '-'}<br>
+                우편번호: ${currentViewOrder.shipping?.zipcode || '-'}<br>
+                주소: ${currentViewOrder.shipping?.address || '-'}
             `;
 
             // Get products to find PV values

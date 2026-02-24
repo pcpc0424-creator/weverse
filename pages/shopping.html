@@ -134,7 +134,6 @@
                 <div class="footer-col">
                     <h4 class="footer-title" data-i18n="footer.products">Products</h4>
                     <div class="footer-links">
-                        <a href="products/new-bornaid.html">New-BornAid</a>
                         <a href="products/alpha-gpc.html">Alpha GPC</a>
                         <a href="products/nano-lutein.html">Nano Lutein</a>
                         <a href="products/super-prostaid.html">Super Prost Aid</a>
@@ -210,14 +209,12 @@
                 return;
             }
 
-            // 기본 상품 ID별 올바른 정보 (기존 6개 상품 데이터 오류 방지)
+            // 기본 상품 ID별 올바른 정보 (DB 데이터 오류 방지용 폴백)
             const DEFAULT_PRODUCT_DATA = {
-                'WV-NB-001': { name: 'New-BornAid', priceUSD: 89, pv: 45, image: 'shop-1.jpg', detailPage: 'products/new-bornaid.html', badge: 'Best' },
-                'WV-AG-002': { name: 'Alpha GPC', priceUSD: 129, pv: 65, image: 'shop-2.jpg', detailPage: 'products/alpha-gpc.html', badge: '' },
-                'WV-NL-003': { name: 'Nano Lutein', priceUSD: 79, pv: 40, image: 'shop-3.jpg', detailPage: 'products/nano-lutein.html', badge: 'New' },
-                'WV-SP-004': { name: 'Super ProstaAid', priceUSD: 99, pv: 50, image: 'shop-4.jpg', detailPage: 'products/super-prostaid.html', badge: '' },
-                'WV-JC-005': { name: 'Joint Care', priceUSD: 69, pv: 35, image: 'shop-5.jpg', detailPage: 'products/joint-care.html', badge: '' },
-                'WV-PP-006': { name: 'Premium Package', priceUSD: 299, pv: 150, image: 'shop-6.jpg', detailPage: 'products/premium-package.html', badge: 'Premium' }
+                'WV-AG-001': { name: 'Alpha GPC', priceUSD: 150, pv: 135, image: 'shop-2.jpg', detailPage: 'products/alpha-gpc.html', badge: '' },
+                'WV-NL-002': { name: 'Nano Lutein', priceUSD: 110, pv: 99, image: 'shop-3.jpg', detailPage: 'products/nano-lutein.html', badge: 'New' },
+                'WV-SP-003': { name: 'Super Prost Aid', priceUSD: 150, pv: 135, image: 'shop-4.jpg', detailPage: 'products/super-prostaid.html', badge: '' },
+                'WV-JC-004': { name: 'Joint Care(2set)', priceUSD: 180, pv: 162, image: 'shop-5.jpg', detailPage: 'products/joint-care.html', badge: '' }
             };
 
             grid.innerHTML = activeProducts.map((product, index) => {

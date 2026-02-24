@@ -6,70 +6,149 @@
     <title>My Account - WEVERSE</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* 산하 조직도 스타일 */
+        /* 트리형 조직도 스타일 */
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .downline-node {
-            position: relative;
-            margin-bottom: 1rem;
+        .org-container {
+            padding: 1.5rem;
+            overflow: auto;
+            min-height: 300px;
         }
 
-        .downline-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
+        /* 트리 구조 - 위에서 아래로 */
+        .org-tree {
+            display: inline-flex;
+            justify-content: flex-start;
+            padding: 20px;
+            min-width: max-content;
+        }
+
+        .org-tree > .org-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 여러 루트 노드가 있을 때 가로 정렬 */
+        .org-tree.multi-root {
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .org-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .org-node-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* 카드 스타일 - 컴팩트 */
+        .org-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
             padding: 0;
-            min-width: 160px;
-            display: inline-block;
+            width: 120px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             cursor: pointer;
             transition: all 0.2s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .downline-card:hover {
-            transform: translateY(-2px);
+        .org-card:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        .downline-card-header {
-            background: #1a1f2e;
+        .org-card-rank-bar {
+            height: 3px;
+            width: 100%;
+        }
+
+        .org-card-main {
+            padding: 0.5rem;
+        }
+
+        .org-card-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
             color: #fff;
-            padding: 0.4rem 0.6rem;
-            border-radius: 7px 7px 0 0;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .downline-card-body {
-            padding: 0.6rem;
-        }
-
-        .downline-card-row {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin: 0 auto 0.4rem;
+            border: 2px solid #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .org-card-name {
+            font-weight: 600;
             font-size: 0.75rem;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.15rem;
+            color: #1f2937;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .downline-card-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .downline-card-label {
-            color: var(--text-secondary);
-        }
-
-        .downline-card-value {
-            font-weight: 500;
-        }
-
-        .downline-rank {
-            display: inline-block;
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
+        .org-card-username {
             font-size: 0.65rem;
-            font-weight: 500;
+            color: #6b7280;
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .org-card-meta {
+            font-size: 0.6rem;
+            color: #6b7280;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .org-card-stats {
+            display: flex;
+            justify-content: center;
+            gap: 0.3rem;
+            margin-top: 0.4rem;
+            padding-top: 0.4rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.6rem;
+        }
+
+        .org-card-pv {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .org-card-group-pv {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .org-rank {
+            display: inline-block;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.55rem;
+            font-weight: 600;
         }
 
         /* 등급별 색상 */
@@ -80,16 +159,127 @@
         .rank-manager { background: rgba(16,185,129,0.15); color: #10b981; }
         .rank-general { background: rgba(107,114,128,0.15); color: #6b7280; }
 
-        /* 아코디언 스타일 */
-        .downline-children {
-            margin-left: 1.5rem;
-            padding-left: 1rem;
-            border-left: 2px solid var(--border);
-            margin-top: 0.5rem;
+        .bar-crown_diamond { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .bar-red_diamond { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .bar-blue_diamond { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .bar-diamond { background: linear-gradient(90deg, #a855f7, #c084fc); }
+        .bar-manager { background: linear-gradient(90deg, #10b981, #34d399); }
+        .bar-general { background: linear-gradient(90deg, #6b7280, #9ca3af); }
+
+        /* 아바타 색상 */
+        .avatar-crown_diamond { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .avatar-red_diamond { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .avatar-blue_diamond { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .avatar-diamond { background: linear-gradient(135deg, #a855f7, #c084fc); }
+        .avatar-manager { background: linear-gradient(135deg, #10b981, #34d399); }
+        .avatar-general { background: linear-gradient(135deg, #6b7280, #9ca3af); }
+
+        /* 확장/축소 버튼 */
+        .expand-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #8b5cf6;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            line-height: 1;
+            cursor: pointer;
+            margin-top: 4px;
+            border: 2px solid #ffffff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 10;
+            transition: all 0.2s;
         }
 
-        .downline-children.collapsed {
+        .expand-btn:hover {
+            background: #7c3aed;
+            transform: scale(1.1);
+        }
+
+        .expand-btn.collapsed {
+            background: #6b7280;
+        }
+
+        /* 자식 컨테이너 - 트리 형태 (위에서 아래로) */
+        .org-children {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding-top: 15px;
+            position: relative;
+        }
+
+        .org-children::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 15px;
+            background: #d1d5db;
+        }
+
+        .org-children.collapsed {
             display: none;
+        }
+
+        /* 연결선 - 수직선 (부모에서 아래로) */
+        .org-node-content::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 4px;
+            background: #d1d5db;
+        }
+
+        .org-node:not(:has(.org-children:not(.collapsed))) .org-node-content::after,
+        .org-node:not(:has(.org-children)) .org-node-content::after {
+            display: none;
+        }
+
+        /* 연결선 - 수평선 (형제 연결) */
+        .org-children > .org-node::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            width: 2px;
+            height: 15px;
+            background: #d1d5db;
+        }
+
+        /* 형제 노드 간 수평 연결선 */
+        .org-children > .org-node:not(:only-child)::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            width: calc(100% + 6px);
+            height: 2px;
+            background: #d1d5db;
+        }
+
+        .org-children > .org-node:first-child:not(:only-child)::after {
+            left: 50%;
+            width: calc(50% + 3px);
+        }
+
+        .org-children > .org-node:last-child:not(:only-child)::after {
+            right: 50%;
+            left: auto;
+            width: calc(50% + 3px);
+        }
+
+        .org-children > .org-node:not(:first-child):not(:last-child)::after {
+            left: -3px;
+            width: calc(100% + 6px);
         }
 
         /* 전체 접기/펼치기 버튼 스타일 */
@@ -148,29 +338,223 @@
             stroke: #8b5cf6 !important;
         }
 
-        .downline-expand-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-left: 0.5rem;
-            vertical-align: middle;
-            border: none;
-        }
-
-        .downline-expand-btn:hover {
-            opacity: 0.8;
-        }
-
         .pv-personal { color: #3b82f6; }
         .pv-group { color: #10b981; }
+
+        /* 산하 통계 스타일 */
+        .downline-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .downline-stat-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .downline-stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .downline-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        /* 조직도 컨테이너 */
+        .downline-tree-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            min-height: 200px;
+            max-height: 60vh;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #downlineTree {
+            display: inline-block;
+            min-width: max-content;
+        }
+
+        /* 조직도 탭 전체 레이아웃 */
+        #tab-downline {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        #tab-downline > * {
+            max-width: 100%;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            /* 조직도 카드 */
+            .org-card {
+                width: 90px;
+                min-width: 90px;
+            }
+
+            .org-card-main {
+                padding: 0.4rem;
+            }
+
+            .org-card-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .org-card-name {
+                font-size: 0.7rem;
+            }
+
+            .org-card-username {
+                font-size: 0.55rem;
+            }
+
+            .org-rank {
+                font-size: 0.5rem;
+                padding: 0.08rem 0.3rem;
+            }
+
+            .org-card-stats {
+                font-size: 0.55rem;
+                gap: 0.2rem;
+                margin-top: 0.3rem;
+                padding-top: 0.3rem;
+            }
+
+            .org-children {
+                gap: 4px;
+                padding-top: 12px;
+            }
+
+            .expand-btn {
+                width: 16px;
+                height: 16px;
+                font-size: 0.8rem;
+            }
+
+            /* 산하 통계 */
+            .downline-stats {
+                gap: 0.4rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .downline-stat-item {
+                padding: 0.6rem 0.3rem;
+                border-radius: 8px;
+            }
+
+            .downline-stat-value {
+                font-size: 1.1rem;
+            }
+
+            .downline-stat-label {
+                font-size: 0.6rem;
+            }
+
+            /* 버튼 */
+            .downline-toggle-btns {
+                justify-content: center;
+                gap: 0.4rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .downline-toggle-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+                border-radius: 6px;
+            }
+
+            .downline-toggle-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            /* 조직도 컨테이너 */
+            .downline-tree-container {
+                padding: 0.75rem;
+                border-radius: 8px;
+                max-height: 50vh;
+            }
+        }
+
+        /* 더 작은 모바일 */
+        @media (max-width: 480px) {
+            /* 조직도 카드 더 작게 */
+            .org-card {
+                width: 80px;
+                min-width: 80px;
+            }
+
+            .org-card-main {
+                padding: 0.35rem;
+            }
+
+            .org-card-avatar {
+                width: 24px;
+                height: 24px;
+                font-size: 0.6rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .org-card-name {
+                font-size: 0.65rem;
+            }
+
+            .org-card-username {
+                font-size: 0.5rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .org-rank {
+                font-size: 0.45rem;
+            }
+
+            .org-card-stats {
+                font-size: 0.5rem;
+            }
+
+            .org-card-rank-bar {
+                height: 2px;
+            }
+
+            /* 산하 통계 */
+            .downline-stat-value {
+                font-size: 1rem;
+            }
+
+            .downline-stat-label {
+                font-size: 0.55rem;
+            }
+
+            /* 버튼 */
+            .downline-toggle-btn {
+                padding: 0.4rem 0.7rem;
+                font-size: 0.7rem;
+            }
+
+            .downline-toggle-btn svg {
+                width: 12px;
+                height: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -297,7 +681,7 @@
                 </aside>
 
                 <!-- Main Content -->
-                <main class="account-main">
+                <main class="account-main" style="min-width: 0; overflow-x: auto;">
                     <!-- Orders Tab -->
                     <div class="account-tab active" id="tab-orders" data-animate data-delay="1">
                         <div class="account-tab-header">
@@ -540,18 +924,18 @@
                         </div>
 
                         <!-- 산하 통계 -->
-                        <div class="downline-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);" id="downlineTotalCount">0</div>
-                                <div style="font-size: 0.8rem; color: var(--text-secondary);">산하 회원수</div>
+                        <div class="downline-stats">
+                            <div class="downline-stat-item">
+                                <div class="downline-stat-value" id="downlineTotalCount">0</div>
+                                <div class="downline-stat-label">산하 회원수</div>
                             </div>
-                            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;" id="downlinePersonalPV">0</div>
-                                <div style="font-size: 0.8rem; color: var(--text-secondary);">개인 PV</div>
+                            <div class="downline-stat-item">
+                                <div class="downline-stat-value pv-personal" id="downlinePersonalPV">0</div>
+                                <div class="downline-stat-label">개인 PV</div>
                             </div>
-                            <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center;">
-                                <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;" id="downlineGroupPV">0</div>
-                                <div style="font-size: 0.8rem; color: var(--text-secondary);">산하 PV</div>
+                            <div class="downline-stat-item">
+                                <div class="downline-stat-value pv-group" id="downlineGroupPV">0</div>
+                                <div class="downline-stat-label">산하 PV</div>
                             </div>
                         </div>
 
@@ -572,8 +956,8 @@
                         </div>
 
                         <!-- 산하 조직도 컨테이너 -->
-                        <div class="downline-tree-container" style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; min-height: 300px;">
-                            <div id="downlineTree" style="overflow-x: auto;">
+                        <div class="downline-tree-container" style="width: 100%; overflow-x: scroll; overflow-y: auto;">
+                            <div id="downlineTree" style="min-width: max-content;">
                                 <!-- 조직도가 여기에 렌더링됩니다 -->
                                 <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
                                     <div class="loading-spinner" style="width: 30px; height: 30px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
@@ -635,7 +1019,6 @@
                 <div class="footer-col">
                     <h4 class="footer-title" data-i18n="footer.products">Products</h4>
                     <div class="footer-links">
-                        <a href="products/new-bornaid.html">New-BornAid</a>
                         <a href="products/alpha-gpc.html">Alpha GPC</a>
                         <a href="products/nano-lutein.html">Nano Lutein</a>
                         <a href="products/super-prostaid.html">Super Prost Aid</a>
@@ -710,31 +1093,13 @@
                           (storageSession || localSession);
             } catch (e) {}
 
-            // Load all orders
-            const storedOrders = localStorage.getItem('weverseOrders');
-            const allOrders = storedOrders ? JSON.parse(storedOrders) : [];
-
-            // Check for last order and add to history if not already there
-            const lastOrder = localStorage.getItem('weverseLastOrder');
-            if (lastOrder) {
-                const order = JSON.parse(lastOrder);
-                const exists = allOrders.find(o => o.orderNumber === order.orderNumber || o.id === order.orderNumber);
-                if (!exists) {
-                    allOrders.unshift(order);
-                    localStorage.setItem('weverseOrders', JSON.stringify(allOrders));
-                }
-            }
-
-            // Filter orders for current user only
-            if (session && session.username) {
-                orders = allOrders.filter(order => {
-                    // Check if order belongs to current user by username
-                    if (order.customer && order.customer.username === session.username) return true;
-                    if (order.shipping && order.shipping.username === session.username) return true;
-                    return false;
-                });
+            // Load orders from Supabase
+            if (session && session.id) {
+                const allOrders = await weverseData.getOrders();
+                orders = allOrders.filter(order => order.customer?.memberId === session.id);
             } else {
-                // Not logged in - show orders from lastOrder only (guest orders)
+                // Not logged in - check localStorage for guest orders
+                const lastOrder = localStorage.getItem('weverseLastOrder');
                 orders = lastOrder ? [JSON.parse(lastOrder)] : [];
             }
 
@@ -1288,88 +1653,73 @@
             document.getElementById('downlineGroupPV').textContent = groupPV.toLocaleString() + ' PV';
         }
 
-        // 산하 조직도 렌더링
+        // 산하 조직도 렌더링 - 트리 형태
         function renderDownlineTree(downlines) {
             const container = document.getElementById('downlineTree');
             const emptyEl = document.getElementById('downlineEmpty');
 
-            if (downlines.length === 0) {
-                container.style.display = 'none';
-                emptyEl.style.display = 'block';
-                return;
-            }
-
             container.style.display = 'block';
             emptyEl.style.display = 'none';
 
-            let html = '';
-            downlines.forEach(member => {
-                html += renderDownlineNode(member);
-            });
+            // 본인을 루트로 하고, 산하를 자식으로 설정
+            const meWithDownlines = {
+                ...currentMember,
+                children: downlines
+            };
 
+            // 트리 형태로 렌더링 (본인이 루트)
+            let html = `<div class="org-tree">`;
+            html += renderDownlineNode(meWithDownlines);
+            html += '</div>';
             container.innerHTML = html;
         }
 
-        // 노드 렌더링
+        // 노드 렌더링 - 트리 형태
         function renderDownlineNode(member) {
             const pv = memberPVMap[member.id] || { personal: 0, group: 0 };
             const hasChildren = (member.children || []).length > 0;
-            const isExpanded = downlineExpandedNodes.has(member.id);
 
             const rankInfo = RANK_DISPLAY[member.rank] || RANK_DISPLAY['general'];
-            const joinDate = member.joinDate ? new Date(member.joinDate).toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            }) : '-';
 
             // 산하 PV 계산
             const groupPV = calculateGroupPVForMember(member.id, member.children || []);
 
+            // 처음 로드 시 기본으로 펼쳐진 상태
+            if (hasChildren && !downlineExpandedNodes.has(member.id) && !downlineExpandedNodes.has('_initialized_' + member.id)) {
+                downlineExpandedNodes.add(member.id);
+                downlineExpandedNodes.add('_initialized_' + member.id);
+            }
+            const isExpanded = downlineExpandedNodes.has(member.id);
+
             let html = `
-                <div class="downline-node" data-member-id="${member.id}">
-                    <div class="downline-card">
-                        <div class="downline-card-header">
-                            ${member.id}/${member.name}
-                        </div>
-                        <div class="downline-card-body">
-                            <div class="downline-card-row">
-                                <span class="downline-card-label">가입일</span>
-                                <span class="downline-card-value">${joinDate}</span>
-                            </div>
-                            <div class="downline-card-row">
-                                <span class="downline-card-label">등급</span>
-                                <span class="downline-rank rank-${member.rank}">${rankInfo.name}</span>
-                            </div>
-                            <div class="downline-card-row">
-                                <span class="downline-card-label">개인PV</span>
-                                <span class="downline-card-value pv-personal">${pv.personal.toLocaleString()}PV</span>
-                            </div>
-                            <div class="downline-card-row">
-                                <span class="downline-card-label">산하PV</span>
-                                <span class="downline-card-value pv-group">${groupPV.toLocaleString()}PV</span>
+                <div class="org-node" data-member-id="${member.id}">
+                    <div class="org-node-content">
+                        <div class="org-card">
+                            <div class="org-card-rank-bar bar-${member.rank || 'general'}"></div>
+                            <div class="org-card-main">
+                                <div class="org-card-avatar avatar-${member.rank || 'general'}">${member.name.substring(0, 2)}</div>
+                                <div class="org-card-name">${member.name}</div>
+                                <div class="org-card-username">@${member.username || member.id}</div>
+                                <span class="org-rank rank-${member.rank || 'general'}">${rankInfo.name}</span>
+                                <div class="org-card-stats">
+                                    <div class="org-card-pv">${pv.personal.toLocaleString()} PV</div>
+                                    ${groupPV > pv.personal ? `<div class="org-card-group-pv">G: ${groupPV.toLocaleString()}</div>` : ''}
+                                </div>
                             </div>
                         </div>
+                        ${hasChildren ? `
+                            <span class="expand-btn ${isExpanded ? '' : 'collapsed'}" onclick="event.stopPropagation(); toggleDownlineNode('${member.id}')">
+                                ${isExpanded ? '−' : '+'}
+                            </span>
+                        ` : ''}
                     </div>
             `;
 
-            // 자식이 있으면 확장 버튼과 자식 표시 (기본 펼침)
+            // 자식 노드가 있으면 자식 렌더링
             if (hasChildren) {
-                // 처음 로드 시 기본으로 펼쳐진 상태
-                if (!downlineExpandedNodes.has(member.id) && !downlineExpandedNodes.has('_initialized_' + member.id)) {
-                    downlineExpandedNodes.add(member.id);
-                    downlineExpandedNodes.add('_initialized_' + member.id);
-                }
-                const isNodeExpanded = downlineExpandedNodes.has(member.id);
+                const collapsedClass = isExpanded ? '' : 'collapsed';
 
-                html += `
-                    <button class="downline-expand-btn" onclick="toggleDownlineNode('${member.id}')">
-                        ${isNodeExpanded ? '-' : '+'}
-                    </button>
-                `;
-
-                const collapsedClass = isNodeExpanded ? '' : 'collapsed';
-                html += `<div class="downline-children ${collapsedClass}" id="downline-children-${member.id}">`;
+                html += `<div class="org-children ${collapsedClass}" id="children-${member.id}">`;
                 member.children.forEach(child => {
                     html += renderDownlineNode(child);
                 });
@@ -1389,14 +1739,15 @@
             }
 
             // 해당 노드의 자식만 토글
-            const childrenEl = document.getElementById('downline-children-' + memberId);
-            const btn = document.querySelector(`[data-member-id="${memberId}"] .downline-expand-btn`);
+            const childrenEl = document.getElementById('children-' + memberId);
+            const btn = document.querySelector(`[data-member-id="${memberId}"] > .org-node-content > .expand-btn`);
 
             if (childrenEl) {
                 childrenEl.classList.toggle('collapsed');
             }
             if (btn) {
-                btn.textContent = downlineExpandedNodes.has(memberId) ? '-' : '+';
+                btn.textContent = downlineExpandedNodes.has(memberId) ? '−' : '+';
+                btn.classList.toggle('collapsed', !downlineExpandedNodes.has(memberId));
             }
         }
 
@@ -1405,18 +1756,18 @@
             const container = document.getElementById('downlineTree');
             if (!container) return;
 
-            const allChildrenEls = container.querySelectorAll('.downline-children');
-            const allBtns = container.querySelectorAll('.downline-expand-btn');
+            const allChildrenEls = container.querySelectorAll('.org-children');
+            const allBtns = container.querySelectorAll('.expand-btn');
 
             allChildrenEls.forEach(el => {
                 el.classList.remove('collapsed');
-                el.style.display = 'block';
-                const memberId = el.id.replace('downline-children-', '');
+                const memberId = el.id.replace('children-', '');
                 downlineExpandedNodes.add(memberId);
             });
 
             allBtns.forEach(btn => {
-                btn.textContent = '-';
+                btn.textContent = '−';
+                btn.classList.remove('collapsed');
             });
         }
 
@@ -1425,18 +1776,18 @@
             const container = document.getElementById('downlineTree');
             if (!container) return;
 
-            const allChildrenEls = container.querySelectorAll('.downline-children');
-            const allBtns = container.querySelectorAll('.downline-expand-btn');
+            const allChildrenEls = container.querySelectorAll('.org-children');
+            const allBtns = container.querySelectorAll('.expand-btn');
 
             allChildrenEls.forEach(el => {
                 el.classList.add('collapsed');
-                el.style.display = 'none';
-                const memberId = el.id.replace('downline-children-', '');
+                const memberId = el.id.replace('children-', '');
                 downlineExpandedNodes.delete(memberId);
             });
 
             allBtns.forEach(btn => {
                 btn.textContent = '+';
+                btn.classList.add('collapsed');
             });
         }
 

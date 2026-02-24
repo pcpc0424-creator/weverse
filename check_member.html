@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>테스트 회원 확인</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+</head>
+<body>
+    <h1>테스트 회원 확인</h1>
+    <div id="result"></div>
+    <script>
+        async function checkMembers() {
+            const members = await weverseData.getMembers();
+            const testMembers = members.filter(m => 
+                ['testa', 'testb', 'minjun', 'seoyeon', 'jihun', 'sua', 'yejun'].includes(m.username)
+            );
+            
+            let html = '<h2>테스트 계정 목록</h2><table border="1"><tr><th>ID</th><th>이름</th><th>아이디</th></tr>';
+            testMembers.forEach(m => {
+                html += `<tr><td>${m.id}</td><td>${m.name}</td><td>${m.username}</td></tr>`;
+            });
+            html += '</table>';
+            
+            document.getElementById('result').innerHTML = html;
+            console.log('테스트 계정:', testMembers);
+        }
+        
+        setTimeout(checkMembers, 500);
+    </script>
+</body>
+</html>

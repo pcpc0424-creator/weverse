@@ -210,7 +210,6 @@
                 <div class="footer-col">
                     <h4 class="footer-title" data-i18n="footer.products">Products</h4>
                     <div class="footer-links">
-                        <a href="pages/products/new-bornaid.html">New-BornAid</a>
                         <a href="pages/products/alpha-gpc.html">Alpha GPC</a>
                         <a href="pages/products/nano-lutein.html">Nano Lutein</a>
                         <a href="pages/products/super-prostaid.html">Super Prost Aid</a>
@@ -275,14 +274,12 @@
             // Show first 3 active products
             const featuredProducts = products.filter(p => p.status === 'active').slice(0, 3);
 
-            // 기본 6개 상품 정보 (데이터베이스 오류 방지)
+            // 기본 상품 정보 (DB 데이터 오류 방지용 폴백)
             const DEFAULT_PRODUCT_DATA = {
-                'WV-NB-001': { name: 'New-BornAid', image: 'shop-1.jpg', detailPage: 'pages/products/new-bornaid.html', description: 'Fermented enzyme supplement for detox and daily vitality' },
-                'WV-AG-002': { name: 'Alpha GPC', image: 'shop-2.jpg', detailPage: 'pages/products/alpha-gpc.html', description: 'Brain health supplement for cognitive enhancement' },
-                'WV-NL-003': { name: 'Nano Lutein', image: 'shop-3.jpg', detailPage: 'pages/products/nano-lutein.html', description: 'Eye health supplement with nano technology' },
-                'WV-SP-004': { name: 'Super ProstaAid', image: 'shop-4.jpg', detailPage: 'pages/products/super-prostaid.html', description: 'Prostate health supplement for men' },
-                'WV-JC-005': { name: 'Joint Care', image: 'shop-5.jpg', detailPage: 'pages/products/joint-care.html', description: 'Joint health supplement with glucosamine' },
-                'WV-PP-006': { name: 'Premium Package', image: 'shop-6.jpg', detailPage: 'pages/products/premium-package.html', description: 'Complete health package with all products' }
+                'WV-AG-001': { name: 'Alpha GPC', image: 'shop-2.jpg', detailPage: 'pages/products/alpha-gpc.html', description: 'Brain health supplement for cognitive enhancement' },
+                'WV-NL-002': { name: 'Nano Lutein', image: 'shop-3.jpg', detailPage: 'pages/products/nano-lutein.html', description: 'Eye health supplement with nano technology' },
+                'WV-SP-003': { name: 'Super Prost Aid', image: 'shop-4.jpg', detailPage: 'pages/products/super-prostaid.html', description: 'Prostate health supplement for men' },
+                'WV-JC-004': { name: 'Joint Care(2set)', image: 'shop-5.jpg', detailPage: 'pages/products/joint-care.html', description: 'Joint health supplement with glucosamine' }
             };
 
             grid.innerHTML = featuredProducts.map((product, index) => {

@@ -729,6 +729,20 @@
         async function renderMembers() {
             let members = await weverseData.getMembers();
 
+            // 주문 데이터 가져와서 회원별 주문 수/금액 계산
+            const orders = await weverseData.getOrders();
+            const memberOrderStats = {};
+            orders.forEach(order => {
+                if (order.customer?.memberId && order.status !== 'cancelled') {
+                    const memberId = order.customer.memberId;
+                    if (!memberOrderStats[memberId]) {
+                        memberOrderStats[memberId] = { count: 0, total: 0 };
+                    }
+                    memberOrderStats[memberId].count++;
+                    memberOrderStats[memberId].total += order.total || 0;
+                }
+            });
+
             // Apply search filter
             if (memberSearchTerm) {
                 members = members.filter(m =>
@@ -753,6 +767,8 @@
             paginationInfo.textContent = `${members.length}명 중 1-${members.length} 표시`;
 
             tbody.innerHTML = members.map(member => {
+                // 주문 통계 가져오기
+                const orderStats = memberOrderStats[member.id] || { count: 0, total: 0 };
                 const statusClass = member.status === 'active' ? 'active' : 'inactive';
                 const statusText = member.status === 'active' ? '활성' : '비활성';
                 const nameInitials = member.name.substring(0, 2);
@@ -786,8 +802,8 @@
                         <td>${referrerHtml}</td>
                         <td>${rankHtml}</td>
                         <td style="font-size: 0.85rem;">${pointsSummary}</td>
-                        <td>${member.orderCount}건</td>
-                        <td class="fw-600">₩${member.totalSpent.toLocaleString()}</td>
+                        <td>${orderStats.count}건</td>
+                        <td class="fw-600">₩${orderStats.total.toLocaleString()}</td>
                         <td>${joinDate}</td>
                         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         <td>
@@ -831,6 +847,12 @@
             currentViewMember = await weverseData.getMemberById(memberId);
             if (!currentViewMember) return;
 
+            // 주문 데이터에서 통계 계산
+            const orders = await weverseData.getOrders();
+            const memberOrders = orders.filter(o => o.customer?.memberId === memberId && o.status !== 'cancelled');
+            const orderCount = memberOrders.length;
+            const totalSpent = memberOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+
             const nameInitials = currentViewMember.name.substring(0, 2);
             const rankInfo = RANK_DISPLAY[currentViewMember.rank] || RANK_DISPLAY['general'];
 
@@ -839,8 +861,8 @@
             document.getElementById('modalMemberTier').textContent = rankInfo.name;
             document.getElementById('modalMemberTier').style.background = rankInfo.bgColor;
             document.getElementById('modalMemberTier').style.color = rankInfo.color;
-            document.getElementById('modalMemberOrders').textContent = currentViewMember.orderCount + '건';
-            document.getElementById('modalMemberSpent').textContent = '₩' + currentViewMember.totalSpent.toLocaleString();
+            document.getElementById('modalMemberOrders').textContent = orderCount + '건';
+            document.getElementById('modalMemberSpent').textContent = '₩' + totalSpent.toLocaleString();
             document.getElementById('modalMemberUsername').textContent = currentViewMember.username || '-';
             document.getElementById('modalMemberJoinDate').textContent = currentViewMember.joinDate;
             document.getElementById('modalMemberLastOrder').textContent = currentViewMember.lastOrder || '-';

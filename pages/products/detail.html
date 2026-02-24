@@ -129,7 +129,6 @@
                 <div class="footer-col">
                     <h4 class="footer-title" data-i18n="footer.products">Products</h4>
                     <div class="footer-links">
-                        <a href="new-bornaid.html">New-BornAid</a>
                         <a href="alpha-gpc.html">Alpha GPC</a>
                         <a href="nano-lutein.html">Nano Lutein</a>
                         <a href="super-prostaid.html">Super Prost Aid</a>
@@ -238,8 +237,8 @@
             document.title = `${currentProduct.name} - WEVERSE`;
 
             // 버튼 이벤트 설정
-            if (btnAddCart) btnAddCart.onclick = () => addToCart(currentProduct.name, priceUSD);
-            if (btnBuyNow) btnBuyNow.onclick = () => buyNow(currentProduct.name, priceUSD);
+            if (btnAddCart) btnAddCart.onclick = () => addToCart(currentProduct.name, priceUSD, currentProduct.id);
+            if (btnBuyNow) btnBuyNow.onclick = () => buyNow(currentProduct.name, priceUSD, currentProduct.id);
         }
 
         document.addEventListener('DOMContentLoaded', loadProductData);

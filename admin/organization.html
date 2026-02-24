@@ -7,97 +7,146 @@
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/admin.css">
     <style>
-        /* 조직도 스타일 - 세로 리스트 형태 */
+        /* 트리형 조직도 스타일 */
         .org-container {
             padding: 1.5rem;
             overflow: auto;
             max-height: calc(100vh - 280px);
+            min-height: 400px;
         }
 
+        /* 트리 구조 - 위에서 아래로 */
         .org-tree {
+            display: inline-flex;
+            justify-content: center;
+            padding: 20px;
+            min-width: 100%;
+        }
+
+        .org-tree > .org-node {
             display: flex;
             flex-direction: column;
+            align-items: center;
+        }
+
+        /* 여러 루트 노드가 있을 때 가로 정렬 */
+        .org-tree.multi-root {
+            gap: 20px;
+            align-items: flex-start;
         }
 
         .org-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: relative;
-            margin-left: 0;
         }
 
         .org-node-content {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0;
+            position: relative;
         }
 
+        /* 카드 스타일 - 컴팩트 */
         .org-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 0;
-            width: 320px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            width: 120px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             cursor: pointer;
             transition: all 0.2s;
-            display: flex;
-            align-items: stretch;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
         .org-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         .org-card-rank-bar {
-            width: 4px;
-            border-radius: 8px 0 0 8px;
+            height: 3px;
+            width: 100%;
         }
 
         .org-card-main {
-            flex: 1;
-            padding: 0.6rem 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            padding: 0.5rem;
         }
 
-        .org-card-info {
-            flex: 1;
+        .org-card-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin: 0 auto 0.4rem;
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .org-card-name {
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             margin-bottom: 0.15rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .org-card-username {
+            font-size: 0.65rem;
+            color: var(--text-light);
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .org-card-meta {
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             color: var(--text-light);
+            margin-top: 0.3rem;
+            display: none;
         }
 
         .org-card-stats {
-            text-align: right;
-            font-size: 0.75rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.3rem;
+            margin-top: 0.4rem;
+            padding-top: 0.4rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.6rem;
         }
 
         .org-card-pv {
             color: #3b82f6;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .org-card-group-pv {
             color: #10b981;
-            font-size: 0.7rem;
+            font-weight: 600;
         }
 
         .org-rank {
             display: inline-block;
-            padding: 0.15rem 0.4rem;
-            border-radius: 3px;
-            font-size: 0.65rem;
-            font-weight: 500;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.55rem;
+            font-weight: 600;
         }
 
         /* 등급별 색상 */
@@ -108,60 +157,126 @@
         .rank-manager { background: rgba(16,185,129,0.15); color: #10b981; }
         .rank-general { background: rgba(107,114,128,0.15); color: #6b7280; }
 
-        .bar-crown_diamond { background: #f59e0b; }
-        .bar-red_diamond { background: #ef4444; }
-        .bar-blue_diamond { background: #3b82f6; }
-        .bar-diamond { background: #a855f7; }
-        .bar-manager { background: #10b981; }
-        .bar-general { background: #6b7280; }
+        .bar-crown_diamond { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .bar-red_diamond { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .bar-blue_diamond { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .bar-diamond { background: linear-gradient(90deg, #a855f7, #c084fc); }
+        .bar-manager { background: linear-gradient(90deg, #10b981, #34d399); }
+        .bar-general { background: linear-gradient(90deg, #6b7280, #9ca3af); }
+
+        /* 아바타 색상 */
+        .avatar-crown_diamond { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .avatar-red_diamond { background: linear-gradient(135deg, #ef4444, #f87171); }
+        .avatar-blue_diamond { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .avatar-diamond { background: linear-gradient(135deg, #a855f7, #c084fc); }
+        .avatar-manager { background: linear-gradient(135deg, #10b981, #34d399); }
+        .avatar-general { background: linear-gradient(135deg, #6b7280, #9ca3af); }
 
         /* 확장/축소 버튼 */
         .expand-btn {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 22px;
-            height: 22px;
-            border-radius: 4px;
-            background: var(--bg-main);
-            border: 1px solid var(--border);
-            color: var(--text-light);
-            font-size: 0.85rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.7rem;
             font-weight: bold;
             cursor: pointer;
-            flex-shrink: 0;
+            margin-top: 4px;
+            border: 2px solid var(--bg-card);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 10;
+            transition: all 0.2s;
         }
 
         .expand-btn:hover {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
+            background: var(--primary-dark);
+            transform: scale(1.1);
         }
 
-        /* 자식 컨테이너 - 들여쓰기 */
+        .expand-btn.collapsed {
+            background: var(--text-light);
+        }
+
+        /* 자식 컨테이너 - 트리 형태 (위에서 아래로) */
         .org-children {
-            margin-left: 1.5rem;
-            padding-left: 1rem;
-            border-left: 2px solid var(--border);
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding-top: 15px;
+            position: relative;
+        }
+
+        .org-children::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 15px;
+            background: var(--border);
         }
 
         .org-children.collapsed {
             display: none;
         }
 
-        /* 레벨 표시 */
-        .org-level-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--bg-main);
-            border: 1px solid var(--border);
-            font-size: 0.65rem;
-            color: var(--text-light);
-            flex-shrink: 0;
+        /* 연결선 - 수직선 (부모에서 아래로) */
+        .org-node-content::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 4px;
+            background: var(--border);
+        }
+
+        .org-node:not(:has(.org-children:not(.collapsed))) .org-node-content::after,
+        .org-node:not(:has(.org-children)) .org-node-content::after {
+            display: none;
+        }
+
+        /* 연결선 - 수평선 (형제 연결) */
+        .org-children > .org-node::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            width: 2px;
+            height: 15px;
+            background: var(--border);
+        }
+
+        /* 형제 노드 간 수평 연결선 */
+        .org-children > .org-node:not(:only-child)::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            width: calc(100% + 6px);
+            height: 2px;
+            background: var(--border);
+        }
+
+        .org-children > .org-node:first-child:not(:only-child)::after {
+            left: 50%;
+            width: calc(50% + 3px);
+        }
+
+        .org-children > .org-node:last-child:not(:only-child)::after {
+            right: 50%;
+            left: auto;
+            width: calc(50% + 3px);
+        }
+
+        .org-children > .org-node:not(:first-child):not(:last-child)::after {
+            left: -3px;
+            width: calc(100% + 6px);
         }
 
         /* 검색/필터 영역 */
@@ -197,31 +312,6 @@
             width: 18px;
             height: 18px;
             stroke: var(--text-light);
-        }
-
-        /* 확장/축소 버튼 */
-        .expand-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 0.5rem;
-        }
-
-        .expand-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        /* 숨김 상태 */
-        .org-children.collapsed {
-            display: none;
         }
 
         /* 통계 카드 */
@@ -309,6 +399,34 @@
 
         .member-detail-value {
             font-weight: 500;
+        }
+
+        /* 하이라이트 */
+        .org-card.highlighted {
+            box-shadow: 0 0 0 3px var(--primary), 0 6px 20px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .org-card {
+                min-width: 140px;
+                max-width: 160px;
+            }
+
+            .org-card-main {
+                padding: 0.75rem;
+            }
+
+            .org-card-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+
+            .org-children {
+                gap: 10px;
+            }
         }
     </style>
 </head>
@@ -776,7 +894,8 @@
             }
 
             // 최상위 회원들부터 트리 렌더링
-            let html = '<div class="org-tree">';
+            const multiRootClass = orgTree.roots.length > 1 ? 'multi-root' : '';
+            let html = `<div class="org-tree ${multiRootClass}">`;
 
             orgTree.roots.forEach(rootId => {
                 html += renderOrgNode(rootId, 1);
@@ -786,7 +905,7 @@
             container.innerHTML = html;
         }
 
-        // 노드 렌더링 - 세로 리스트 형태
+        // 노드 렌더링 - 트리 형태
         function renderOrgNode(memberId, level) {
             const member = orgTree.memberMap[memberId];
             if (!member) return '';
@@ -802,28 +921,28 @@
             let html = `
                 <div class="org-node" data-member-id="${memberId}">
                     <div class="org-node-content">
-                        ${hasChildren ? `
-                            <span class="expand-btn" onclick="event.stopPropagation(); toggleNode('${memberId}')">
-                                ${isExpanded ? '−' : '+'}
-                            </span>
-                        ` : `<span class="org-level-badge">${level}</span>`}
                         <div class="org-card" onclick="showMemberDetail('${memberId}')">
-                            <div class="org-card-rank-bar bar-${member.rank}"></div>
+                            <div class="org-card-rank-bar bar-${member.rank || 'general'}"></div>
                             <div class="org-card-main">
-                                <div class="org-card-info">
-                                    <div class="org-card-name">${member.name} <span style="font-weight: 400; color: var(--text-light);">(${member.username || member.id})</span></div>
-                                    <div class="org-card-meta">
-                                        <span class="org-rank rank-${member.rank}">${rankInfo.name}</span>
-                                        · ${member.memberType === 'dealer' ? '딜러' : '소비자'}
-                                        ${hasChildren ? ` · 산하 ${downlineCount}명` : ''}
-                                    </div>
+                                <div class="org-card-avatar avatar-${member.rank || 'general'}">${member.name.substring(0, 2)}</div>
+                                <div class="org-card-name">${member.name}</div>
+                                <div class="org-card-username">@${member.username || member.id}</div>
+                                <span class="org-rank rank-${member.rank || 'general'}">${rankInfo.name}</span>
+                                <div class="org-card-meta">
+                                    ${member.memberType === 'dealer' ? '딜러' : '소비자'}
+                                    ${hasChildren ? ` · 산하 ${downlineCount}명` : ''}
                                 </div>
                                 <div class="org-card-stats">
                                     <div class="org-card-pv">${pv.personal.toLocaleString()} PV</div>
-                                    ${pv.group > pv.personal ? `<div class="org-card-group-pv">그룹 ${pv.group.toLocaleString()} PV</div>` : ''}
+                                    ${pv.group > pv.personal ? `<div class="org-card-group-pv">G: ${pv.group.toLocaleString()}</div>` : ''}
                                 </div>
                             </div>
                         </div>
+                        ${hasChildren ? `
+                            <span class="expand-btn ${isExpanded ? '' : 'collapsed'}" onclick="event.stopPropagation(); toggleNode('${memberId}')">
+                                ${isExpanded ? '−' : '+'}
+                            </span>
+                        ` : ''}
                     </div>
             `;
 
@@ -891,12 +1010,12 @@
         function searchMember() {
             const searchTerm = document.getElementById('memberSearch').value.trim().toLowerCase();
 
+            // 이전 하이라이트 제거
+            document.querySelectorAll('.org-card.highlighted').forEach(card => {
+                card.classList.remove('highlighted');
+            });
+
             if (!searchTerm) {
-                // 검색어가 없으면 하이라이트 제거
-                document.querySelectorAll('.org-card').forEach(card => {
-                    card.style.boxShadow = '';
-                    card.style.border = '';
-                });
                 return;
             }
 
@@ -917,10 +1036,10 @@
 
                 // 하이라이트
                 setTimeout(() => {
-                    const node = document.querySelector(`[data-member-id="${foundMemberId}"] .org-card`);
+                    const node = document.querySelector(`[data-member-id="${foundMemberId}"] > .org-node-content > .org-card`);
                     if (node) {
-                        node.style.boxShadow = '0 0 0 3px var(--primary)';
-                        node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        node.classList.add('highlighted');
+                        node.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
                     }
                 }, 100);
             }
