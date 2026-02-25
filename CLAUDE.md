@@ -18,6 +18,48 @@
 
 ## 작업 이력
 
+### 2026-02-25: 보상 시스템 버그 수정 및 즉시 승급 기능
+**파일:** `js/settlement.js`, `js/supabase.js`, `admin/settlement.html`, `admin/organization.html`, `admin/index.html`, `admin/css/admin.css`
+
+#### 1. 14,400PV 한방매출 즉시 다이아몬드 승급 (신규)
+- **주문 시점에 즉시 승급** (주마감 필요 없음)
+- `js/supabase.js`의 `addOrder()` 함수에서 14,400PV 이상 주문 감지
+- `instantDiamondPromotion()` 함수 추가
+- 이미 다이아몬드 이상이면 스킵
+- **사용자 승급 알림**: 주문 완료 페이지에서 승급 축하 메시지 표시
+  - `pages/checkout.html`: 승급 정보 localStorage 저장 + 디버깅 로그
+  - `pages/order-complete.html`: 승급 알림 UI (보라색 박스 + 펄스 애니메이션) + 디버깅 로그
+- **관리자 승급 알림 시스템** (신규):
+  - `js/supabase.js`: `addPromotionLog()`, `getPromotionLogs()`, `getUnviewedPromotionCount()`, `markPromotionsAsViewed()` 함수 추가
+  - `admin/index.html`: 알림 드롭다운에 승급 알림 표시 (별 아이콘, 보라색)
+  - `admin/css/admin.css`: `.notification-icon.promotion` 스타일 추가
+  - 승급 로그는 localStorage(`weversePromotionLogs`)에 저장됨
+
+#### 2. 엑셀 내보내기 버그 수정
+- `exportSettlementDetails()` 함수 async/await 수정
+- `weverseData.getMembers()`가 비동기 함수인데 await 없이 호출하던 문제
+
+#### 3. 조직도 PV 표시 안됨 수정
+- `order.totalPv` → `order.totalPV` (대소문자 오류)
+- Supabase의 `toCamelCase`가 `total_pv`를 `totalPV`로 변환
+
+#### 4. 주마감 시 다이아몬드 승급 조건 보완
+- 마감 기간 내 **단일 주문**이 14,400PV 이상이면 승급
+- `hasSingleOrderWithPVAtLeast()` 함수 추가
+- `evaluateNewRank()`에 `periodStart`, `periodEnd` 파라미터 추가
+
+#### 5. 육성보너스 조건 추가
+- **"인센티브 수령자에게만 지급"** 조건 추가
+- 본인이 인센티브를 받아야 육성보너스도 받을 수 있음
+
+#### 6. 마이페이지 주문 내역 버그 수정
+- **문제**: 다른 계정으로 주문한 내역이 localStorage에 남아 다른 계정에서도 표시됨
+- **수정**:
+  - `pages/account.html`: 로그인한 본인의 주문만 표시 (session.id로 필터링)
+  - `js/supabase.js`: 로그인/로그아웃 시 localStorage의 lastOrder 삭제
+
+---
+
 ### 2026-02-23: 수당 검수용 조회 기능 추가
 **파일:** `admin/settlement.html`, `js/settlement.js`
 

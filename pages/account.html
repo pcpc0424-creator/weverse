@@ -1093,14 +1093,29 @@
                           (storageSession || localSession);
             } catch (e) {}
 
-            // Load orders from Supabase
+            // Load orders from Supabase - 본인 주문만 표시
+            // localStorage에 id가 있으면 그걸 사용 (sessionStorage에는 id가 없을 수 있음)
+            const localSessionForId = JSON.parse(localStorage.getItem('weverseSession'));
+            if (localSessionForId && localSessionForId.id && (!session || !session.id)) {
+                session = localSessionForId;
+            }
+            console.log('[Account] 최종 세션 정보:', session);
             if (session && session.id) {
                 const allOrders = await weverseData.getOrders();
+                console.log('[Account] 전체 주문 수:', allOrders.length);
+                console.log('[Account] 내 ID:', session.id);
+
+                // 주문별 memberId 확인
+                allOrders.forEach((order, idx) => {
+                    console.log(`[Account] 주문 ${idx + 1}: ID=${order.id}, memberId=${order.customer?.memberId}`);
+                });
+
                 orders = allOrders.filter(order => order.customer?.memberId === session.id);
+                console.log('[Account] 필터링 후 내 주문 수:', orders.length);
             } else {
-                // Not logged in - check localStorage for guest orders
-                const lastOrder = localStorage.getItem('weverseLastOrder');
-                orders = lastOrder ? [JSON.parse(lastOrder)] : [];
+                // 로그인하지 않은 경우 주문 내역 없음
+                console.log('[Account] 세션 없음 - 주문 내역 비움');
+                orders = [];
             }
 
             // Load profile from session

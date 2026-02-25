@@ -373,13 +373,22 @@
             const session = JSON.parse(localStorage.getItem('weverseSession')) ||
                            JSON.parse(sessionStorage.getItem('weverseSession'));
 
+            console.log('[Checkout] 세션 정보:', session);
+
             // Find member
             if (session && session.username) {
                 try {
                     currentMember = await weverseData.getMemberByUsername(session.username);
+                    console.log('[Checkout] 회원 정보 로드:', currentMember);
                 } catch (e) {
                     console.error('Error fetching member:', e);
                 }
+            }
+
+            // session.id가 있으면 currentMember에 id 보장
+            if (!currentMember && session && session.id) {
+                currentMember = { id: session.id, name: session.name };
+                console.log('[Checkout] 세션에서 회원 정보 복원:', currentMember);
             }
 
             // Get settings
@@ -730,6 +739,15 @@
                 totalPV += (product?.pv || 0) * item.quantity;
             });
 
+            // 세션에서 memberId 가져오기 (currentMember가 없을 경우 대비)
+            const session = JSON.parse(localStorage.getItem('weverseSession')) ||
+                           JSON.parse(sessionStorage.getItem('weverseSession'));
+            const memberId = currentMember?.id || session?.id || null;
+
+            console.log('[Checkout] placeOrder - currentMember:', currentMember);
+            console.log('[Checkout] placeOrder - session:', session);
+            console.log('[Checkout] placeOrder - memberId:', memberId);
+
             // Create order data object
             const orderData = {
                 orderNumber: orderNumber,
@@ -759,7 +777,7 @@
                 },
                 paymentMethod: 'points',
                 orderDate: new Date().toISOString(),
-                memberId: currentMember?.id || null
+                memberId: memberId
             };
 
             // Save order data to localStorage
@@ -818,15 +836,28 @@
 
             // Add order to data store for admin dashboard
             if (typeof weverseData !== 'undefined') {
-                await weverseData.addOrder(orderData);
+                console.log('[Checkout] 주문 추가 시작, totalPV:', orderData.totalPV, 'memberId:', orderData.memberId);
+                const orderResult = await weverseData.addOrder(orderData);
+                console.log('[Checkout] 주문 결과:', orderResult);
+
+                // 승급 정보가 있으면 localStorage에 추가
+                if (orderResult && orderResult.promotion) {
+                    console.log('[Checkout] 승급 감지!', orderResult.promotion);
+                    const savedOrder = JSON.parse(localStorage.getItem('weverseLastOrder'));
+                    savedOrder.promotion = orderResult.promotion;
+                    localStorage.setItem('weverseLastOrder', JSON.stringify(savedOrder));
+                    console.log('[Checkout] 승급 정보 localStorage에 저장 완료');
+                }
             }
 
             // Clear cart
             localStorage.removeItem('weverseCart');
             updateCartCount();
 
-            // Redirect to order complete page
-            window.location.href = 'order-complete.html';
+            // Redirect to order complete page (약간의 딜레이로 localStorage 저장 보장)
+            setTimeout(function() {
+                window.location.href = 'order-complete.html';
+            }, 100);
         }
 
         // Check if user is logged in

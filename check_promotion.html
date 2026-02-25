@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>승급 확인</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+    <h2>승급 알림 확인</h2>
+    <div id="result"></div>
+    <script>
+        async function check() {
+            const result = document.getElementById('result');
+
+            // weversePromotion 키 확인 (가장 중요!)
+            const promoKey = localStorage.getItem('weversePromotion');
+            result.innerHTML = '<h3 style="color:red;">0. weversePromotion 키 (승급 알림용)</h3>';
+            result.innerHTML += '<pre style="background:#ffe0e0;padding:10px;">' + (promoKey || '없음') + '</pre>';
+
+            // localStorage 주문 확인
+            const lastOrder = JSON.parse(localStorage.getItem('weverseLastOrder'));
+            result.innerHTML += '<h3>1. 마지막 주문 정보</h3>';
+            if (lastOrder) {
+                result.innerHTML += '<pre>' + JSON.stringify(lastOrder, null, 2) + '</pre>';
+            } else {
+                result.innerHTML += '<p>주문 정보 없음</p>';
+            }
+
+            // 승급 로그 확인
+            const promotionLogs = weverseData.getPromotionLogs();
+            result.innerHTML += '<h3>2. 승급 로그 (관리자용)</h3>';
+            if (promotionLogs.length > 0) {
+                result.innerHTML += '<pre>' + JSON.stringify(promotionLogs, null, 2) + '</pre>';
+            } else {
+                result.innerHTML += '<p>승급 로그 없음</p>';
+            }
+
+            // 세션 확인
+            const session = JSON.parse(localStorage.getItem('weverseSession'));
+            result.innerHTML += '<h3>3. 현재 로그인 세션</h3>';
+            if (session) {
+                result.innerHTML += '<p>ID: ' + session.id + '</p>';
+                result.innerHTML += '<p>이름: ' + session.name + '</p>';
+                result.innerHTML += '<p>직급: ' + session.rank + '</p>';
+            }
+        }
+        check();
+    </script>
+</body>
+</html>

@@ -70,10 +70,8 @@ class WeverseSettlement {
      * 캐시 초기화
      */
     async initCache() {
-        console.log('[Settlement] 캐시 초기화 중...');
         this._cachedMembers = await this.dataStore.getMembers();
         this._cachedOrders = await this.dataStore.getOrders();
-        console.log('[Settlement] 캐시 초기화 완료 - 회원:', this._cachedMembers.length, '주문:', this._cachedOrders.length);
     }
 
     /**
@@ -342,9 +340,9 @@ class WeverseSettlement {
      * ① 본인 누적 22,000PV
      * ② 직추천 누적 22,000PV (라인별 최소 3,300PV)
      * ③ 직하선 3개+ 라인, 120일 산하 합산 33,000PV (라인별 최소 3,300PV)
-     * ④ 당일 14,400PV (한방 매출)
+     * ④ 당일 14,400PV (한방 매출) - 마감 기간 내 단일 주문이 14,400PV 이상
      */
-    checkDiamondPromotion(memberId, currentRank, checkDate = null) {
+    checkDiamondPromotion(memberId, currentRank, periodStart = null, periodEnd = null) {
         // 매니저 이상이어야 함
         if (!this.isRankAtLeast(currentRank, RANKS.MANAGER)) return false;
 
@@ -361,17 +359,55 @@ class WeverseSettlement {
         }
 
         // ③ 직하선 3개+ 라인, 120일 산하 합산 33,000PV (라인별 최소 3,300PV)
-        const downlineLines = this.getDownlinePVByLine(memberId, 120, checkDate);
+        const downlineLines = this.getDownlinePVByLine(memberId, 120, periodEnd);
         const qualifiedDownlines = downlineLines.filter(l => l.pv >= 3300);
         if (qualifiedDownlines.length >= 3) {
             const totalDownlinePV = qualifiedDownlines.reduce((sum, l) => sum + l.pv, 0);
             if (totalDownlinePV >= 33000) return true;
         }
 
-        // ④ 당일 14,400PV (한방 매출)
-        const today = checkDate || this.formatDate(new Date());
-        const dailyPV = this.getMemberPVInPeriod(memberId, today, today);
-        if (dailyPV >= 14400) return true;
+        // ④ 당일 14,400PV (한방 매출) - 마감 기간 내 단일 주문이 14,400PV 이상
+        if (periodStart && periodEnd) {
+            // 마감 기간 내 단일 주문이 14,400PV 이상인 경우
+            if (this.hasSingleOrderWithPVAtLeast(memberId, 14400, periodStart, periodEnd)) {
+                return true;
+            }
+        } else {
+            // 기존 호환성: 특정 날짜 하루 체크
+            const today = periodEnd || this.formatDate(new Date());
+            const dailyPV = this.getMemberPVInPeriod(memberId, today, today);
+            if (dailyPV >= 14400) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 마감 기간 내 단일 주문이 특정 PV 이상인지 확인
+     * @param {string} memberId - 회원 ID
+     * @param {number} minPV - 최소 PV
+     * @param {string} startDate - 시작일 (YYYY-MM-DD)
+     * @param {string} endDate - 종료일 (YYYY-MM-DD)
+     * @returns {boolean} 조건 충족 여부
+     */
+    hasSingleOrderWithPVAtLeast(memberId, minPV, startDate, endDate) {
+        const orders = this.getCachedOrders();
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+
+        for (const order of orders) {
+            if (order.customer?.memberId !== memberId) continue;
+            if (order.status === 'cancelled') continue;
+
+            const orderDate = new Date(order.orderDate);
+            if (orderDate >= start && orderDate <= end) {
+                const orderPV = order.totalPV || 0;
+                if (orderPV >= minPV) {
+                    return true;
+                }
+            }
+        }
 
         return false;
     }
@@ -504,8 +540,12 @@ class WeverseSettlement {
 
     /**
      * 회원의 새 직급 평가 (현재 직급에서 승급 가능한 최고 직급 반환)
+     * @param {string} memberId - 회원 ID
+     * @param {string} currentRank - 현재 직급
+     * @param {string} periodStart - 마감 기간 시작일 (YYYY-MM-DD)
+     * @param {string} periodEnd - 마감 기간 종료일 (YYYY-MM-DD)
      */
-    evaluateNewRank(memberId, currentRank, checkDate = null) {
+    evaluateNewRank(memberId, currentRank, periodStart = null, periodEnd = null) {
         // rank가 없거나 잘못된 값이면 'general'로 기본 처리
         const normalizedRank = currentRank && RANK_ORDER.hasOwnProperty(currentRank)
             ? currentRank
@@ -519,39 +559,34 @@ class WeverseSettlement {
         if (newRank === RANKS.GENERAL || !RANK_ORDER.hasOwnProperty(newRank)) {
             if (this.checkManagerPromotion(memberId)) {
                 newRank = RANKS.MANAGER;
-                console.log(`[Promotion] ${memberId}: 일반 → 매니저`);
             }
         }
 
         // 매니저 → 다이아몬드
         if (newRank === RANKS.MANAGER) {
-            if (this.checkDiamondPromotion(memberId, RANKS.MANAGER, checkDate)) {
+            if (this.checkDiamondPromotion(memberId, RANKS.MANAGER, periodStart, periodEnd)) {
                 newRank = RANKS.DIAMOND;
-                console.log(`[Promotion] ${memberId}: 매니저 → 다이아몬드`);
             }
         }
 
         // 다이아몬드 → 블루다이아몬드
         if (newRank === RANKS.DIAMOND) {
-            if (this.checkBlueDiamondPromotion(memberId, RANKS.DIAMOND, checkDate)) {
+            if (this.checkBlueDiamondPromotion(memberId, RANKS.DIAMOND, periodEnd)) {
                 newRank = RANKS.BLUE_DIAMOND;
-                console.log(`[Promotion] ${memberId}: 다이아몬드 → 블루다이아몬드`);
             }
         }
 
         // 블루다이아몬드 → 레드다이아몬드
         if (newRank === RANKS.BLUE_DIAMOND) {
-            if (this.checkRedDiamondPromotion(memberId, RANKS.BLUE_DIAMOND, checkDate)) {
+            if (this.checkRedDiamondPromotion(memberId, RANKS.BLUE_DIAMOND, periodEnd)) {
                 newRank = RANKS.RED_DIAMOND;
-                console.log(`[Promotion] ${memberId}: 블루다이아몬드 → 레드다이아몬드`);
             }
         }
 
         // 레드다이아몬드 → 크라운다이아몬드
         if (newRank === RANKS.RED_DIAMOND) {
-            if (this.checkCrownDiamondPromotion(memberId, RANKS.RED_DIAMOND, checkDate)) {
+            if (this.checkCrownDiamondPromotion(memberId, RANKS.RED_DIAMOND, periodEnd)) {
                 newRank = RANKS.CROWN_DIAMOND;
-                console.log(`[Promotion] ${memberId}: 레드다이아몬드 → 크라운다이아몬드`);
             }
         }
 
@@ -568,7 +603,9 @@ class WeverseSettlement {
      */
     calculateReferralBonus(memberId, memberRank, startDate, endDate) {
         // 매니저 이상만 대상
-        if (!this.isRankAtLeast(memberRank, RANKS.MANAGER)) return 0;
+        if (!this.isRankAtLeast(memberRank, RANKS.MANAGER)) {
+            return 0;
+        }
 
         const directRefPV = this.getDirectReferralPVInPeriod(memberId, startDate, endDate);
         return Math.floor(directRefPV * 0.30);
@@ -662,8 +699,6 @@ class WeverseSettlement {
         const baseIncentive = Math.floor(nonIndependentPV * myRate);
         const incentive = baseIncentive + differentialIncentive;
 
-        console.log(`[Incentive] ${memberId}: 독립조직제외PV=${nonIndependentPV}, 기본인센티브=${baseIncentive}, 차등인센티브=${differentialIncentive}, 총=${incentive}`);
-
         return { incentive, rollupTo: null, totalPV: totalDownlinePV, differentialIncentive, nonIndependentPV };
     }
 
@@ -684,10 +719,17 @@ class WeverseSettlement {
      * 육성보너스 계산 (월마감)
      * 대상: 다이아몬드 이상
      * 재원: 추천 산하 라인별 첫번째 다이아+가 수령하는 인센티브의 20%
+     * 조건: 인센티브 수령자에게만 지급 (본인이 인센티브를 받아야 육성보너스도 받을 수 있음)
      */
     calculateNurturingBonus(memberId, memberRank, settlementDetails) {
         // 다이아몬드 이상만 대상
         if (!this.isRankAtLeast(memberRank, RANKS.DIAMOND)) return 0;
+
+        // 본인이 인센티브를 수령해야 육성보너스도 받을 수 있음
+        const myDetail = settlementDetails.find(d => d.member_id === memberId);
+        if (!myDetail || myDetail.incentive <= 0) {
+            return 0;
+        }
 
         const members = this.getCachedMembers();
         const directReferrals = members.filter(m => m.referrer?.id === memberId);
@@ -780,19 +822,16 @@ class WeverseSettlement {
      * 주마감 실행 (추천 보너스 + 승급)
      */
     async executeWeeklySettlement(periodStart, periodEnd) {
-        console.log('[Settlement] 주마감 시작');
-
         // 캐시 초기화 (한 번만 데이터 로드)
         await this.initCache();
 
         const settlementId = this.generateId('WST');
-        console.log('[Settlement] ID 생성:', settlementId);
-
         const members = this.getCachedMembers();
         const orders = this.getCachedOrders();
 
-        console.log('[Settlement] 회원 수:', members.length);
-        console.log('[Settlement] 주문 수:', orders.length);
+        const start = new Date(periodStart);
+        const end = new Date(periodEnd);
+        end.setHours(23, 59, 59, 999);
 
         const details = [];
         let totalPV = 0;
@@ -800,10 +839,6 @@ class WeverseSettlement {
         let membersPromoted = 0;
 
         // 전체 PV 계산
-        const start = new Date(periodStart);
-        const end = new Date(periodEnd);
-        end.setHours(23, 59, 59, 999);
-
         orders.forEach(order => {
             if (order.status === 'cancelled') return;
             const orderDate = new Date(order.orderDate);
@@ -811,21 +846,11 @@ class WeverseSettlement {
                 totalPV += order.totalPV || 0;
             }
         });
-        console.log('[Settlement] 기간 내 총 PV:', totalPV);
 
         // 각 회원 처리
         const processableMembers = members.filter(m => m.id !== 'ADMIN' && m.rank !== 'admin');
-        console.log('[Settlement] 처리 대상 회원 수:', processableMembers.length);
 
-        let memberIndex = 0;
         for (const member of processableMembers) {
-            memberIndex++;
-
-            // 10명마다 로그 출력 (성능 향상)
-            if (memberIndex % 10 === 0 || memberIndex === processableMembers.length) {
-                console.log(`[Settlement] 회원 처리 중 (${memberIndex}/${processableMembers.length})`);
-            }
-
             try {
                 // 모든 PV 계산은 이제 동기 함수 (캐시 사용)
                 const personalPV = this.getMemberPVInPeriod(member.id, periodStart, periodEnd);
@@ -834,9 +859,11 @@ class WeverseSettlement {
 
                 // 승급 평가 (동기) - 먼저 승급 여부를 판단
                 const currentRank = member.rank || RANKS.GENERAL;
-                const newRank = this.evaluateNewRank(member.id, currentRank, periodEnd);
+                const newRank = this.evaluateNewRank(member.id, currentRank, periodStart, periodEnd);
                 const promoted = newRank !== currentRank;
-                if (promoted) membersPromoted++;
+                if (promoted) {
+                    membersPromoted++;
+                }
 
                 // 추천 보너스 계산 (동기) - 승급 후 직급으로 계산
                 const referralBonus = this.calculateReferralBonus(
@@ -878,15 +905,10 @@ class WeverseSettlement {
             }
         }
 
-        console.log('[Settlement] 모든 회원 처리 완료');
-        console.log('[Settlement] 총 추천 보너스:', totalReferralBonus);
-        console.log('[Settlement] 승급 회원 수:', membersPromoted);
-
         // 캐시 클리어
         this.clearCache();
 
         // 마감 이력 저장
-        console.log('[Settlement] 마감 이력 저장 중...');
         const settlement = {
             id: settlementId,
             type: 'weekly',
@@ -904,18 +926,9 @@ class WeverseSettlement {
             created_at: new Date().toISOString()
         };
 
-        try {
-            await this.saveSettlement(settlement);
-            console.log('[Settlement] 마감 이력 저장 완료');
+        await this.saveSettlement(settlement);
+        await this.saveSettlementDetails(details);
 
-            console.log('[Settlement] 마감 상세 저장 중...');
-            await this.saveSettlementDetails(details);
-            console.log('[Settlement] 마감 상세 저장 완료');
-        } catch (error) {
-            console.error('[Settlement] 저장 오류:', error);
-        }
-
-        console.log('[Settlement] 주마감 완료!');
         return { settlement, details };
     }
 
@@ -923,17 +936,12 @@ class WeverseSettlement {
      * 월마감 실행 (인센티브 + 육성보너스 + 크라운보너스)
      */
     async executeMonthlySettlement(periodStart, periodEnd) {
-        console.log('[Settlement] 월마감 시작');
-
         // 캐시 초기화 (한 번만 데이터 로드)
         await this.initCache();
 
         const settlementId = this.generateId('MST');
         const members = this.getCachedMembers();
         const orders = this.getCachedOrders();
-
-        console.log('[Settlement] 회원 수:', members.length);
-        console.log('[Settlement] 주문 수:', orders.length);
 
         const details = [];
         let totalPV = 0;
@@ -953,21 +961,12 @@ class WeverseSettlement {
                 totalPV += order.totalPV || 0;
             }
         });
-        console.log('[Settlement] 기간 내 총 PV:', totalPV);
 
         // 처리 대상 회원
         const processableMembers = members.filter(m => m.id !== 'ADMIN' && m.rank !== 'admin');
-        console.log('[Settlement] 처리 대상 회원 수:', processableMembers.length);
 
         // 1단계: 인센티브 계산
-        console.log('[Settlement] 1단계: 인센티브 계산');
-        let memberIndex = 0;
         for (const member of processableMembers) {
-            memberIndex++;
-            if (memberIndex % 10 === 0 || memberIndex === processableMembers.length) {
-                console.log(`[Settlement] 인센티브 계산 중 (${memberIndex}/${processableMembers.length})`);
-            }
-
             // 동기 함수 호출 (캐시 사용)
             const personalPV = this.getMemberPVInPeriod(member.id, periodStart, periodEnd);
             const cumulativePV = this.getMemberCumulativePV(member.id);
@@ -1001,7 +1000,6 @@ class WeverseSettlement {
         }
 
         // 2단계: 육성보너스 계산 (인센티브 계산 후)
-        console.log('[Settlement] 2단계: 육성보너스 계산');
         for (const detail of details) {
             const member = members.find(m => m.id === detail.member_id);
             if (!member) continue;
@@ -1017,7 +1015,6 @@ class WeverseSettlement {
         }
 
         // 3단계: 크라운다이아 보너스 계산
-        console.log('[Settlement] 3단계: 크라운다이아 보너스 계산');
         const crownBonuses = this.calculateCrownBonus(periodStart, periodEnd);
         for (const cb of crownBonuses) {
             const detail = details.find(d => d.member_id === cb.memberId);
@@ -1029,7 +1026,6 @@ class WeverseSettlement {
         }
 
         // 포인트 지급 (비동기 - DB 저장)
-        console.log('[Settlement] 포인트 지급 중...');
         for (const detail of details) {
             if (detail.total_bonus > 0) {
                 await this.grantBonusAsPoints(
@@ -1065,11 +1061,6 @@ class WeverseSettlement {
         await this.saveSettlement(settlement);
         await this.saveSettlementDetails(details);
 
-        console.log('[Settlement] 월마감 완료!');
-        console.log('[Settlement] 총 인센티브:', totalIncentive);
-        console.log('[Settlement] 총 육성보너스:', totalNurturingBonus);
-        console.log('[Settlement] 총 크라운보너스:', totalCrownBonus);
-
         return { settlement, details };
     }
 
@@ -1104,6 +1095,7 @@ class WeverseSettlement {
      */
     async rollbackSettlement(settlementId) {
         const settlement = await this.getSettlementById(settlementId);
+
         if (!settlement) {
             return { error: '마감 이력을 찾을 수 없습니다.' };
         }
@@ -1116,10 +1108,11 @@ class WeverseSettlement {
 
         // 포인트 차감 (지급된 보너스 원복)
         for (const detail of details) {
-            if (detail.total_bonus > 0) {
-                const member = await this.dataStore.getMemberById(detail.member_id);
-                if (!member) continue;
+            const member = await this.dataStore.getMemberById(detail.member_id);
+            if (!member) continue;
 
+            // 포인트 차감
+            if (detail.total_bonus > 0) {
                 const points = member.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
                 points.pPoint = Math.max(0, (points.pPoint || 0) - detail.total_bonus);
 
@@ -1135,8 +1128,10 @@ class WeverseSettlement {
                 });
             }
 
-            // 직급 변경 원복 (주마감의 경우) - 강등 없음 원칙에 따라 롤백하지 않음
-            // 직급은 최고 도달 직급을 유지
+            // 직급 변경 원복 (마감 이전 상태로 복원)
+            if (detail.rank_before !== detail.rank_after) {
+                await this.dataStore.updateMember(detail.member_id, { rank: detail.rank_before });
+            }
         }
 
         // 마감 상태 업데이트

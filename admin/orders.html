@@ -523,6 +523,9 @@
         async function renderOrders() {
             let orders = await weverseData.getOrders();
 
+            // 승급 로그 조회 (승급 표시용)
+            const promotionLogs = weverseData.getPromotionLogs();
+
             // 회원 목록 조회 (회원 정보 표시용)
             const members = await weverseData.getMembers();
             const memberMap = {};
@@ -607,9 +610,19 @@
                     ? `<a href="members.html?id=${member.id}" style="color: var(--primary); font-size: 0.75rem;">@${memberUsername}</a>`
                     : '<span style="color: var(--text-light); font-size: 0.75rem;">비회원</span>';
 
+                // 승급 여부 확인 (주문 시점 ±5초 이내에 승급된 경우)
+                const orderTime = new Date(order.orderDate).getTime();
+                const promotion = promotionLogs.find(p => {
+                    const promoTime = new Date(p.promotedAt).getTime();
+                    return p.memberId === order.customer?.memberId && Math.abs(promoTime - orderTime) < 10000;
+                });
+                const promotionBadge = promotion
+                    ? `<span style="background: linear-gradient(135deg, #a855f7, #8b5cf6); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; margin-left: 5px;">⭐ ${promotion.newRankName} 승급</span>`
+                    : '';
+
                 return `
                     <tr>
-                        <td><strong>#${order.id}</strong></td>
+                        <td><strong>#${order.id}</strong>${promotionBadge}</td>
                         <td>
                             <div>
                                 <div class="fw-500">${customerName}</div>

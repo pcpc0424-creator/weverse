@@ -457,6 +457,11 @@ body {
     color: var(--success);
 }
 
+.notification-icon.promotion {
+    background: rgba(168, 85, 247, 0.15);
+    color: #a855f7;
+}
+
 .notification-icon svg {
     width: 18px;
     height: 18px;

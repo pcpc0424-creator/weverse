@@ -788,7 +788,8 @@
                     if (!memberPVMap[memberId]) {
                         memberPVMap[memberId] = { personal: 0, group: 0 };
                     }
-                    memberPVMap[memberId].personal += order.totalPv || 0;
+                    // totalPV (대문자 PV) - supabase.js의 toCamelCase에서 변환됨
+                    memberPVMap[memberId].personal += order.totalPV || 0;
                 }
             });
         }

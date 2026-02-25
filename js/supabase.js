@@ -428,6 +428,9 @@ class WeverseSupabaseStore {
     }
 
     async addOrder(orderData) {
+        console.log('[addOrder] orderData.memberId:', orderData.memberId);
+        console.log('[addOrder] orderData.customer?.memberId:', orderData.customer?.memberId);
+
         const order = {
             id: orderData.orderNumber || 'WV' + Date.now().toString().slice(-8),
             customer: {
@@ -471,7 +474,135 @@ class WeverseSupabaseStore {
             }
         }
 
-        return this.toCamelCase(data);
+        // 14,400PV 이상 한방 매출 시 즉시 다이아몬드 승급
+        const orderPV = orderData.totalPV || 0;
+        const memberId = order.customer.memberId;
+        let promotionResult = null;
+        console.log('[addOrder] 승급 체크 - orderPV:', orderPV, 'memberId:', memberId);
+        if (orderPV >= 14400 && memberId) {
+            console.log('[addOrder] 14,400PV 이상! 승급 시도...');
+            promotionResult = await this.instantDiamondPromotion(memberId, orderPV);
+            console.log('[addOrder] 승급 결과:', promotionResult);
+        }
+
+        const result = this.toCamelCase(data);
+        // 승급 정보 포함
+        if (promotionResult) {
+            result.promotion = promotionResult;
+            console.log('[addOrder] result.promotion 설정됨:', result.promotion);
+        } else {
+            console.log('[addOrder] promotionResult가 없음 (이미 다이아몬드 이상이거나 조건 미충족)');
+        }
+        return result;
+    }
+
+    /**
+     * 14,400PV 이상 한방 매출 시 즉시 다이아몬드 승급
+     * @returns {object|null} 승급 정보 또는 null
+     */
+    async instantDiamondPromotion(memberId, orderPV) {
+        const member = await this.getMemberById(memberId);
+        if (!member) return null;
+
+        // 이미 다이아몬드 이상이면 스킵
+        const RANK_ORDER = {
+            'general': 0,
+            'manager': 1,
+            'diamond': 2,
+            'blue_diamond': 3,
+            'red_diamond': 4,
+            'crown_diamond': 5
+        };
+
+        const RANK_NAMES = {
+            'general': '일반',
+            'manager': '매니저',
+            'diamond': '다이아몬드',
+            'blue_diamond': '블루다이아몬드',
+            'red_diamond': '레드다이아몬드',
+            'crown_diamond': '크라운다이아몬드'
+        };
+
+        const currentRankOrder = RANK_ORDER[member.rank] || 0;
+        if (currentRankOrder >= RANK_ORDER['diamond']) {
+            console.log(`[InstantPromotion] ${memberId}: 이미 다이아몬드 이상 직급`);
+            return null;
+        }
+
+        const previousRank = member.rank || 'general';
+
+        // 즉시 다이아몬드 승급
+        const { error } = await this.supabase
+            .from('members')
+            .update({ rank: 'diamond' })
+            .eq('id', memberId);
+
+        if (error) {
+            console.error('Error promoting to diamond:', error);
+            return null;
+        }
+
+        console.log(`[InstantPromotion] ${memberId}: ${orderPV}PV 한방 매출로 다이아몬드 즉시 승급!`);
+
+        const promotionData = {
+            promoted: true,
+            previousRank: previousRank,
+            previousRankName: RANK_NAMES[previousRank],
+            newRank: 'diamond',
+            newRankName: '다이아몬드',
+            reason: `${orderPV.toLocaleString()}PV 한방 매출`,
+            memberName: member.name,
+            memberId: memberId,
+            orderPV: orderPV,
+            promotedAt: new Date().toISOString()
+        };
+
+        // 승급 로그 저장 (관리자 확인용)
+        this.addPromotionLog(promotionData);
+
+        // 사용자 알림용: 별도 키로 승급 정보 저장 (order-complete.html에서 읽음)
+        localStorage.setItem('weversePromotion', JSON.stringify(promotionData));
+        console.log('[InstantPromotion] 승급 알림 저장 완료');
+
+        return promotionData;
+    }
+
+    /**
+     * 승급 로그 저장 (관리자 확인용)
+     */
+    addPromotionLog(promotionData) {
+        const logs = this.getPromotionLogs();
+        logs.unshift({
+            id: 'PL' + Date.now().toString().slice(-8),
+            ...promotionData,
+            viewedByAdmin: false
+        });
+        localStorage.setItem('weversePromotionLogs', JSON.stringify(logs));
+    }
+
+    /**
+     * 승급 로그 조회
+     */
+    getPromotionLogs() {
+        const data = localStorage.getItem('weversePromotionLogs');
+        return data ? JSON.parse(data) : [];
+    }
+
+    /**
+     * 미확인 승급 로그 개수
+     */
+    getUnviewedPromotionCount() {
+        const logs = this.getPromotionLogs();
+        return logs.filter(log => !log.viewedByAdmin).length;
+    }
+
+    /**
+     * 승급 로그 확인 처리
+     */
+    markPromotionsAsViewed() {
+        const logs = this.getPromotionLogs();
+        logs.forEach(log => log.viewedByAdmin = true);
+        localStorage.setItem('weversePromotionLogs', JSON.stringify(logs));
     }
 
     async updateOrderStatus(id, status, extras = {}) {
@@ -665,16 +796,23 @@ class WeverseSupabaseStore {
             email: member.email,
             memberType: member.memberType,
             rank: member.rank,
-            loginTime: new Date().toISOString()
+            loginTime: new Date().toISOString(),
+            loggedIn: true
         };
 
         localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(session));
+
+        // 이전 계정의 주문 내역 삭제 (다른 계정 주문이 보이는 문제 방지)
+        localStorage.removeItem(STORAGE_KEYS.LAST_ORDER);
+
         return session;
     }
 
     logout() {
         localStorage.removeItem(STORAGE_KEYS.SESSION);
         sessionStorage.removeItem(STORAGE_KEYS.SESSION);
+        // 로그아웃 시에도 주문 내역 삭제
+        localStorage.removeItem(STORAGE_KEYS.LAST_ORDER);
     }
 
     getSession() {

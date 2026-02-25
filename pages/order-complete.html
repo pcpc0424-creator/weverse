@@ -5,6 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Complete - WEVERSE</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* 승급 알림 스타일 */
+        .promotion-alert {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            border: 2px solid #a855f7;
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            animation: promotionPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes promotionPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.6); }
+        }
+
+        .promotion-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+
+        .promotion-icon svg {
+            stroke: #fff;
+            fill: rgba(255,255,255,0.2);
+        }
+
+        .promotion-alert h2 {
+            font-size: 1.5rem;
+            color: #a855f7;
+            margin-bottom: 0.5rem;
+        }
+
+        .promotion-alert p {
+            font-size: 1.1rem;
+            color: var(--text-primary, #333);
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
     <!-- Scroll Progress Bar -->
@@ -65,6 +110,33 @@
                 <!-- Success Message -->
                 <h1>Thank You for Your Order!</h1>
                 <p class="order-message">Your order has been successfully placed.</p>
+
+                <!-- 승급 알림 (14,400PV 이상 한방 매출 시) -->
+                <div class="promotion-alert" id="promotionAlert" style="display: none;">
+                    <div class="promotion-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </div>
+                    <h2 id="promotionTitle">축하합니다!</h2>
+                    <p id="promotionMessage"></p>
+                </div>
+                <script>
+                    // 즉시 실행 - 승급 알림 체크
+                    (function() {
+                        var promo = localStorage.getItem('weversePromotion');
+                        if (promo) {
+                            var data = JSON.parse(promo);
+                            var alertBox = document.getElementById('promotionAlert');
+                            var title = document.getElementById('promotionTitle');
+                            var msg = document.getElementById('promotionMessage');
+                            title.textContent = '🎉 축하합니다, ' + data.memberName + '님!';
+                            msg.innerHTML = '<strong>' + data.reason + '</strong>으로<br><span style="color: #a855f7; font-weight: 600;">' + data.newRankName + '</span> 직급으로 승급되었습니다!';
+                            alertBox.style.display = 'block';
+                            localStorage.removeItem('weversePromotion');
+                        }
+                    })();
+                </script>
 
                 <!-- Order Number -->
                 <div class="order-number-box">
@@ -331,9 +403,40 @@
             // localStorage.removeItem('weverseLastOrder');
         }
 
+        // 승급 알림 표시
+        function showPromotionAlert(promotion) {
+            if (!promotion || !promotion.promoted) return;
+
+            const alertEl = document.getElementById('promotionAlert');
+            const titleEl = document.getElementById('promotionTitle');
+            const messageEl = document.getElementById('promotionMessage');
+
+            titleEl.textContent = `🎉 축하합니다, ${promotion.memberName}님!`;
+            messageEl.innerHTML = `
+                <strong>${promotion.reason}</strong>으로<br>
+                <span style="color: #a855f7; font-weight: 600;">${promotion.newRankName}</span> 직급으로 승급되었습니다!
+            `;
+
+            alertEl.style.display = 'block';
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadOrderData();
+
+            // 승급 알림 체크 (별도 키에서 읽음)
+            const promotionData = localStorage.getItem('weversePromotion');
+            console.log('[OrderComplete] 승급 정보:', promotionData);
+
+            if (promotionData) {
+                const promotion = JSON.parse(promotionData);
+                console.log('[OrderComplete] 승급 알림 표시!', promotion);
+                showPromotionAlert(promotion);
+                // 알림 표시 후 삭제 (한 번만 표시)
+                localStorage.removeItem('weversePromotion');
+            } else {
+                console.log('[OrderComplete] 승급 정보 없음');
+            }
 
             // Animate elements
             setTimeout(() => {
