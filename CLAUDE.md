@@ -18,6 +18,36 @@
 
 ## 작업 이력
 
+### 2026-02-27: 마감 승인 시스템 추가
+**파일:** `js/settlement.js`, `admin/settlement.html`
+
+#### 마감 실행 후 관리자 승인 단계 추가
+- **변경 전**: 마감 실행 시 즉시 승급 및 포인트 지급
+- **변경 후**: 마감 실행 → 승인 대기 → 관리자 승인 → 승급 및 포인트 지급
+
+#### 상태 플로우
+| 상태 | 설명 |
+|------|------|
+| `pending` | 마감 생성됨, 승인 대기 중 (승급/포인트 미적용) |
+| `approved` | 승인됨, 승급 및 포인트 지급 완료 |
+| `rejected` | 거부됨, 승급 및 포인트 지급 취소 |
+| `rolled_back` | 롤백됨, 승급 및 포인트 원복 |
+
+#### 주요 변경사항
+1. **settlement.js**:
+   - `executeWeeklySettlement()`: 승인 대기(`pending`) 상태로 저장, 실제 적용 안함
+   - `executeMonthlySettlement()`: 승인 대기(`pending`) 상태로 저장, 실제 적용 안함
+   - `approveSettlement(settlementId)` 함수 추가: 승급 + 포인트 지급 실행
+   - `rejectSettlement(settlementId)` 함수 추가: 상태만 `rejected`로 변경
+   - `rollbackSettlement()`: `approved` 상태에서만 롤백 가능하도록 수정
+
+2. **admin/settlement.html**:
+   - 마감 목록에 승인(✓)/거부(✗) 버튼 추가
+   - 상태별 필터 드롭다운 추가 (승인 대기, 승인됨, 거부됨, 롤백됨)
+   - 마감 실행 후 "승인 대기" 안내 메시지 표시
+
+---
+
 ### 2026-02-25: 보상 시스템 버그 수정 및 즉시 승급 기능
 **파일:** `js/settlement.js`, `js/supabase.js`, `admin/settlement.html`, `admin/organization.html`, `admin/index.html`, `admin/css/admin.css`
 

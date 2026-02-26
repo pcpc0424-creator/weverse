@@ -819,7 +819,8 @@ class WeverseSettlement {
     // ==================== 마감 실행 ====================
 
     /**
-     * 주마감 실행 (추천 보너스 + 승급)
+     * 주마감 실행 (추천 보너스 + 승급) - 승인 대기 상태로 저장
+     * 실제 승급/포인트 지급은 approveSettlement()에서 처리
      */
     async executeWeeklySettlement(periodStart, periodEnd) {
         // 캐시 초기화 (한 번만 데이터 로드)
@@ -891,15 +892,16 @@ class WeverseSettlement {
                 details.push(detail);
                 totalReferralBonus += referralBonus;
 
-                // 직급 업데이트 (비동기 - DB 저장)
+                // 캐시 업데이트 (다른 회원의 블루다이아몬드 등 승급 조건 체크에 필요)
+                // 실제 DB 업데이트는 승인 시 처리
                 if (promoted) {
-                    await this.dataStore.updateMember(member.id, { rank: newRank });
+                    const cachedMember = this._cachedMembers.find(m => m.id === member.id);
+                    if (cachedMember) {
+                        cachedMember.rank = newRank;
+                    }
                 }
 
-                // P포인트 지급 (비동기 - DB 저장)
-                if (referralBonus > 0) {
-                    await this.grantBonusAsPoints(member.id, referralBonus, '주마감 추천보너스', 'pPoint');
-                }
+                // 승인 대기 상태이므로 포인트 지급하지 않음
             } catch (error) {
                 console.error(`[Settlement] 회원 처리 오류 (${member.name || member.id}):`, error);
             }
@@ -908,13 +910,13 @@ class WeverseSettlement {
         // 캐시 클리어
         this.clearCache();
 
-        // 마감 이력 저장
+        // 마감 이력 저장 (승인 대기 상태)
         const settlement = {
             id: settlementId,
             type: 'weekly',
             period_start: periodStart,
             period_end: periodEnd,
-            status: 'completed',
+            status: 'pending',  // 승인 대기 상태
             total_pv: totalPV,
             total_bonus: totalReferralBonus,
             total_referral_bonus: totalReferralBonus,
@@ -933,7 +935,8 @@ class WeverseSettlement {
     }
 
     /**
-     * 월마감 실행 (인센티브 + 육성보너스 + 크라운보너스)
+     * 월마감 실행 (인센티브 + 육성보너스 + 크라운보너스) - 승인 대기 상태로 저장
+     * 실제 포인트 지급은 approveSettlement()에서 처리
      */
     async executeMonthlySettlement(periodStart, periodEnd) {
         // 캐시 초기화 (한 번만 데이터 로드)
@@ -1025,28 +1028,18 @@ class WeverseSettlement {
             }
         }
 
-        // 포인트 지급 (비동기 - DB 저장)
-        for (const detail of details) {
-            if (detail.total_bonus > 0) {
-                await this.grantBonusAsPoints(
-                    detail.member_id,
-                    detail.total_bonus,
-                    '월마감 수당',
-                    'pPoint'
-                );
-            }
-        }
+        // 승인 대기 상태이므로 포인트 지급하지 않음
 
         // 캐시 클리어
         this.clearCache();
 
-        // 마감 이력 저장
+        // 마감 이력 저장 (승인 대기 상태)
         const settlement = {
             id: settlementId,
             type: 'monthly',
             period_start: periodStart,
             period_end: periodEnd,
-            status: 'completed',
+            status: 'pending',  // 승인 대기 상태
             total_pv: totalPV,
             total_bonus: totalIncentive + totalNurturingBonus + totalCrownBonus,
             total_referral_bonus: 0,
@@ -1088,10 +1081,114 @@ class WeverseSettlement {
         });
     }
 
+    // ==================== 마감 승인/거부 ====================
+
+    /**
+     * 마감 승인 (실제 승급 및 포인트 지급 처리)
+     * pending 상태의 마감을 approved로 변경하고 실제 처리 수행
+     */
+    async approveSettlement(settlementId) {
+        const settlement = await this.getSettlementById(settlementId);
+
+        if (!settlement) {
+            return { error: '마감 이력을 찾을 수 없습니다.' };
+        }
+
+        if (settlement.status !== 'pending') {
+            return { error: '승인 대기 상태의 마감만 승인할 수 있습니다.' };
+        }
+
+        const details = await this.getSettlementDetails(settlementId);
+
+        // 주마감인 경우: 직급 업데이트 + 추천보너스 지급
+        if (settlement.type === 'weekly') {
+            for (const detail of details) {
+                try {
+                    // 직급 업데이트 (승급이 있는 경우)
+                    if (detail.rank_before !== detail.rank_after) {
+                        await this.dataStore.updateMember(detail.member_id, { rank: detail.rank_after });
+                    }
+
+                    // P포인트 지급 (추천보너스)
+                    if (detail.referral_bonus > 0) {
+                        await this.grantBonusAsPoints(
+                            detail.member_id,
+                            detail.referral_bonus,
+                            `주마감 추천보너스 (${settlement.period_start} ~ ${settlement.period_end})`,
+                            'pPoint'
+                        );
+                    }
+                } catch (error) {
+                    console.error(`[Settlement] 승인 처리 오류 (회원 ${detail.member_id}):`, error);
+                }
+            }
+        }
+
+        // 월마감인 경우: 인센티브 + 육성보너스 + 크라운보너스 지급
+        if (settlement.type === 'monthly') {
+            for (const detail of details) {
+                try {
+                    // P포인트 지급 (총 보너스)
+                    if (detail.total_bonus > 0) {
+                        await this.grantBonusAsPoints(
+                            detail.member_id,
+                            detail.total_bonus,
+                            `월마감 수당 (${settlement.period_start} ~ ${settlement.period_end})`,
+                            'pPoint'
+                        );
+                    }
+                } catch (error) {
+                    console.error(`[Settlement] 승인 처리 오류 (회원 ${detail.member_id}):`, error);
+                }
+            }
+        }
+
+        // 마감 상태 업데이트
+        await this.updateSettlementStatus(settlementId, 'approved');
+
+        // 승인 시간 기록
+        const settlements = this.getSettlements();
+        const index = settlements.findIndex(s => s.id === settlementId);
+        if (index !== -1) {
+            settlements[index].approved_at = new Date().toISOString();
+            localStorage.setItem(SETTLEMENT_STORAGE_KEYS.SETTLEMENTS, JSON.stringify(settlements));
+        }
+
+        return { success: true, message: '마감이 승인되었습니다. 승급 및 포인트 지급이 완료되었습니다.' };
+    }
+
+    /**
+     * 마감 거부 (승급 및 포인트 지급 없이 상태만 변경)
+     */
+    async rejectSettlement(settlementId) {
+        const settlement = await this.getSettlementById(settlementId);
+
+        if (!settlement) {
+            return { error: '마감 이력을 찾을 수 없습니다.' };
+        }
+
+        if (settlement.status !== 'pending') {
+            return { error: '승인 대기 상태의 마감만 거부할 수 있습니다.' };
+        }
+
+        // 마감 상태 업데이트 (거부됨)
+        await this.updateSettlementStatus(settlementId, 'rejected');
+
+        // 거부 시간 기록
+        const settlements = this.getSettlements();
+        const index = settlements.findIndex(s => s.id === settlementId);
+        if (index !== -1) {
+            settlements[index].rejected_at = new Date().toISOString();
+            localStorage.setItem(SETTLEMENT_STORAGE_KEYS.SETTLEMENTS, JSON.stringify(settlements));
+        }
+
+        return { success: true, message: '마감이 거부되었습니다. 승급 및 포인트 지급이 취소되었습니다.' };
+    }
+
     // ==================== 마감 롤백 ====================
 
     /**
-     * 마감 롤백
+     * 마감 롤백 (승인된 마감만 롤백 가능)
      */
     async rollbackSettlement(settlementId) {
         const settlement = await this.getSettlementById(settlementId);
@@ -1102,6 +1199,14 @@ class WeverseSettlement {
 
         if (settlement.status === 'rolled_back') {
             return { error: '이미 롤백된 마감입니다.' };
+        }
+
+        if (settlement.status === 'pending') {
+            return { error: '승인 대기 상태의 마감은 롤백할 수 없습니다. 거부를 사용해주세요.' };
+        }
+
+        if (settlement.status === 'rejected') {
+            return { error: '거부된 마감은 롤백할 수 없습니다.' };
         }
 
         const details = await this.getSettlementDetails(settlementId);
@@ -1213,9 +1318,9 @@ class WeverseSettlement {
      * 마감 삭제
      */
     async deleteSettlement(settlementId) {
-        // 먼저 롤백
+        // 먼저 롤백 (이미 롤백된 경우는 무시하고 삭제 진행)
         const rollbackResult = await this.rollbackSettlement(settlementId);
-        if (rollbackResult.error) {
+        if (rollbackResult.error && rollbackResult.error !== '이미 롤백된 마감입니다.') {
             return rollbackResult;
         }
 

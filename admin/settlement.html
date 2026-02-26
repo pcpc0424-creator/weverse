@@ -399,9 +399,16 @@
                         <h2 class="card-title">마감 이력</h2>
                         <div class="d-flex align-center gap-2">
                             <select class="form-control form-select" style="width: 120px;" id="settlementTypeFilter" onchange="renderSettlements()">
-                                <option value="">전체</option>
+                                <option value="">전체 유형</option>
                                 <option value="weekly">주마감</option>
                                 <option value="monthly">월마감</option>
+                            </select>
+                            <select class="form-control form-select" style="width: 120px;" id="settlementStatusFilter" onchange="renderSettlements()">
+                                <option value="">전체 상태</option>
+                                <option value="pending">승인 대기</option>
+                                <option value="approved">승인됨</option>
+                                <option value="rejected">거부됨</option>
+                                <option value="rolled_back">롤백됨</option>
                             </select>
                         </div>
                     </div>
@@ -827,10 +834,21 @@
         async function renderSettlements() {
             let settlements = weverseSettlement.getSettlements();
 
-            // Apply filter
+            // Apply type filter
             const typeFilter = document.getElementById('settlementTypeFilter').value;
             if (typeFilter) {
                 settlements = settlements.filter(s => s.type === typeFilter);
+            }
+
+            // Apply status filter
+            const statusFilter = document.getElementById('settlementStatusFilter').value;
+            if (statusFilter) {
+                // 'approved' 필터는 'completed' 상태도 포함 (이전 버전 호환)
+                if (statusFilter === 'approved') {
+                    settlements = settlements.filter(s => s.status === 'approved' || s.status === 'completed');
+                } else {
+                    settlements = settlements.filter(s => s.status === statusFilter);
+                }
             }
 
             const tbody = document.getElementById('settlementsTableBody');
@@ -846,10 +864,86 @@
             tbody.innerHTML = settlements.map(settlement => {
                 const typeLabel = settlement.type === 'weekly' ? '주마감' : '월마감';
                 const typeClass = settlement.type === 'weekly' ? 'processing' : 'shipped';
-                const statusLabel = settlement.status === 'completed' ? '완료' : '롤백됨';
-                const statusClass = settlement.status === 'completed' ? 'active' : 'cancelled';
+
+                // 상태별 라벨과 스타일
+                let statusLabel, statusClass;
+                switch (settlement.status) {
+                    case 'pending':
+                        statusLabel = '승인 대기';
+                        statusClass = 'processing';
+                        break;
+                    case 'approved':
+                        statusLabel = '승인됨';
+                        statusClass = 'active';
+                        break;
+                    case 'rejected':
+                        statusLabel = '거부됨';
+                        statusClass = 'cancelled';
+                        break;
+                    case 'rolled_back':
+                        statusLabel = '롤백됨';
+                        statusClass = 'cancelled';
+                        break;
+                    case 'completed':  // 이전 버전 호환
+                        statusLabel = '승인됨';
+                        statusClass = 'active';
+                        break;
+                    default:
+                        statusLabel = settlement.status;
+                        statusClass = '';
+                }
+
                 const createdDate = new Date(settlement.created_at).toLocaleDateString('ko-KR');
                 const periodText = `${settlement.period_start} ~ ${settlement.period_end}`;
+
+                // 상태별 액션 버튼
+                let actionButtons = `
+                    <button class="action-btn" title="상세보기" onclick="viewSettlementDetail('${settlement.id}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                `;
+
+                // 승인 대기 상태: 승인/거부 버튼
+                if (settlement.status === 'pending') {
+                    actionButtons += `
+                        <button class="action-btn" title="승인" onclick="confirmApprove('${settlement.id}')" style="color: #10b981;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" title="거부" onclick="confirmReject('${settlement.id}')" style="color: #ef4444;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    `;
+                }
+
+                // 승인됨 또는 completed 상태: 롤백 버튼
+                if (settlement.status === 'approved' || settlement.status === 'completed') {
+                    actionButtons += `
+                        <button class="action-btn" title="롤백" onclick="confirmRollback('${settlement.id}')" style="color: #f59e0b;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="1 4 1 10 7 10"/>
+                                <path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+                            </svg>
+                        </button>
+                    `;
+                }
+
+                // 삭제 버튼 (모든 상태에서 가능)
+                actionButtons += `
+                    <button class="action-btn" title="삭제" onclick="confirmDelete('${settlement.id}')" style="color: #dc3545;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                        </svg>
+                    </button>
+                `;
 
                 return `
                     <tr>
@@ -864,26 +958,7 @@
                         <td>${createdDate}</td>
                         <td>
                             <div class="action-btns">
-                                <button class="action-btn" title="상세보기" onclick="viewSettlementDetail('${settlement.id}')">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                </button>
-                                ${settlement.status === 'completed' ? `
-                                <button class="action-btn" title="롤백" onclick="confirmRollback('${settlement.id}')" style="color: #f59e0b;">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="1 4 1 10 7 10"/>
-                                        <path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
-                                    </svg>
-                                </button>
-                                ` : ''}
-                                <button class="action-btn" title="삭제" onclick="confirmDelete('${settlement.id}')" style="color: #dc3545;">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6"/>
-                                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                                    </svg>
-                                </button>
+                                ${actionButtons}
                             </div>
                         </td>
                     </tr>
@@ -931,7 +1006,7 @@
                 document.getElementById('weeklyEndDate').value = formatDate(nextWeekEnd);
 
                 hideLoading();
-                showToast(`✅ 주마감 완료!\n처리 회원: ${result.settlement.members_processed}명\n승급: ${result.settlement.members_promoted}명\n총 보너스: $${result.settlement.total_bonus.toLocaleString()}`);
+                showToast(`✅ 주마감 생성 완료! (승인 대기 중)\n처리 회원: ${result.settlement.members_processed}명\n승급 예정: ${result.settlement.members_promoted}명\n총 보너스: $${result.settlement.total_bonus.toLocaleString()}\n\n※ 승인 버튼을 클릭하면 실제 승급 및 포인트 지급이 적용됩니다.`);
 
             } catch (error) {
                 console.error('주마감 오류:', error);
@@ -977,7 +1052,7 @@
                 document.getElementById('monthlyEndDate').value = formatDate(nextMonthEnd);
 
                 hideLoading();
-                showToast(`✅ 월마감 완료!\n처리 회원: ${result.settlement.members_processed}명\n인센티브: $${result.settlement.total_incentive.toLocaleString()}\n육성보너스: $${result.settlement.total_nurturing_bonus.toLocaleString()}\n크라운보너스: $${result.settlement.total_crown_bonus.toLocaleString()}`);
+                showToast(`✅ 월마감 생성 완료! (승인 대기 중)\n처리 회원: ${result.settlement.members_processed}명\n인센티브: $${result.settlement.total_incentive.toLocaleString()}\n육성보너스: $${result.settlement.total_nurturing_bonus.toLocaleString()}\n크라운보너스: $${result.settlement.total_crown_bonus.toLocaleString()}\n\n※ 승인 버튼을 클릭하면 실제 포인트 지급이 적용됩니다.`);
 
             } catch (error) {
                 console.error('월마감 오류:', error);
@@ -1078,6 +1153,88 @@
             showToast('엑셀 파일이 다운로드되었습니다.');
         }
 
+        // Confirm approve
+        function confirmApprove(settlementId) {
+            document.getElementById('confirmModalTitle').textContent = '마감 승인';
+            document.getElementById('confirmModalMessage').innerHTML = `
+                이 마감을 승인하시겠습니까?<br><br>
+                <strong style="color: #10b981;">승인 시 다음 작업이 수행됩니다:</strong><br>
+                • 직급 승급이 적용됩니다.<br>
+                • 보너스 포인트가 지급됩니다.
+            `;
+            document.getElementById('confirmModalBtn').style.background = '#10b981';
+            document.getElementById('confirmModalBtn').textContent = '승인';
+            document.getElementById('confirmModalBtn').onclick = async () => {
+                closeModal('confirmModal');
+                await approveSettlement(settlementId);
+            };
+            openModal('confirmModal');
+        }
+
+        // Approve settlement
+        async function approveSettlement(settlementId) {
+            showLoading('승인 처리 중...', '직급 승급 및 포인트 지급을 처리하고 있습니다.');
+
+            try {
+                const result = await weverseSettlement.approveSettlement(settlementId);
+
+                if (result.error) {
+                    hideLoading();
+                    showToast('❌ ' + result.error);
+                    return;
+                }
+
+                await updateStats();
+                await renderSettlements();
+                hideLoading();
+                showToast('✅ 마감이 승인되었습니다. 승급 및 포인트 지급이 완료되었습니다.');
+
+            } catch (error) {
+                console.error('승인 오류:', error);
+                hideLoading();
+                showToast('❌ 승인 처리 중 오류가 발생했습니다.');
+            }
+        }
+
+        // Confirm reject
+        function confirmReject(settlementId) {
+            document.getElementById('confirmModalTitle').textContent = '마감 거부';
+            document.getElementById('confirmModalMessage').innerHTML = `
+                이 마감을 거부하시겠습니까?<br><br>
+                <strong style="color: #ef4444;">거부 시:</strong><br>
+                • 직급 승급이 적용되지 않습니다.<br>
+                • 보너스 포인트가 지급되지 않습니다.<br>
+                • 마감 기록은 유지됩니다.
+            `;
+            document.getElementById('confirmModalBtn').style.background = '#ef4444';
+            document.getElementById('confirmModalBtn').textContent = '거부';
+            document.getElementById('confirmModalBtn').onclick = async () => {
+                closeModal('confirmModal');
+                await rejectSettlement(settlementId);
+            };
+            openModal('confirmModal');
+        }
+
+        // Reject settlement
+        async function rejectSettlement(settlementId) {
+            try {
+                const result = await weverseSettlement.rejectSettlement(settlementId);
+
+                if (result.error) {
+                    showToast('❌ ' + result.error);
+                    return;
+                }
+
+                await updateStats();
+                await renderSettlements();
+                showToast('✅ 마감이 거부되었습니다. 승급 및 포인트 지급이 취소되었습니다.');
+
+            } catch (error) {
+                console.error('거부 오류:', error);
+                showToast('❌ 거부 처리 중 오류가 발생했습니다.');
+            }
+        }
+
         // Confirm rollback
         function confirmRollback(settlementId) {
             document.getElementById('confirmModalTitle').textContent = '마감 롤백';
@@ -1087,6 +1244,8 @@
                 • 지급된 보너스 포인트가 차감됩니다.<br>
                 • 승급된 직급이 마감 이전 상태로 복원됩니다.
             `;
+            document.getElementById('confirmModalBtn').style.background = '#ef4444';
+            document.getElementById('confirmModalBtn').textContent = '확인';
             document.getElementById('confirmModalBtn').onclick = async () => {
                 closeModal('confirmModal');
                 await rollbackSettlement(settlementId);
