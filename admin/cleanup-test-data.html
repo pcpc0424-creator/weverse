@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테스트 데이터 정리 - WEVERSE 관리자</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .cleanup-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .cleanup-section h3 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .data-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .data-item:last-child {
+            border-bottom: none;
+        }
+        .data-item.selected {
+            background: rgba(var(--primary-rgb), 0.1);
+        }
+        .data-item input[type="checkbox"] {
+            margin-right: 0.75rem;
+        }
+        .item-info {
+            flex: 1;
+        }
+        .item-info .name {
+            font-weight: 500;
+        }
+        .item-info .detail {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #856404;
+        }
+        .result-box {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #2e7d32;
+            display: none;
+        }
+        .result-box.error {
+            background: rgba(244, 67, 54, 0.1);
+            border-color: rgba(244, 67, 54, 0.3);
+            color: #c62828;
+        }
+        .select-all-row {
+            padding: 0.75rem 1rem;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Main Content -->
+        <main class="main-content" style="margin-left: 0;">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 class="page-title">테스트 데이터 정리</h1>
+                </div>
+                <div class="header-right">
+                    <a href="index.html" class="btn btn-outline">관리자 홈으로</a>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content-area">
+                <div class="warning-box">
+                    <strong>주의:</strong> 삭제된 데이터는 복구할 수 없습니다. 신중하게 선택해주세요.
+                </div>
+
+                <!-- 테스트 회원 -->
+                <div class="cleanup-section">
+                    <h3>테스트 회원</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">CLAUDE.md에 정의된 테스트 계정: minjun, seoyeon, jihun, sua, yejun</p>
+                    <div class="data-list" id="membersList">
+                        <div class="loading">로딩 중...</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteSelectedMembers()">선택한 회원 삭제</button>
+                    <div class="result-box" id="membersResult"></div>
+                </div>
+
+                <!-- 테스트 주문 -->
+                <div class="cleanup-section">
+                    <h3>테스트 주문</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">테스트 회원의 주문 또는 특정 주문 선택 삭제</p>
+                    <div class="data-list" id="ordersList">
+                        <div class="loading">로딩 중...</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteSelectedOrders()">선택한 주문 삭제</button>
+                    <div class="result-box" id="ordersResult"></div>
+                </div>
+
+                <!-- 테스트 상품 -->
+                <div class="cleanup-section">
+                    <h3>테스트 상품</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">삭제할 테스트 상품 선택</p>
+                    <div class="data-list" id="productsList">
+                        <div class="loading">로딩 중...</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteSelectedProducts()">선택한 상품 삭제</button>
+                    <div class="result-box" id="productsResult"></div>
+                </div>
+
+                <!-- 이정숙 포인트 내역 -->
+                <div class="cleanup-section">
+                    <h3>이정숙 크라운다이아몬드 포인트 지급 내역</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">이정숙 회원의 포인트 지급/적립 내역</p>
+                    <div class="data-list" id="pointsList">
+                        <div class="loading">로딩 중...</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteSelectedPoints()">선택한 포인트 내역 삭제</button>
+                    <div class="result-box" id="pointsResult"></div>
+                </div>
+
+                <!-- 마감 데이터 -->
+                <div class="cleanup-section">
+                    <h3>마감 데이터 (Settlements)</h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary);">테스트로 생성된 마감 데이터</p>
+                    <div class="data-list" id="settlementsList">
+                        <div class="loading">로딩 중...</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteSelectedSettlements()">선택한 마감 데이터 삭제</button>
+                    <div class="result-box" id="settlementsResult"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script>
+        const TEST_USERNAMES = ['minjun', 'seoyeon', 'jihun', 'sua', 'yejun'];
+        let testMemberIds = [];
+
+        // 페이지 로드 시 데이터 조회
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadMembers();
+            await loadOrders();
+            await loadProducts();
+            await loadPoints();
+            await loadSettlements();
+        });
+
+        // 테스트 회원 조회
+        async function loadMembers() {
+            const container = document.getElementById('membersList');
+            try {
+                const members = await weverseData.getMembers();
+                const testMembers = members.filter(m =>
+                    TEST_USERNAMES.includes(m.username) ||
+                    m.name?.includes('테스트') ||
+                    m.username?.includes('test')
+                );
+
+                testMemberIds = testMembers.map(m => m.id);
+
+                if (testMembers.length === 0) {
+                    container.innerHTML = '<div class="loading">테스트 회원이 없습니다.</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="select-all-row">
+                        <label><input type="checkbox" onchange="toggleAll('members', this.checked)"> 전체 선택</label>
+                    </div>
+                    ${testMembers.map(m => `
+                        <div class="data-item">
+                            <label style="display: flex; align-items: center; flex: 1;">
+                                <input type="checkbox" name="members" value="${m.id}">
+                                <div class="item-info">
+                                    <div class="name">${m.name} (@${m.username})</div>
+                                    <div class="detail">ID: ${m.id} | 등급: ${m.rank || 'general'} | 가입일: ${new Date(m.createdAt).toLocaleDateString('ko-KR')}</div>
+                                </div>
+                            </label>
+                        </div>
+                    `).join('')}
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="loading" style="color: red;">오류: ${error.message}</div>`;
+            }
+        }
+
+        // 주문 조회
+        async function loadOrders() {
+            const container = document.getElementById('ordersList');
+            try {
+                const orders = await weverseData.getOrders();
+                // 테스트 회원의 주문 또는 최근 테스트 주문
+                const testOrders = orders.filter(o =>
+                    testMemberIds.includes(o.customer?.memberId) ||
+                    o.customer?.name?.includes('테스트') ||
+                    o.items?.some(item => item.name?.includes('테스트'))
+                );
+
+                if (testOrders.length === 0) {
+                    container.innerHTML = '<div class="loading">테스트 주문이 없습니다.</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="select-all-row">
+                        <label><input type="checkbox" onchange="toggleAll('orders', this.checked)"> 전체 선택</label>
+                    </div>
+                    ${testOrders.map(o => `
+                        <div class="data-item">
+                            <label style="display: flex; align-items: center; flex: 1;">
+                                <input type="checkbox" name="orders" value="${o.id}">
+                                <div class="item-info">
+                                    <div class="name">#${o.id} - ${o.customer?.name || '비회원'}</div>
+                                    <div class="detail">금액: ₩${o.total?.toLocaleString()} | 상품: ${o.items?.map(i => i.name).join(', ')} | 날짜: ${new Date(o.orderDate).toLocaleDateString('ko-KR')}</div>
+                                </div>
+                            </label>
+                        </div>
+                    `).join('')}
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="loading" style="color: red;">오류: ${error.message}</div>`;
+            }
+        }
+
+        // 상품 조회
+        async function loadProducts() {
+            const container = document.getElementById('productsList');
+            try {
+                const products = await weverseData.getProducts();
+                const testProducts = products.filter(p =>
+                    p.name?.includes('테스트') ||
+                    p.description?.includes('테스트')
+                );
+
+                if (testProducts.length === 0) {
+                    container.innerHTML = '<div class="loading">테스트 상품이 없습니다.</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="select-all-row">
+                        <label><input type="checkbox" onchange="toggleAll('products', this.checked)"> 전체 선택</label>
+                    </div>
+                    ${testProducts.map(p => `
+                        <div class="data-item">
+                            <label style="display: flex; align-items: center; flex: 1;">
+                                <input type="checkbox" name="products" value="${p.id}">
+                                <div class="item-info">
+                                    <div class="name">${p.name}</div>
+                                    <div class="detail">가격: ₩${p.price?.toLocaleString()} | PV: ${p.pv || 0}</div>
+                                </div>
+                            </label>
+                        </div>
+                    `).join('')}
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="loading" style="color: red;">오류: ${error.message}</div>`;
+            }
+        }
+
+        // 이정숙 포인트 내역 조회
+        async function loadPoints() {
+            const container = document.getElementById('pointsList');
+            try {
+                const members = await weverseData.getMembers();
+                const leeJungsook = members.find(m => m.name === '이정숙');
+
+                if (!leeJungsook) {
+                    container.innerHTML = '<div class="loading">이정숙 회원을 찾을 수 없습니다.</div>';
+                    return;
+                }
+
+                // 포인트 내역 조회 (P포인트 적립 내역)
+                const { data: pointLogs, error } = await supabaseClient
+                    .from('point_transactions')
+                    .select('*')
+                    .eq('member_id', leeJungsook.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!pointLogs || pointLogs.length === 0) {
+                    container.innerHTML = '<div class="loading">이정숙 회원의 포인트 내역이 없습니다.</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="select-all-row">
+                        <label><input type="checkbox" onchange="toggleAll('points', this.checked)"> 전체 선택</label>
+                    </div>
+                    ${pointLogs.map(p => `
+                        <div class="data-item">
+                            <label style="display: flex; align-items: center; flex: 1;">
+                                <input type="checkbox" name="points" value="${p.id}">
+                                <div class="item-info">
+                                    <div class="name">${p.type || p.description || '포인트 변동'}</div>
+                                    <div class="detail">금액: ${p.amount > 0 ? '+' : ''}${p.amount?.toLocaleString()} | 날짜: ${new Date(p.created_at).toLocaleString('ko-KR')}</div>
+                                </div>
+                            </label>
+                        </div>
+                    `).join('')}
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="loading" style="color: red;">오류: ${error.message}</div>`;
+            }
+        }
+
+        // 마감 데이터 조회
+        async function loadSettlements() {
+            const container = document.getElementById('settlementsList');
+            try {
+                const settlements = weverseData.getSettlements();
+
+                if (!settlements || settlements.length === 0) {
+                    container.innerHTML = '<div class="loading">마감 데이터가 없습니다.</div>';
+                    return;
+                }
+
+                const statusMap = {
+                    'pending': '승인대기',
+                    'approved': '승인완료',
+                    'rejected': '거부됨',
+                    'rolled_back': '롤백됨'
+                };
+
+                container.innerHTML = `
+                    <div class="select-all-row">
+                        <label><input type="checkbox" onchange="toggleAll('settlements', this.checked)"> 전체 선택</label>
+                    </div>
+                    ${settlements.map(s => `
+                        <div class="data-item">
+                            <label style="display: flex; align-items: center; flex: 1;">
+                                <input type="checkbox" name="settlements" value="${s.id}">
+                                <div class="item-info">
+                                    <div class="name">${s.type === 'weekly' ? '주마감' : '월마감'} - ${s.period_start} ~ ${s.period_end}</div>
+                                    <div class="detail">상태: ${statusMap[s.status] || s.status} | 생성일: ${new Date(s.created_at).toLocaleString('ko-KR')}</div>
+                                </div>
+                            </label>
+                        </div>
+                    `).join('')}
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="loading" style="color: red;">오류: ${error.message}</div>`;
+            }
+        }
+
+        // 전체 선택/해제
+        function toggleAll(name, checked) {
+            document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
+                cb.checked = checked;
+            });
+        }
+
+        // 선택된 항목 가져오기
+        function getSelectedIds(name) {
+            return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+        }
+
+        // 회원 삭제
+        async function deleteSelectedMembers() {
+            const ids = getSelectedIds('members');
+            if (ids.length === 0) {
+                alert('삭제할 회원을 선택해주세요.');
+                return;
+            }
+
+            if (!confirm(`선택한 ${ids.length}명의 회원을 삭제하시겠습니까?\n\n주의: 해당 회원의 주문, 포인트 등 관련 데이터도 함께 삭제됩니다.`)) {
+                return;
+            }
+
+            const resultBox = document.getElementById('membersResult');
+            resultBox.style.display = 'block';
+            resultBox.className = 'result-box';
+            resultBox.textContent = '삭제 중...';
+
+            try {
+                for (const id of ids) {
+                    const { error } = await supabaseClient
+                        .from('members')
+                        .delete()
+                        .eq('id', id);
+                    if (error) throw error;
+                }
+                resultBox.textContent = `${ids.length}명의 회원이 삭제되었습니다.`;
+                await loadMembers();
+            } catch (error) {
+                resultBox.className = 'result-box error';
+                resultBox.textContent = `오류: ${error.message}`;
+            }
+        }
+
+        // 주문 삭제
+        async function deleteSelectedOrders() {
+            const ids = getSelectedIds('orders');
+            if (ids.length === 0) {
+                alert('삭제할 주문을 선택해주세요.');
+                return;
+            }
+
+            if (!confirm(`선택한 ${ids.length}건의 주문을 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            const resultBox = document.getElementById('ordersResult');
+            resultBox.style.display = 'block';
+            resultBox.className = 'result-box';
+            resultBox.textContent = '삭제 중...';
+
+            try {
+                for (const id of ids) {
+                    const { error } = await supabaseClient
+                        .from('orders')
+                        .delete()
+                        .eq('id', id);
+                    if (error) throw error;
+                }
+                resultBox.textContent = `${ids.length}건의 주문이 삭제되었습니다.`;
+                await loadOrders();
+            } catch (error) {
+                resultBox.className = 'result-box error';
+                resultBox.textContent = `오류: ${error.message}`;
+            }
+        }
+
+        // 상품 삭제
+        async function deleteSelectedProducts() {
+            const ids = getSelectedIds('products');
+            if (ids.length === 0) {
+                alert('삭제할 상품을 선택해주세요.');
+                return;
+            }
+
+            if (!confirm(`선택한 ${ids.length}개의 상품을 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            const resultBox = document.getElementById('productsResult');
+            resultBox.style.display = 'block';
+            resultBox.className = 'result-box';
+            resultBox.textContent = '삭제 중...';
+
+            try {
+                for (const id of ids) {
+                    const { error } = await supabaseClient
+                        .from('products')
+                        .delete()
+                        .eq('id', id);
+                    if (error) throw error;
+                }
+                resultBox.textContent = `${ids.length}개의 상품이 삭제되었습니다.`;
+                await loadProducts();
+            } catch (error) {
+                resultBox.className = 'result-box error';
+                resultBox.textContent = `오류: ${error.message}`;
+            }
+        }
+
+        // 포인트 내역 삭제
+        async function deleteSelectedPoints() {
+            const ids = getSelectedIds('points');
+            if (ids.length === 0) {
+                alert('삭제할 포인트 내역을 선택해주세요.');
+                return;
+            }
+
+            if (!confirm(`선택한 ${ids.length}건의 포인트 내역을 삭제하시겠습니까?\n\n주의: 포인트 잔액은 별도로 조정해야 합니다.`)) {
+                return;
+            }
+
+            const resultBox = document.getElementById('pointsResult');
+            resultBox.style.display = 'block';
+            resultBox.className = 'result-box';
+            resultBox.textContent = '삭제 중...';
+
+            try {
+                for (const id of ids) {
+                    const { error } = await supabaseClient
+                        .from('point_transactions')
+                        .delete()
+                        .eq('id', id);
+                    if (error) throw error;
+                }
+                resultBox.textContent = `${ids.length}건의 포인트 내역이 삭제되었습니다.`;
+                await loadPoints();
+            } catch (error) {
+                resultBox.className = 'result-box error';
+                resultBox.textContent = `오류: ${error.message}`;
+            }
+        }
+
+        // 마감 데이터 삭제
+        async function deleteSelectedSettlements() {
+            const ids = getSelectedIds('settlements');
+            if (ids.length === 0) {
+                alert('삭제할 마감 데이터를 선택해주세요.');
+                return;
+            }
+
+            if (!confirm(`선택한 ${ids.length}건의 마감 데이터를 삭제하시겠습니까?\n\n주의: 관련 상세 내역도 함께 삭제됩니다.`)) {
+                return;
+            }
+
+            const resultBox = document.getElementById('settlementsResult');
+            resultBox.style.display = 'block';
+            resultBox.className = 'result-box';
+            resultBox.textContent = '삭제 중...';
+
+            try {
+                for (const id of ids) {
+                    weverseData.deleteSettlement(id);
+                }
+                resultBox.textContent = `${ids.length}건의 마감 데이터가 삭제되었습니다.`;
+                await loadSettlements();
+            } catch (error) {
+                resultBox.className = 'result-box error';
+                resultBox.textContent = `오류: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

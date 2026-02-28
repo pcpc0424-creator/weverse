@@ -1728,16 +1728,25 @@ class WeverseSettlement {
      * 마감 삭제
      */
     async deleteSettlement(settlementId) {
-        // 먼저 롤백 (이미 롤백된 경우는 무시하고 삭제 진행)
-        const rollbackResult = await this.rollbackSettlement(settlementId);
-        if (rollbackResult.error && rollbackResult.error !== '이미 롤백된 마감입니다.') {
-            return rollbackResult;
+        // 마감 상태 확인
+        const settlements = this.getSettlements();
+        const settlement = settlements.find(s => s.id === settlementId);
+
+        if (settlement) {
+            // pending, rejected 상태는 포인트 지급이 안 됐으므로 바로 삭제
+            // approved 상태만 롤백 후 삭제
+            if (settlement.status === 'approved') {
+                const rollbackResult = await this.rollbackSettlement(settlementId);
+                if (rollbackResult.error && rollbackResult.error !== '이미 롤백된 마감입니다.') {
+                    return rollbackResult;
+                }
+            }
         }
 
         // 마감 이력 삭제
-        let settlements = this.getSettlements();
-        settlements = settlements.filter(s => s.id !== settlementId);
-        localStorage.setItem(SETTLEMENT_STORAGE_KEYS.SETTLEMENTS, JSON.stringify(settlements));
+        let allSettlements = this.getSettlements();
+        allSettlements = allSettlements.filter(s => s.id !== settlementId);
+        localStorage.setItem(SETTLEMENT_STORAGE_KEYS.SETTLEMENTS, JSON.stringify(allSettlements));
 
         // 마감 상세 삭제
         let allDetails = this.getAllSettlementDetails();
