@@ -781,17 +781,35 @@
         function calculateMemberPV(orders) {
             memberPVMap = {};
 
+            console.log('[조직도 PV 계산] 주문 수:', orders.length);
+            if (orders.length > 0) {
+                console.log('[조직도 PV 계산] 첫 주문 샘플:', JSON.stringify(orders[0], null, 2));
+            }
+
             // 완료된 주문의 PV만 계산
+            let validOrderCount = 0;
             orders.filter(o => o.status !== 'cancelled').forEach(order => {
-                const memberId = order.customer?.memberId;
+                // customer 필드에서 memberId 추출 (다양한 형식 지원)
+                let memberId = null;
+                if (order.customer) {
+                    memberId = order.customer.memberId || order.customer.member_id || order.customer.id;
+                }
+                // totalPV 추출 (다양한 형식 지원)
+                const totalPV = order.totalPV || order.totalPv || order.total_pv || 0;
+
                 if (memberId) {
+                    validOrderCount++;
                     if (!memberPVMap[memberId]) {
                         memberPVMap[memberId] = { personal: 0, group: 0 };
                     }
-                    // totalPV (대문자 PV) - supabase.js의 toCamelCase에서 변환됨
-                    memberPVMap[memberId].personal += order.totalPV || 0;
+                    memberPVMap[memberId].personal += totalPV;
+                } else {
+                    console.log('[조직도 PV 계산] memberId 없음:', order.id, 'customer:', order.customer);
                 }
             });
+
+            console.log('[조직도 PV 계산] 유효 주문 수:', validOrderCount);
+            console.log('[조직도 PV 계산] memberPVMap:', memberPVMap);
         }
 
         // 조직 트리 구성
@@ -838,6 +856,13 @@
             });
 
             memberPVMap[memberId].group = groupPV;
+
+            // 하선이 있는 회원만 로그 출력
+            if (children.length > 0) {
+                const member = orgTree.memberMap[memberId];
+                console.log(`[그룹PV] ${member?.name}(${memberId}): 개인=${memberPVMap[memberId].personal}, 하선=${children.length}명, 그룹PV=${groupPV}`);
+            }
+
             return groupPV;
         }
 
@@ -935,7 +960,7 @@
                                 </div>
                                 <div class="org-card-stats">
                                     <div class="org-card-pv">${pv.personal.toLocaleString()} PV</div>
-                                    ${pv.group > pv.personal ? `<div class="org-card-group-pv">G: ${pv.group.toLocaleString()}</div>` : ''}
+                                    ${hasChildren ? `<div class="org-card-group-pv">하선: ${(pv.group - pv.personal).toLocaleString()}</div>` : ''}
                                 </div>
                             </div>
                         </div>

@@ -378,6 +378,20 @@
                     </div>
                 </div>
 
+                <!-- 주문일자 변경 -->
+                <div style="margin-top: 1.5rem;" id="orderDateEditSection">
+                    <label class="form-label">주문일자 변경</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="datetime-local" class="form-control" id="modalOrderDate" style="flex: 1;">
+                        <span id="orderDateSettledBadge" class="status-badge warning" style="display: none; white-space: nowrap;">
+                            마감완료 (변경불가)
+                        </span>
+                    </div>
+                    <p id="orderDateSettledMsg" style="display: none; font-size: 0.75rem; color: #f44336; margin-top: 0.25rem;">
+                        이 주문은 마감 처리되어 주문일자를 변경할 수 없습니다.
+                    </p>
+                </div>
+
                 <div style="margin-top: 1.5rem;">
                     <label class="form-label">상태 변경</label>
                     <select class="form-control form-select" id="modalStatusSelect">
@@ -526,6 +540,9 @@
             // 승급 로그 조회 (승급 표시용)
             const promotionLogs = weverseData.getPromotionLogs();
 
+            // 마감 정보 조회 (마감 표시용)
+            const settlements = weverseData.getSettlements();
+
             // 회원 목록 조회 (회원 정보 표시용)
             const members = await weverseData.getMembers();
             const memberMap = {};
@@ -620,6 +637,19 @@
                     ? `<span style="background: linear-gradient(135deg, #a855f7, #8b5cf6); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; margin-left: 5px;">⭐ ${promotion.newRankName} 승급</span>`
                     : '';
 
+                // 마감 여부 확인
+                const orderDateObj = new Date(order.createdAt || order.orderDate);
+                const settledInfo = settlements.find(s => {
+                    if (s.status === 'rejected' || s.status === 'rolled_back') return false;
+                    const periodStart = new Date(s.period_start);
+                    const periodEnd = new Date(s.period_end);
+                    periodEnd.setHours(23, 59, 59, 999);
+                    return orderDateObj >= periodStart && orderDateObj <= periodEnd;
+                });
+                const settlementBadge = settledInfo
+                    ? `<span style="background: ${settledInfo.status === 'approved' ? 'rgba(76,175,80,0.1)' : 'rgba(255,193,7,0.1)'}; color: ${settledInfo.status === 'approved' ? '#4caf50' : '#ff9800'}; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; display: inline-block; margin-top: 2px;">${settledInfo.status === 'approved' ? '마감완료' : '마감대기'}</span>`
+                    : '';
+
                 return `
                     <tr>
                         <td><strong>#${order.id}</strong>${promotionBadge}</td>
@@ -634,7 +664,10 @@
                         <td class="fw-600">₩${order.total.toLocaleString()}</td>
                         <td>${trackingDisplay}</td>
                         <td><span class="status-badge ${status.class}">${status.text}</span></td>
-                        <td>${orderDate}</td>
+                        <td>
+                            <div>${orderDate}</div>
+                            ${settlementBadge}
+                        </td>
                         <td>
                             <div class="action-btns">
                                 <button class="action-btn" title="상세보기/수정" onclick="viewOrderDetail('${order.id}')">
@@ -767,7 +800,52 @@
             document.getElementById('modalTrackingCompany').value = currentViewOrder.trackingCompany || '';
             document.getElementById('modalTrackingNumber').value = currentViewOrder.trackingNumber || '';
 
+            // Set order date and check settlement status
+            const orderDateInput = document.getElementById('modalOrderDate');
+            const settledBadge = document.getElementById('orderDateSettledBadge');
+            const settledMsg = document.getElementById('orderDateSettledMsg');
+
+            // Convert order date to datetime-local format
+            const orderDate = new Date(currentViewOrder.createdAt);
+            const localDatetime = orderDate.toISOString().slice(0, 16);
+            orderDateInput.value = localDatetime;
+
+            // Check if order is in a settled period
+            const isSettled = await isOrderInSettlement(currentViewOrder);
+            if (isSettled) {
+                orderDateInput.disabled = true;
+                settledBadge.style.display = 'inline-block';
+                settledMsg.style.display = 'block';
+            } else {
+                orderDateInput.disabled = false;
+                settledBadge.style.display = 'none';
+                settledMsg.style.display = 'none';
+            }
+
             openModal('orderDetailModal');
+        }
+
+        // Check if order is included in any approved/pending settlement
+        async function isOrderInSettlement(order) {
+            const settlements = weverseData.getSettlements();
+            const orderDate = new Date(order.createdAt);
+
+            for (const settlement of settlements) {
+                // Only check approved or pending settlements (not rejected or rolled_back)
+                if (settlement.status === 'rejected' || settlement.status === 'rolled_back') {
+                    continue;
+                }
+
+                const periodStart = new Date(settlement.period_start);
+                const periodEnd = new Date(settlement.period_end);
+                // Set periodEnd to end of day
+                periodEnd.setHours(23, 59, 59, 999);
+
+                if (orderDate >= periodStart && orderDate <= periodEnd) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         // Change order status
@@ -800,6 +878,7 @@
             const newStatus = document.getElementById('modalStatusSelect').value;
             const trackingCompany = document.getElementById('modalTrackingCompany').value;
             const trackingNumber = document.getElementById('modalTrackingNumber').value.trim();
+            const orderDateInput = document.getElementById('modalOrderDate');
 
             // Update status
             await weverseData.updateOrderStatus(currentViewOrder.id, newStatus);
@@ -809,10 +888,31 @@
                 await weverseData.updateOrderTracking(currentViewOrder.id, trackingNumber, trackingCompany);
             }
 
+            // Update order date if not disabled (not in settlement)
+            if (!orderDateInput.disabled && orderDateInput.value) {
+                const newOrderDate = new Date(orderDateInput.value);
+                const originalDate = new Date(currentViewOrder.createdAt);
+
+                // Only update if date actually changed
+                if (newOrderDate.getTime() !== originalDate.getTime()) {
+                    await updateOrderDate(currentViewOrder.id, newOrderDate);
+                }
+            }
+
             closeModal('orderDetailModal');
             await updateOrderStats();
             await renderOrders();
             showToast('주문이 수정되었습니다.');
+        }
+
+        // Update order date
+        async function updateOrderDate(orderId, newDate) {
+            const orders = await weverseData.getOrders();
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            if (orderIndex === -1) return;
+
+            orders[orderIndex].createdAt = newDate.toISOString();
+            localStorage.setItem('weverseOrders', JSON.stringify(orders));
         }
 
         // Open edit order modal

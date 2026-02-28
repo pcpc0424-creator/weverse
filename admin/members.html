@@ -213,6 +213,13 @@
                 <div class="card">
                     <div class="card-body d-flex align-center justify-between">
                         <div class="d-flex align-center gap-2">
+                            <div class="search-box" style="position: relative;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: #888;">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                                <input type="text" class="form-control" placeholder="이름 또는 아이디 검색..." id="memberSearchFilter" oninput="searchMembers()" style="width: 220px; padding-left: 38px;">
+                            </div>
                             <select class="form-control form-select" style="width: 140px;" id="memberStatusFilter" onchange="renderMembers()">
                                 <option value="">전체 상태</option>
                                 <option value="active">활성</option>
@@ -722,7 +729,21 @@
         let memberSearchTerm = '';
 
         function searchMembers() {
-            memberSearchTerm = document.getElementById('memberSearch').value.trim().toLowerCase();
+            // 필터 바의 검색창 또는 헤더의 검색창에서 값 가져오기
+            const filterSearch = document.getElementById('memberSearchFilter');
+            const headerSearch = document.getElementById('memberSearch');
+
+            if (filterSearch && filterSearch.value) {
+                memberSearchTerm = filterSearch.value.trim().toLowerCase();
+                // 헤더 검색창과 동기화
+                if (headerSearch) headerSearch.value = filterSearch.value;
+            } else if (headerSearch && headerSearch.value) {
+                memberSearchTerm = headerSearch.value.trim().toLowerCase();
+                // 필터 검색창과 동기화
+                if (filterSearch) filterSearch.value = headerSearch.value;
+            } else {
+                memberSearchTerm = '';
+            }
             renderMembers();
         }
 
