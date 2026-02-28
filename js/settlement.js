@@ -612,58 +612,196 @@ class WeverseSettlement {
     }
 
     /**
-     * 인센티브 계산 (월마감) - 롤업 구조 + 독립조직 제외 + 차등 인센티브
-     * 대상: 다이아몬드 이상
-     * 재원: 본인 매출 제외 하선 전체 매출 PV (단, 독립조직 PV 제외)
-     * 롤업 조건: 최대실적 라인 제외, 나머지 라인 합계 기준
-     * 독립조직: 다이아몬드 이상 회원이 있으면 해당 회원과 그 하선의 PV는 제외
-     *           단, 차등 인센티브(본인 비율 - 하선 비율)는 발생
+     * 월마감 전체 인센티브 계산 (수정된 로직)
+     *
+     * 계산 순서:
+     * 1. 각 회원의 롤업 여부 확인
+     * 2. 순수 발생PV 계산 (총PV - 인센티브 수령 하선의 라인PV)
+     * 3. 본인 인센티브 = 순수 발생PV × 본인 비율
+     * 4. 차등 인센티브 = 직추천의 순수 발생PV × (본인 비율 - 하선 비율)
      */
-    calculateIncentive(memberId, memberRank, startDate, endDate) {
-        // 다이아몬드 이상만 대상
-        if (!this.isRankAtLeast(memberRank, RANKS.DIAMOND)) {
-            return { incentive: 0, rollupTo: null, differentialIncentive: 0 };
-        }
-
+    calculateAllIncentives(startDate, endDate) {
         const members = this.getCachedMembers();
-        const myRate = INCENTIVE_RATES[memberRank] || 0;
+        const processableMembers = members.filter(m =>
+            m.id !== 'ADMIN' && m.rank !== 'admin' &&
+            this.isRankAtLeast(m.rank, RANKS.DIAMOND)
+        );
 
-        // 독립 조직 제외한 하선 조회
-        const { includedIds, independentMembers } = this.getDownlineIdsExcludingIndependent(memberId);
+        // 결과 저장 객체
+        const results = {};
 
-        // 1. 독립 조직 제외한 하선 PV 합계 (인센티브 전액 적용 대상)
-        let nonIndependentPV = 0;
-        for (const id of includedIds) {
-            nonIndependentPV += this.getMemberPVInPeriod(id, startDate, endDate);
+        // 초기화
+        for (const member of processableMembers) {
+            results[member.id] = {
+                memberId: member.id,
+                rank: member.rank,
+                baseIncentive: 0,
+                differentialIncentives: [],
+                totalDifferentialIncentive: 0,
+                totalIncentive: 0,
+                isRolledUp: false,
+                rolledUpPV: 0,
+                generatedPV: 0,      // 총 하선 PV
+                netGeneratedPV: 0    // 순수 발생PV (인센티브 수령 하선 제외)
+            };
         }
 
-        // 2. 독립 조직(다이아몬드+)에 대한 차등 인센티브 계산
-        //    독립 조직의 전체 PV × (본인 비율 - 독립 조직장 비율)
-        let differentialIncentive = 0;
-        for (const indMember of independentMembers) {
-            const indRate = INCENTIVE_RATES[indMember.rank] || 0;
-            const diffRate = myRate - indRate; // 차등률
+        // 1단계: 각 회원의 롤업 여부 확인 및 총 PV 계산
+        for (const member of processableMembers) {
+            const rollupCheck = this.checkRollupCondition(member.id, member.rank, startDate, endDate);
+            results[member.id].isRolledUp = rollupCheck.isRolledUp;
+            results[member.id].generatedPV = rollupCheck.totalDownlinePV;
 
-            if (diffRate > 0) {
-                // 독립 조직장 본인 + 그 하선 전체 PV
-                const indDownlineIds = this.getAllDownlineIds(indMember.id);
-                let indTotalPV = this.getMemberPVInPeriod(indMember.id, startDate, endDate);
-                for (const id of indDownlineIds) {
-                    indTotalPV += this.getMemberPVInPeriod(id, startDate, endDate);
-                }
-                differentialIncentive += Math.floor(indTotalPV * diffRate);
+            if (rollupCheck.isRolledUp) {
+                results[member.id].rolledUpPV = rollupCheck.totalDownlinePV;
             }
         }
 
-        // 총 하선 PV (롤업 조건 확인용 - 독립조직 포함)
+        // 2단계: 순수 발생PV 계산 (Bottom-up 방식)
+        // 먼저 트리 깊이별로 정렬 (깊은 노드부터 처리)
+        const memberDepths = {};
+        for (const member of processableMembers) {
+            memberDepths[member.id] = this.getMemberDepth(member.id);
+        }
+        const sortedMembers = [...processableMembers].sort((a, b) =>
+            memberDepths[b.id] - memberDepths[a.id]
+        );
+
+        // 깊은 노드부터 순수 발생PV 계산
+        for (const member of sortedMembers) {
+            const totalPV = results[member.id].generatedPV;
+
+            // 모든 다이아+ 하선의 순수PV 합계 차감 (직추천뿐 아니라 모든 하선)
+            const allDownlineIds = this.getAllDownlineIds(member.id);
+            let pvToSubtract = 0;
+            for (const downlineId of allDownlineIds) {
+                if (results[downlineId]) {
+                    // 다이아+ 하선의 순수PV 차감 (인센티브 받든 롤업되든)
+                    pvToSubtract += results[downlineId].netGeneratedPV || 0;
+                }
+            }
+
+            results[member.id].netGeneratedPV = totalPV - pvToSubtract;
+
+            // 본인 인센티브 계산 (순수 발생PV × 본인 비율)
+            if (!results[member.id].isRolledUp) {
+                const myRate = INCENTIVE_RATES[member.rank] || 0;
+                results[member.id].baseIncentive = Math.round(results[member.id].netGeneratedPV * myRate);
+            }
+        }
+
+        // 3단계: 차등 인센티브 계산 (각 회원의 순수 발생PV를 상위에게 전달)
+        for (const member of processableMembers) {
+            const memberResult = results[member.id];
+
+            if (memberResult.isRolledUp) {
+                // 롤업된 회원: 순수 발생PV가 상위 직급자에게 전달 (전액)
+                this.distributeRolledUpPV(
+                    member.id,
+                    memberResult.netGeneratedPV,
+                    startDate,
+                    endDate,
+                    results
+                );
+            } else {
+                // 롤업 안된 회원: 순수 발생PV에 대해 상위에게 차등 인센티브 분배
+                this.distributeDifferentialIncentives(
+                    member.id,
+                    member.rank,
+                    memberResult.netGeneratedPV,
+                    results
+                );
+            }
+        }
+
+        // 4단계: 총 인센티브 계산
+        for (const memberId in results) {
+            const r = results[memberId];
+            r.totalDifferentialIncentive = r.differentialIncentives.reduce((sum, d) => sum + d.amount, 0);
+            r.totalIncentive = r.baseIncentive + r.totalDifferentialIncentive;
+        }
+
+        return results;
+    }
+
+    /**
+     * 라인에 인센티브 수령자가 있는지 확인
+     * (본인 또는 하선 중 롤업되지 않은 다이아+ 회원이 있으면 true)
+     */
+    lineHasIncentiveRecipient(memberId, results) {
+        // 본인이 인센티브 수령자인지
+        if (results[memberId] && !results[memberId].isRolledUp) {
+            return true;
+        }
+
+        // 하선 중 인센티브 수령자 확인
+        const members = this.getCachedMembers();
+        const downlineIds = this.getAllDownlineIds(memberId);
+
+        for (const id of downlineIds) {
+            if (results[id] && !results[id].isRolledUp) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 라인 전체 PV 계산 (회원 본인 + 모든 하선)
+     */
+    getLineTotalPV(memberId, startDate, endDate) {
+        let totalPV = this.getMemberPVInPeriod(memberId, startDate, endDate);
+        const downlineIds = this.getAllDownlineIds(memberId);
+
+        for (const id of downlineIds) {
+            totalPV += this.getMemberPVInPeriod(id, startDate, endDate);
+        }
+
+        return totalPV;
+    }
+
+    /**
+     * 회원의 트리 깊이 계산 (루트에서부터의 거리)
+     */
+    getMemberDepth(memberId) {
+        const members = this.getCachedMembers();
+        let depth = 0;
+        let currentId = memberId;
+
+        while (currentId) {
+            const member = members.find(m => m.id === currentId);
+            if (!member || !member.referrer?.id) {
+                break;
+            }
+            currentId = member.referrer.id;
+            depth++;
+        }
+
+        return depth;
+    }
+
+    /**
+     * 롤업 조건 확인
+     * 조건: 2개 라인 이상 & 최대 실적 라인 제외 합계가 PV 구간 이상
+     */
+    checkRollupCondition(memberId, memberRank, startDate, endDate) {
+        const members = this.getCachedMembers();
+        const directReferrals = members.filter(m => m.referrer?.id === memberId);
+
+        // 하선 전체 PV 계산
         const allDownlineIds = this.getAllDownlineIds(memberId);
         let totalDownlinePV = 0;
         for (const id of allDownlineIds) {
             totalDownlinePV += this.getMemberPVInPeriod(id, startDate, endDate);
         }
 
-        // 라인별 PV 계산 (직추천 라인별, 롤업 조건 확인용)
-        const directReferrals = members.filter(m => m.referrer?.id === memberId);
+        // 2개 라인 미만이면 롤업
+        if (directReferrals.length < 2) {
+            return { isRolledUp: true, totalDownlinePV };
+        }
+
+        // 라인별 PV 계산
         const linesPV = [];
         for (const referral of directReferrals) {
             const lineIds = this.getAllDownlineIds(referral.id);
@@ -676,84 +814,287 @@ class WeverseSettlement {
             linesPV.push({ memberId: referral.id, pv: linePV });
         }
 
-        // 2개 라인 이상 필요
-        if (linesPV.length < 2) {
-            return { incentive: 0, rollupTo: memberId, totalPV: totalDownlinePV, differentialIncentive: 0 };
-        }
-
-        // 최대 실적 라인 제외한 합계 (롤업 조건 확인용)
+        // 최대 실적 라인 제외한 합계
         linesPV.sort((a, b) => b.pv - a.pv);
         const pvExcludingMax = linesPV.slice(1).reduce((sum, l) => sum + l.pv, 0);
 
-        // 롤업 조건 확인 (PV 구간별)
+        // PV 구간별 롤업 조건
         const minPV = INCENTIVE_PV_THRESHOLDS[memberRank] || 0;
-        if (pvExcludingMax < minPV) {
-            // 롤업 - 상위 라인으로
-            const member = members.find(m => m.id === memberId);
-            const referrerId = member?.referrer?.id || null;
-            return { incentive: 0, rollupTo: referrerId, totalPV: totalDownlinePV, differentialIncentive: 0 };
-        }
+        const isRolledUp = pvExcludingMax < minPV;
 
-        // 인센티브 계산
-        // 독립조직 제외 PV × 본인 비율 + 차등 인센티브
-        const baseIncentive = Math.floor(nonIndependentPV * myRate);
-        const incentive = baseIncentive + differentialIncentive;
-
-        return { incentive, rollupTo: null, totalPV: totalDownlinePV, differentialIncentive, nonIndependentPV };
+        return { isRolledUp, totalDownlinePV, pvExcludingMax, minPV };
     }
 
     /**
-     * 차등 인센티브 계산 (하선 직급에 따른 차등 지급)
+     * 롤업된 PV를 상위 직급자에게 분배
      */
-    calculateDifferentialRate(sponsorRank, downlineRank) {
-        const sponsorRate = INCENTIVE_RATES[sponsorRank] || 0;
-        const downlineRate = INCENTIVE_RATES[downlineRank] || 0;
-
-        // 하선이 동일 직급 이상이면 차액만 지급
-        if (this.isRankAtLeast(downlineRank, sponsorRank)) return 0;
-
-        return sponsorRate - downlineRate;
-    }
-
-    /**
-     * 육성보너스 계산 (월마감)
-     * 대상: 다이아몬드 이상
-     * 재원: 추천 산하 라인별 첫번째 다이아+가 수령하는 인센티브의 20%
-     * 조건: 인센티브 수령자에게만 지급 (본인이 인센티브를 받아야 육성보너스도 받을 수 있음)
-     */
-    calculateNurturingBonus(memberId, memberRank, settlementDetails) {
-        // 다이아몬드 이상만 대상
-        if (!this.isRankAtLeast(memberRank, RANKS.DIAMOND)) return 0;
-
-        // 본인이 인센티브를 수령해야 육성보너스도 받을 수 있음
-        const myDetail = settlementDetails.find(d => d.member_id === memberId);
-        if (!myDetail || myDetail.incentive <= 0) {
-            return 0;
-        }
-
+    distributeRolledUpPV(memberId, rolledUpPV, startDate, endDate, results) {
         const members = this.getCachedMembers();
-        const directReferrals = members.filter(m => m.referrer?.id === memberId);
+        const member = members.find(m => m.id === memberId);
+        if (!member) return;
 
-        let totalNurturingBonus = 0;
+        // 상위 라인을 따라 올라가며 첫 번째 롤업 안된 상위 직급자 찾기
+        let currentId = member.referrer?.id;
+        let prevRank = null; // 이전 직급 (차등 계산용)
 
-        for (const referral of directReferrals) {
-            // 각 라인에서 첫 번째 다이아+ 찾기
-            const firstDiamond = this.findFirstDiamondInLine(referral.id);
+        while (currentId) {
+            const upperMember = members.find(m => m.id === currentId);
+            if (!upperMember) break;
 
-            if (firstDiamond) {
-                // 해당 회원의 인센티브 조회
-                const detail = settlementDetails.find(d => d.member_id === firstDiamond.id);
-                if (detail && detail.incentive > 0) {
-                    totalNurturingBonus += Math.floor(detail.incentive * 0.20);
+            // 다이아몬드 이상인지 확인
+            if (!this.isRankAtLeast(upperMember.rank, RANKS.DIAMOND)) {
+                currentId = upperMember.referrer?.id;
+                continue;
+            }
+
+            // 해당 상위가 롤업인지 확인
+            if (results[currentId] && results[currentId].isRolledUp) {
+                currentId = upperMember.referrer?.id;
+                continue;
+            }
+
+            // 롤업 안된 상위 직급자 발견 - 전액 지급
+            const upperRate = INCENTIVE_RATES[upperMember.rank] || 0;
+            const incentiveAmount = Math.round(rolledUpPV * upperRate);
+
+            if (results[currentId]) {
+                results[currentId].differentialIncentives.push({
+                    fromMemberId: memberId,
+                    type: 'rollup',
+                    pv: rolledUpPV,
+                    rate: upperRate,
+                    amount: incentiveAmount
+                });
+            }
+
+            // 이 상위 직급자보다 더 상위에게도 차등 지급
+            this.distributeDifferentialToUpperRanks(
+                currentId,
+                upperMember.rank,
+                rolledUpPV,
+                memberId,
+                results
+            );
+
+            break;
+        }
+    }
+
+    /**
+     * 차등 인센티브를 상위 직급자들에게 순차 분배
+     */
+    distributeDifferentialIncentives(memberId, memberRank, generatedPV, results) {
+        // 본인보다 상위 직급자들에게 차등 인센티브 지급
+        this.distributeDifferentialToUpperRanks(memberId, memberRank, generatedPV, memberId, results);
+    }
+
+    /**
+     * 상위 직급자들에게 차등 인센티브 분배 (재귀적)
+     */
+    distributeDifferentialToUpperRanks(startMemberId, startRank, pv, originMemberId, results) {
+        const members = this.getCachedMembers();
+        const startMember = members.find(m => m.id === startMemberId);
+        if (!startMember) return;
+
+        let currentId = startMember.referrer?.id;
+        let prevRank = startRank;
+
+        while (currentId) {
+            const upperMember = members.find(m => m.id === currentId);
+            if (!upperMember) break;
+
+            // 다이아몬드 이상인지 확인
+            if (!this.isRankAtLeast(upperMember.rank, RANKS.DIAMOND)) {
+                currentId = upperMember.referrer?.id;
+                continue;
+            }
+
+            // 상위가 롤업된 경우 건너뛰기
+            if (results[currentId] && results[currentId].isRolledUp) {
+                currentId = upperMember.referrer?.id;
+                continue;
+            }
+
+            // 차등률 계산 (상위 비율 - 이전 비율)
+            const upperRate = INCENTIVE_RATES[upperMember.rank] || 0;
+            const prevRate = INCENTIVE_RATES[prevRank] || 0;
+            const diffRate = upperRate - prevRate;
+
+            if (diffRate > 0 && results[currentId]) {
+                const diffAmount = Math.round(pv * diffRate);
+                results[currentId].differentialIncentives.push({
+                    fromMemberId: originMemberId,
+                    type: 'differential',
+                    pv: pv,
+                    rate: diffRate,
+                    prevRank: prevRank,
+                    amount: diffAmount
+                });
+            }
+
+            // 다음 상위로 이동
+            prevRank = upperMember.rank;
+            currentId = upperMember.referrer?.id;
+        }
+    }
+
+    /**
+     * 월마감 전체 육성보너스 계산 (새로운 로직)
+     *
+     * 육성보너스 규칙:
+     * 1. 직추천 라인의 첫 다이아+ 본인 인센티브 × 20%
+     * 2. 해당 라인에서 중간 직급자가 받은 차등 인센티브 × 20% (추가!)
+     *
+     * @param {Object} incentiveResults - calculateAllIncentives의 결과
+     */
+    calculateAllNurturingBonuses(incentiveResults) {
+        const members = this.getCachedMembers();
+        const nurturingResults = {};
+
+        // 초기화
+        for (const memberId in incentiveResults) {
+            nurturingResults[memberId] = {
+                memberId,
+                nurturingBonusDetails: [],
+                totalNurturingBonus: 0
+            };
+        }
+
+        // 각 다이아몬드+ 회원에 대해 육성보너스 계산
+        for (const memberId in incentiveResults) {
+            const memberResult = incentiveResults[memberId];
+
+            // 롤업된 회원은 육성보너스 없음
+            if (memberResult.isRolledUp) continue;
+
+            // 본인 인센티브가 없으면 육성보너스도 없음
+            if (memberResult.totalIncentive <= 0) continue;
+
+            const member = members.find(m => m.id === memberId);
+            if (!member) continue;
+
+            // 직추천 회원들 조회
+            const directReferrals = members.filter(m => m.referrer?.id === memberId);
+
+            for (const referral of directReferrals) {
+                // 해당 라인에서 육성보너스 대상 계산
+                const lineNurturing = this.calculateLineNurturingBonus(
+                    memberId,
+                    member.rank,
+                    referral.id,
+                    incentiveResults
+                );
+
+                if (lineNurturing.totalBonus > 0) {
+                    nurturingResults[memberId].nurturingBonusDetails.push({
+                        lineStartId: referral.id,
+                        ...lineNurturing
+                    });
+                    nurturingResults[memberId].totalNurturingBonus += lineNurturing.totalBonus;
                 }
             }
         }
 
-        return totalNurturingBonus;
+        return nurturingResults;
     }
 
     /**
-     * 라인에서 첫 번째 다이아몬드+ 회원 찾기
+     * 특정 라인에서 발생하는 육성보너스 계산
+     */
+    calculateLineNurturingBonus(sponsorId, sponsorRank, lineStartId, incentiveResults) {
+        const members = this.getCachedMembers();
+
+        // 라인에서 첫 다이아+ 찾기 (롤업 안된 회원)
+        const firstDiamond = this.findFirstActiveDiamondInLine(lineStartId, incentiveResults);
+
+        if (!firstDiamond) {
+            return { totalBonus: 0, details: [] };
+        }
+
+        const details = [];
+        let totalBonus = 0;
+
+        // 1. 첫 다이아+ 본인 인센티브의 20%
+        const firstDiamondResult = incentiveResults[firstDiamond.id];
+        if (firstDiamondResult && firstDiamondResult.baseIncentive > 0) {
+            const bonus = Math.round(firstDiamondResult.baseIncentive * 0.20);
+            details.push({
+                type: 'base_incentive',
+                fromMemberId: firstDiamond.id,
+                baseAmount: firstDiamondResult.baseIncentive,
+                bonus
+            });
+            totalBonus += bonus;
+        }
+
+        // 2. 해당 라인의 중간 직급자들이 받은 차등 인센티브의 20%
+        //    (본인보다 직급이 낮고, 해당 라인에 속하는 회원들이 받은 차등)
+        const lineMembers = this.getAllDownlineIds(lineStartId);
+        lineMembers.unshift(lineStartId);
+
+        for (const lineMemberId of lineMembers) {
+            const lineMemberResult = incentiveResults[lineMemberId];
+            if (!lineMemberResult) continue;
+
+            // 해당 회원이 받은 차등 인센티브 중, 본인보다 직급이 낮은 회원으로부터 받은 것
+            for (const diff of lineMemberResult.differentialIncentives) {
+                // 차등 인센티브를 받은 회원이 이 라인에 속하고,
+                // 스폰서(본인)보다 직급이 낮은 경우만 해당
+                const lineMember = members.find(m => m.id === lineMemberId);
+                if (!lineMember) continue;
+
+                // 스폰서보다 직급이 낮은 회원이 받은 차등만 육성보너스 대상
+                if (this.compareRanks(lineMember.rank, sponsorRank) < 0) {
+                    const bonus = Math.round(diff.amount * 0.20);
+                    if (bonus > 0) {
+                        details.push({
+                            type: 'differential_incentive',
+                            fromMemberId: lineMemberId,
+                            originalFrom: diff.fromMemberId,
+                            diffAmount: diff.amount,
+                            bonus
+                        });
+                        totalBonus += bonus;
+                    }
+                }
+            }
+        }
+
+        return { totalBonus, details, firstDiamondId: firstDiamond.id };
+    }
+
+    /**
+     * 라인에서 첫 번째 활성(롤업 안된) 다이아몬드+ 회원 찾기
+     */
+    findFirstActiveDiamondInLine(startMemberId, incentiveResults) {
+        const members = this.getCachedMembers();
+        const queue = [startMemberId];
+        const visited = new Set();
+
+        while (queue.length > 0) {
+            const currentId = queue.shift();
+            if (visited.has(currentId)) continue;
+            visited.add(currentId);
+
+            const member = members.find(m => m.id === currentId);
+            if (member && this.isRankAtLeast(member.rank, RANKS.DIAMOND)) {
+                // 롤업 안된 회원인지 확인
+                const result = incentiveResults[currentId];
+                if (result && !result.isRolledUp && result.totalIncentive > 0) {
+                    return member;
+                }
+            }
+
+            // 다음 하선 추가
+            const directReferrals = members.filter(m => m.referrer?.id === currentId);
+            directReferrals.forEach(r => queue.push(r.id));
+        }
+
+        return null;
+    }
+
+    /**
+     * 라인에서 첫 번째 다이아몬드+ 회원 찾기 (기존 호환용)
      */
     findFirstDiamondInLine(startMemberId) {
         const members = this.getCachedMembers();
@@ -776,6 +1117,51 @@ class WeverseSettlement {
         }
 
         return null;
+    }
+
+    // ==================== 기존 호환 함수 (deprecated) ====================
+
+    /**
+     * @deprecated 새로운 calculateAllIncentives 사용 권장
+     */
+    calculateIncentive(memberId, memberRank, startDate, endDate) {
+        // 기존 호환성을 위해 유지
+        if (!this.isRankAtLeast(memberRank, RANKS.DIAMOND)) {
+            return { incentive: 0, rollupTo: null, differentialIncentive: 0 };
+        }
+        const rollupCheck = this.checkRollupCondition(memberId, memberRank, startDate, endDate);
+        if (rollupCheck.isRolledUp) {
+            const members = this.getCachedMembers();
+            const member = members.find(m => m.id === memberId);
+            return { incentive: 0, rollupTo: member?.referrer?.id, totalPV: rollupCheck.totalDownlinePV, differentialIncentive: 0 };
+        }
+        const myRate = INCENTIVE_RATES[memberRank] || 0;
+        const incentive = Math.floor(rollupCheck.totalDownlinePV * myRate);
+        return { incentive, rollupTo: null, totalPV: rollupCheck.totalDownlinePV, differentialIncentive: 0 };
+    }
+
+    /**
+     * @deprecated 새로운 calculateAllNurturingBonuses 사용 권장
+     */
+    calculateNurturingBonus(memberId, memberRank, settlementDetails) {
+        if (!this.isRankAtLeast(memberRank, RANKS.DIAMOND)) return 0;
+        const myDetail = settlementDetails.find(d => d.member_id === memberId);
+        if (!myDetail || myDetail.incentive <= 0) return 0;
+
+        const members = this.getCachedMembers();
+        const directReferrals = members.filter(m => m.referrer?.id === memberId);
+        let totalNurturingBonus = 0;
+
+        for (const referral of directReferrals) {
+            const firstDiamond = this.findFirstDiamondInLine(referral.id);
+            if (firstDiamond) {
+                const detail = settlementDetails.find(d => d.member_id === firstDiamond.id);
+                if (detail && detail.incentive > 0) {
+                    totalNurturingBonus += Math.floor(detail.incentive * 0.20);
+                }
+            }
+        }
+        return totalNurturingBonus;
     }
 
     /**
@@ -937,6 +1323,10 @@ class WeverseSettlement {
     /**
      * 월마감 실행 (인센티브 + 육성보너스 + 크라운보너스) - 승인 대기 상태로 저장
      * 실제 포인트 지급은 approveSettlement()에서 처리
+     *
+     * 새로운 계산 로직 사용:
+     * - calculateAllIncentives: 모든 회원의 인센티브 + 차등 인센티브 계산
+     * - calculateAllNurturingBonuses: 육성보너스 계산 (차등 인센티브의 20% 포함)
      */
     async executeMonthlySettlement(periodStart, periodEnd) {
         // 캐시 초기화 (한 번만 데이터 로드)
@@ -968,17 +1358,52 @@ class WeverseSettlement {
         // 처리 대상 회원
         const processableMembers = members.filter(m => m.id !== 'ADMIN' && m.rank !== 'admin');
 
-        // 1단계: 인센티브 계산
+        // ========== 새로운 계산 로직 ==========
+
+        // 1단계: 모든 인센티브 계산 (본인 + 차등)
+        console.log('[월마감] 인센티브 계산 시작...');
+        const incentiveResults = this.calculateAllIncentives(periodStart, periodEnd);
+
+        // 2단계: 육성보너스 계산
+        console.log('[월마감] 육성보너스 계산 시작...');
+        const nurturingResults = this.calculateAllNurturingBonuses(incentiveResults);
+
+        // 3단계: 크라운다이아 보너스 계산
+        console.log('[월마감] 크라운 보너스 계산 시작...');
+        const crownBonuses = this.calculateCrownBonus(periodStart, periodEnd);
+        const crownBonusMap = {};
+        for (const cb of crownBonuses) {
+            crownBonusMap[cb.memberId] = cb.bonus;
+            totalCrownBonus += cb.bonus;
+        }
+
+        // 4단계: 모든 회원에 대해 상세 기록 생성
         for (const member of processableMembers) {
-            // 동기 함수 호출 (캐시 사용)
             const personalPV = this.getMemberPVInPeriod(member.id, periodStart, periodEnd);
             const cumulativePV = this.getMemberCumulativePV(member.id);
             const groupPV = this.getDownlinePVInPeriod(member.id, periodStart, periodEnd);
 
-            // 인센티브 계산 (동기)
-            const incentiveResult = this.calculateIncentive(
-                member.id, member.rank, periodStart, periodEnd
-            );
+            // 인센티브 결과
+            const incResult = incentiveResults[member.id] || {
+                totalIncentive: 0,
+                baseIncentive: 0,
+                totalDifferentialIncentive: 0,
+                isRolledUp: false,
+                differentialIncentives: []
+            };
+
+            // 육성보너스 결과
+            const nurResult = nurturingResults[member.id] || {
+                totalNurturingBonus: 0,
+                nurturingBonusDetails: []
+            };
+
+            // 크라운 보너스
+            const crownBonus = crownBonusMap[member.id] || 0;
+
+            const incentive = incResult.totalIncentive;
+            const nurturingBonus = nurResult.totalNurturingBonus;
+            const totalBonus = incentive + nurturingBonus + crownBonus;
 
             const detail = {
                 id: this.generateId('MSD'),
@@ -990,45 +1415,30 @@ class WeverseSettlement {
                 cumulative_pv: cumulativePV,
                 group_pv: groupPV,
                 referral_bonus: 0,
-                incentive: incentiveResult.incentive,
-                rollup_to: incentiveResult.rollupTo,
-                nurturing_bonus: 0,
-                crown_bonus: 0,
-                total_bonus: incentiveResult.incentive,
+                incentive: incentive,
+                base_incentive: incResult.baseIncentive,
+                differential_incentive: incResult.totalDifferentialIncentive,
+                is_rolled_up: incResult.isRolledUp,
+                nurturing_bonus: nurturingBonus,
+                crown_bonus: crownBonus,
+                total_bonus: totalBonus,
+                // 디버깅용 상세 정보
+                incentive_details: incResult.differentialIncentives,
+                nurturing_details: nurResult.nurturingBonusDetails,
                 created_at: new Date().toISOString()
             };
 
             details.push(detail);
-            totalIncentive += incentiveResult.incentive;
-        }
-
-        // 2단계: 육성보너스 계산 (인센티브 계산 후)
-        for (const detail of details) {
-            const member = members.find(m => m.id === detail.member_id);
-            if (!member) continue;
-
-            // 동기 함수 호출
-            const nurturingBonus = this.calculateNurturingBonus(
-                detail.member_id, member.rank, details
-            );
-
-            detail.nurturing_bonus = nurturingBonus;
-            detail.total_bonus += nurturingBonus;
+            totalIncentive += incentive;
             totalNurturingBonus += nurturingBonus;
         }
 
-        // 3단계: 크라운다이아 보너스 계산
-        const crownBonuses = this.calculateCrownBonus(periodStart, periodEnd);
-        for (const cb of crownBonuses) {
-            const detail = details.find(d => d.member_id === cb.memberId);
-            if (detail) {
-                detail.crown_bonus = cb.bonus;
-                detail.total_bonus += cb.bonus;
-                totalCrownBonus += cb.bonus;
-            }
-        }
-
-        // 승인 대기 상태이므로 포인트 지급하지 않음
+        // 디버깅 로그
+        console.log('[월마감] 계산 완료');
+        console.log(`  - 전체 PV: ${totalPV.toLocaleString()}`);
+        console.log(`  - 총 인센티브: ${totalIncentive.toLocaleString()}`);
+        console.log(`  - 총 육성보너스: ${totalNurturingBonus.toLocaleString()}`);
+        console.log(`  - 총 크라운보너스: ${totalCrownBonus.toLocaleString()}`);
 
         // 캐시 클리어
         this.clearCache();
