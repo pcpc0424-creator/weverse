@@ -157,7 +157,7 @@
                     <div class="stat-card">
                         <div class="stat-info">
                             <h3>오늘 매출</h3>
-                            <div class="stat-value" id="statTodaySales">₩0</div>
+                            <div class="stat-value" id="statTodaySales">$0</div>
                             <div class="stat-change" id="statTodaySalesChange"></div>
                         </div>
                         <div class="stat-icon sales">
@@ -197,7 +197,7 @@
                     <div class="stat-card">
                         <div class="stat-info">
                             <h3>평균 주문금액</h3>
-                            <div class="stat-value" id="statAvgOrder">₩0</div>
+                            <div class="stat-value" id="statAvgOrder">$0</div>
                             <div class="stat-change" id="statAvgOrderChange"></div>
                         </div>
                         <div class="stat-icon products">
@@ -326,10 +326,10 @@
             const avgOrder = orders.length > 0 ? orders.reduce((sum, o) => sum + (o.total || 0), 0) / orders.length : 0;
 
             // Update display
-            document.getElementById('statTodaySales').textContent = '₩' + todaySales.toLocaleString();
+            document.getElementById('statTodaySales').textContent = '$' + todaySales.toLocaleString();
             document.getElementById('statTodayOrders').textContent = todayOrders.length + '건';
             document.getElementById('statTodayVisitors').textContent = todayVisitors + '명';
-            document.getElementById('statAvgOrder').textContent = '₩' + Math.round(avgOrder).toLocaleString();
+            document.getElementById('statAvgOrder').textContent = '$' + Math.round(avgOrder).toLocaleString();
 
             // Update changes
             updateChangeDisplay('statTodaySalesChange', todaySales, yesterdaySales, '어제 대비');
@@ -389,7 +389,7 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: { callback: v => '₩' + v.toLocaleString() }
+                            ticks: { callback: v => '$' + v.toLocaleString() }
                         }
                     }
                 }
@@ -556,7 +556,7 @@
                         <td><strong>${index + 1}</strong></td>
                         <td>${name}</td>
                         <td>${stat.quantity}개</td>
-                        <td class="fw-600">₩${stat.revenue.toLocaleString()}</td>
+                        <td class="fw-600">$${stat.revenue.toLocaleString()}</td>
                         <td>
                             <div style="display: flex; align-items: center; gap: 0.5rem;">
                                 <div style="flex: 1; height: 8px; background: #eee; border-radius: 4px;">

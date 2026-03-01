@@ -293,7 +293,7 @@
                         <div class="settings-preview">
                             <div class="preview-item">
                                 <span class="preview-label">환율</span>
-                                <span class="preview-value" id="previewExchangeRate">1 USD = ₩1,350</span>
+                                <span class="preview-value" id="previewExchangeRate">1 USD = $1,350</span>
                             </div>
                             <div class="preview-item preview-disabled">
                                 <span class="preview-label">P포인트 적립률</span>
@@ -305,7 +305,7 @@
                             </div>
                             <div class="preview-item">
                                 <span class="preview-label">최소 출금 금액</span>
-                                <span class="preview-value" id="previewMinWithdrawal">$50 (≈₩67,500)</span>
+                                <span class="preview-value" id="previewMinWithdrawal">$50 (≈$67,500)</span>
                             </div>
                         </div>
                     </div>
@@ -567,9 +567,9 @@
             const minWithdrawal = parseInt(document.getElementById('minWithdrawal').value) || 50;
 
             document.getElementById('exchangeRatePreview').textContent = exchangeRate.toLocaleString();
-            document.getElementById('previewExchangeRate').textContent = `1 USD = ₩${exchangeRate.toLocaleString()}`;
+            document.getElementById('previewExchangeRate').textContent = `1 USD = $${exchangeRate.toLocaleString()}`;
             // P포인트 설정은 비활성화 상태 - 미리보기 업데이트 안함
-            document.getElementById('previewMinWithdrawal').textContent = `$${minWithdrawal} (≈₩${(minWithdrawal * exchangeRate).toLocaleString()})`;
+            document.getElementById('previewMinWithdrawal').textContent = `$${minWithdrawal} (≈$${(minWithdrawal * exchangeRate).toLocaleString()})`;
         }
 
         async function saveSettings() {

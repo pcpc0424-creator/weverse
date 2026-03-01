@@ -322,7 +322,7 @@
                 <div style="border-top: 1px solid var(--border); padding-top: 1rem;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span class="text-muted">소계</span>
-                        <span id="modalSubtotal">₩0</span>
+                        <span id="modalSubtotal">$0</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span class="text-muted">총 PV</span>
@@ -334,7 +334,7 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; font-size: 1.125rem; font-weight: 600; padding-top: 0.5rem; border-top: 1px solid var(--border);">
                         <span>총 결제금액</span>
-                        <span id="modalTotal">₩0</span>
+                        <span id="modalTotal">$0</span>
                     </div>
                 </div>
 
@@ -661,7 +661,7 @@
                         </td>
                         <td>${itemsSummary}</td>
                         <td class="fw-500" style="color: #9c27b0;">${totalPV}</td>
-                        <td class="fw-600">₩${order.total.toLocaleString()}</td>
+                        <td class="fw-600">$${order.total.toLocaleString()}</td>
                         <td>${trackingDisplay}</td>
                         <td><span class="status-badge ${status.class}">${status.text}</span></td>
                         <td>
@@ -738,18 +738,18 @@
                 return `
                     <tr>
                         <td>${item.name}</td>
-                        <td>₩${item.price.toLocaleString()}</td>
+                        <td>$${item.price.toLocaleString()}</td>
                         <td>${item.quantity}</td>
                         <td style="color: #9c27b0;">${itemPV}</td>
-                        <td class="text-right fw-500">₩${(item.price * item.quantity).toLocaleString()}</td>
+                        <td class="text-right fw-500">$${(item.price * item.quantity).toLocaleString()}</td>
                     </tr>
                 `;
             }).join('');
 
-            document.getElementById('modalSubtotal').textContent = '₩' + currentViewOrder.subtotal.toLocaleString();
+            document.getElementById('modalSubtotal').textContent = '$' + currentViewOrder.subtotal.toLocaleString();
             document.getElementById('modalTotalPV').textContent = (currentViewOrder.totalPV || totalPV) + ' PV';
-            document.getElementById('modalShipping').textContent = currentViewOrder.shippingCost === 0 ? '무료' : '₩' + currentViewOrder.shippingCost.toLocaleString();
-            document.getElementById('modalTotal').textContent = '₩' + currentViewOrder.total.toLocaleString();
+            document.getElementById('modalShipping').textContent = currentViewOrder.shippingCost === 0 ? '무료' : '$' + currentViewOrder.shippingCost.toLocaleString();
+            document.getElementById('modalTotal').textContent = '$' + currentViewOrder.total.toLocaleString();
             document.getElementById('modalStatusSelect').value = currentViewOrder.status;
 
             // Show payment details if available
@@ -758,12 +758,12 @@
             if (currentViewOrder.payment && currentViewOrder.payment.details) {
                 const details = currentViewOrder.payment.details;
                 let paymentHtml = '';
-                if (details.rPay > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>W페이</span><span>₩${details.rPay.toLocaleString()}</span></div>`;
+                if (details.rPay > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>W페이</span><span>$${details.rPay.toLocaleString()}</span></div>`;
                 if (details.pPoint > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>P포인트</span><span>$${details.pPoint.toLocaleString()}</span></div>`;
                 if (details.cPoint > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>C포인트</span><span>$${details.cPoint.toLocaleString()}</span></div>`;
                 if (details.tPoint > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>T포인트</span><span>$${details.tPoint.toLocaleString()}</span></div>`;
-                if (details.card > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>카드결제</span><span>₩${details.card.toLocaleString()}</span></div>`;
-                if (details.bank > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>무통장입금</span><span>₩${details.bank.toLocaleString()}</span></div>`;
+                if (details.card > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>카드결제</span><span>$${details.card.toLocaleString()}</span></div>`;
+                if (details.bank > 0) paymentHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;"><span>무통장입금</span><span>$${details.bank.toLocaleString()}</span></div>`;
 
                 if (paymentHtml) {
                     paymentListEl.innerHTML = paymentHtml;

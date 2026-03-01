@@ -321,7 +321,7 @@
                     </div>
                     <div style="padding: 1rem; background: var(--bg-main); border-radius: var(--radius-sm);">
                         <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 0.25rem;">총 구매액</div>
-                        <div class="fw-600" style="font-size: 1.25rem;" id="modalMemberSpent">₩0</div>
+                        <div class="fw-600" style="font-size: 1.25rem;" id="modalMemberSpent">$0</div>
                     </div>
                 </div>
 
@@ -624,7 +624,7 @@
                 <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--bg-main); border-radius: 8px;">
                     <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">현재 포인트 잔액</div>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.85rem;">
-                        <div>W페이: <span class="fw-600" id="grantPointsCurrentRPay">₩0</span></div>
+                        <div>W페이: <span class="fw-600" id="grantPointsCurrentRPay">$0</span></div>
                         <div>P포인트: <span class="fw-600" id="grantPointsCurrentPPoint">$0</span></div>
                         <div>C포인트: <span class="fw-600" id="grantPointsCurrentCPoint">$0</span></div>
                         <div>T포인트: <span class="fw-600" id="grantPointsCurrentTPoint">$0</span></div>
@@ -801,7 +801,7 @@
 
                 // Points summary
                 const points = member.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
-                const pointsSummary = `R₩${(points.rPay || 0).toLocaleString()} / P$${points.pPoint || 0}`;
+                const pointsSummary = `R$${(points.rPay || 0).toLocaleString()} / P$${points.pPoint || 0}`;
 
                 // Rank display
                 const rankHtml = getRankBadgeHtml(member.rank);
@@ -824,7 +824,7 @@
                         <td>${rankHtml}</td>
                         <td style="font-size: 0.85rem;">${pointsSummary}</td>
                         <td>${orderStats.count}건</td>
-                        <td class="fw-600">₩${orderStats.total.toLocaleString()}</td>
+                        <td class="fw-600">$${orderStats.total.toLocaleString()}</td>
                         <td>${joinDate}</td>
                         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         <td>
@@ -840,6 +840,13 @@
                                         <circle cx="12" cy="12" r="10"/>
                                         <line x1="12" y1="8" x2="12" y2="16"/>
                                         <line x1="8" y1="12" x2="16" y2="12"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn" title="마이페이지 접속" onclick="accessMemberPage('${member.id}')" style="color: #9c27b0;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                                        <polyline points="15,3 21,3 21,9"/>
+                                        <line x1="10" y1="14" x2="21" y2="3"/>
                                     </svg>
                                 </button>
                                 <button class="action-btn" title="정보수정" onclick="openEditMember('${member.id}')">
@@ -883,7 +890,7 @@
             document.getElementById('modalMemberTier').style.background = rankInfo.bgColor;
             document.getElementById('modalMemberTier').style.color = rankInfo.color;
             document.getElementById('modalMemberOrders').textContent = orderCount + '건';
-            document.getElementById('modalMemberSpent').textContent = '₩' + totalSpent.toLocaleString();
+            document.getElementById('modalMemberSpent').textContent = '$' + totalSpent.toLocaleString();
             document.getElementById('modalMemberUsername').textContent = currentViewMember.username || '-';
             document.getElementById('modalMemberJoinDate').textContent = currentViewMember.joinDate;
             document.getElementById('modalMemberLastOrder').textContent = currentViewMember.lastOrder || '-';
@@ -899,6 +906,60 @@
             }
 
             openModal('memberDetailModal');
+        }
+
+        // Access member's mypage (admin impersonation)
+        async function accessMemberPage(memberId) {
+            const member = await weverseData.getMemberById(memberId);
+            if (!member) {
+                alert('회원 정보를 찾을 수 없습니다.');
+                return;
+            }
+
+            // Create session data for the member with admin access flag
+            const sessionData = {
+                loggedIn: true,
+                id: member.id,
+                username: member.username,
+                name: member.name,
+                fullName: member.name,
+                rank: member.rank || 'general',
+                adminAccess: true, // Flag indicating admin is accessing this account
+                adminAccessTime: new Date().toISOString()
+            };
+
+            // Open mypage in a new tab with the member's session
+            const newWindow = window.open('', '_blank');
+            if (newWindow) {
+                // Set session data in the new window's localStorage
+                newWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>마이페이지 접속 중...</title>
+                        <style>
+                            body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f5f5f5; }
+                            .loading { text-align: center; }
+                            .spinner { width: 40px; height: 40px; border: 3px solid #ddd; border-top-color: #9c27b0; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+                            @keyframes spin { to { transform: rotate(360deg); } }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>${member.name}님의 마이페이지로 이동 중...</p>
+                        </div>
+                        <scr` + `ipt>
+                            localStorage.setItem('weverseSession', '${JSON.stringify(sessionData).replace(/'/g, "\\'")}');
+                            sessionStorage.setItem('weverseSession', '${JSON.stringify(sessionData).replace(/'/g, "\\'")}');
+                            window.location.href = '../pages/account.html';
+                        </scr` + `ipt>
+                    </body>
+                    </html>
+                `);
+            } else {
+                alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
+            }
         }
 
         // Open edit member modal
@@ -1610,7 +1671,7 @@
 
             // Set current points
             const points = member.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
-            document.getElementById('grantPointsCurrentRPay').textContent = '₩' + (points.rPay || 0).toLocaleString();
+            document.getElementById('grantPointsCurrentRPay').textContent = '$' + (points.rPay || 0).toLocaleString();
             document.getElementById('grantPointsCurrentPPoint').textContent = '$' + (points.pPoint || 0).toFixed(2);
             document.getElementById('grantPointsCurrentCPoint').textContent = '$' + (points.cPoint || 0).toFixed(2);
             document.getElementById('grantPointsCurrentTPoint').textContent = '$' + (points.tPoint || 0).toFixed(2);
@@ -1681,7 +1742,7 @@
                 await renderMembers();
 
                 const formattedAmount = pointType === 'rPay'
-                    ? '₩' + Math.abs(amount).toLocaleString()
+                    ? '$' + Math.abs(amount).toLocaleString()
                     : '$' + Math.abs(amount).toFixed(2);
                 const actionText = amount >= 0 ? '부여' : '차감';
 

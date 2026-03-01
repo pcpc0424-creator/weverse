@@ -172,7 +172,7 @@
                     <div class="stat-card">
                         <div class="stat-info">
                             <h3>총 W페이 잔액</h3>
-                            <div class="stat-value" id="statTotalRPay">₩0</div>
+                            <div class="stat-value" id="statTotalRPay">$0</div>
                         </div>
                         <div class="stat-icon" style="background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -542,7 +542,7 @@
 
             const pendingWithdrawals = (await weverseData.getPendingWithdrawals()).length;
 
-            document.getElementById('statTotalRPay').textContent = '₩' + totalRPay.toLocaleString();
+            document.getElementById('statTotalRPay').textContent = '$' + totalRPay.toLocaleString();
             document.getElementById('statTotalPPoint').textContent = '$' + totalPPoint.toLocaleString();
             document.getElementById('statTotalCPoint').textContent = '$' + totalCPoint.toLocaleString();
             document.getElementById('statPendingWithdrawals').textContent = pendingWithdrawals + '건';
@@ -573,7 +573,7 @@
                     <tr>
                         <td><span class="fw-500">${m.name}</span><br><small class="text-muted">${m.username || m.id}</small></td>
                         <td><span class="status-badge" style="background: rgba(100,181,246,0.1); color: #2196f3;">회원</span></td>
-                        <td class="fw-600">₩${(points.rPay || 0).toLocaleString()}</td>
+                        <td class="fw-600">$${(points.rPay || 0).toLocaleString()}</td>
                         <td>
                             <button class="btn btn-outline btn-sm" onclick="chargeRPay('${m.id}')">충전</button>
                         </td>
@@ -682,7 +682,7 @@
                         <td class="fw-500">${w.id}</td>
                         <td>${w.memberName}</td>
                         <td class="fw-600">$${w.amount.toLocaleString()}</td>
-                        <td>₩${w.amountKRW.toLocaleString()}</td>
+                        <td>$${w.amountKRW.toLocaleString()}</td>
                         <td style="font-size: 0.85rem;">${bankInfo}</td>
                         <td>${requestDate}</td>
                         <td><span class="status-badge ${status.class}">${status.text}</span></td>
@@ -716,7 +716,7 @@
                 const date = new Date(t.createdAt).toLocaleString('ko-KR');
                 const amountPrefix = t.amount >= 0 ? '+' : '';
                 const amountClass = t.amount >= 0 ? 'color: #4caf50;' : 'color: #dc3545;';
-                const unit = t.pointType === 'rPay' ? '₩' : '$';
+                const unit = t.pointType === 'rPay' ? '$' : '$';
 
                 return `
                     <tr>

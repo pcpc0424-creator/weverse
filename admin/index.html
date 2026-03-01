@@ -187,7 +187,7 @@
                     <div class="stat-card">
                         <div class="stat-info">
                             <h3>총 매출</h3>
-                            <div class="stat-value" id="statRevenue">₩0</div>
+                            <div class="stat-value" id="statRevenue">$0</div>
                             <div class="stat-change" id="statRevenueChange">
                                 <span class="change-text">계산 중...</span>
                             </div>
@@ -399,7 +399,7 @@
             const stats = await weverseData.getDashboardStats();
 
             // Update stat cards
-            document.getElementById('statRevenue').textContent = '₩' + stats.totalRevenue.toLocaleString();
+            document.getElementById('statRevenue').textContent = '$' + stats.totalRevenue.toLocaleString();
             document.getElementById('statOrders').textContent = stats.totalOrders + '건';
             document.getElementById('statMembers').textContent = stats.totalMembers + '명';
             document.getElementById('statProducts').textContent = stats.totalProducts + '개';
@@ -459,7 +459,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function(value) {
-                                    return '₩' + value.toLocaleString();
+                                    return '$' + value.toLocaleString();
                                 }
                             }
                         }
@@ -836,7 +836,7 @@
                         <td><strong>#${order.id}</strong></td>
                         <td>${order.customer.name}</td>
                         <td>${itemsSummary}</td>
-                        <td>₩${order.total.toLocaleString()}</td>
+                        <td>$${order.total.toLocaleString()}</td>
                         <td><span class="status-badge ${status.class}">${status.text}</span></td>
                         <td>${orderDate}</td>
                     </tr>
@@ -870,7 +870,7 @@
                             id: 'order_' + order.id,
                             type: 'order',
                             title: '새 주문',
-                            message: `주문 #${order.id}이(가) 접수되었습니다. (₩${order.total.toLocaleString()})`,
+                            message: `주문 #${order.id}이(가) 접수되었습니다. ($${order.total.toLocaleString()})`,
                             date: order.orderDate,
                             read: false
                         });

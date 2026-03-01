@@ -572,6 +572,20 @@
     <div class="cursor" id="cursor"></div>
     <div class="cursor-dot" id="cursorDot"></div>
 
+    <!-- Admin Access Banner -->
+    <div id="adminAccessBanner" style="display: none; background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; padding: 12px 20px; text-align: center; font-size: 14px; position: fixed; top: 0; left: 0; right: 0; z-index: 10000; box-shadow: 0 2px 10px rgba(156, 39, 176, 0.3);">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 1200px; margin: 0 auto;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M9 12l2 2 4-4"/>
+            </svg>
+            <span><strong>관리자 모드</strong>: <span id="adminAccessMemberName">-</span>님의 마이페이지를 열람 중입니다</span>
+            <button onclick="exitAdminAccess()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                관리자 페이지로 돌아가기
+            </button>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="header" id="header">
         <div class="container">
@@ -1806,8 +1820,40 @@
             });
         }
 
+        // Check and show admin access banner
+        function checkAdminAccess() {
+            try {
+                const session = JSON.parse(localStorage.getItem('weverseSession')) ||
+                               JSON.parse(sessionStorage.getItem('weverseSession'));
+                if (session && session.adminAccess) {
+                    const banner = document.getElementById('adminAccessBanner');
+                    const memberName = document.getElementById('adminAccessMemberName');
+                    if (banner) {
+                        banner.style.display = 'block';
+                        memberName.textContent = session.name || session.fullName || session.username;
+                        // Add padding to body to account for fixed banner
+                        document.body.style.paddingTop = '50px';
+                    }
+                }
+            } catch (e) {
+                console.log('Admin access check error:', e);
+            }
+        }
+
+        // Exit admin access mode and return to admin page
+        function exitAdminAccess() {
+            // Clear the member session
+            localStorage.removeItem('weverseSession');
+            sessionStorage.removeItem('weverseSession');
+            // Redirect to admin members page
+            window.location.href = '../admin/members.html';
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Check for admin access mode
+            checkAdminAccess();
+
             // Debug: Check session state
             const localSession = localStorage.getItem('weverseSession');
             const sessionSession = sessionStorage.getItem('weverseSession');
