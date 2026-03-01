@@ -572,19 +572,6 @@
     <div class="cursor" id="cursor"></div>
     <div class="cursor-dot" id="cursorDot"></div>
 
-    <!-- Admin Access Banner -->
-    <div id="adminAccessBanner" style="display: none; background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; padding: 12px 20px; text-align: center; font-size: 14px; position: fixed; top: 0; left: 0; right: 0; z-index: 10000; box-shadow: 0 2px 10px rgba(156, 39, 176, 0.3);">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 1200px; margin: 0 auto;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <path d="M9 12l2 2 4-4"/>
-            </svg>
-            <span><strong>관리자 모드</strong>: <span id="adminAccessMemberName">-</span>님의 마이페이지를 열람 중입니다</span>
-            <button onclick="exitAdminAccess()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-                관리자 페이지로 돌아가기
-            </button>
-        </div>
-    </div>
 
     <!-- Header -->
     <header class="header" id="header">
@@ -1094,55 +1081,79 @@
         let profile = {};
         let addresses = [];
         let currentMember = null;
+        let adminViewMemberId = null; // URL 파라미터로 전달된 회원 ID (관리자 열람용)
+
+        // URL 파라미터에서 adminView 확인
+        function getAdminViewMemberId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('adminView');
+        }
 
         // Load data from localStorage
         async function loadAccountData() {
-            // Get current user session
-            let session = null;
-            try {
-                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
-                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
-                session = (storageSession && storageSession.loggedIn) ? storageSession :
-                          (localSession && localSession.loggedIn) ? localSession :
-                          (storageSession || localSession);
-            } catch (e) {}
+            // Check for admin view mode via URL parameter
+            adminViewMemberId = getAdminViewMemberId();
 
-            // Load orders from Supabase - 본인 주문만 표시
-            // localStorage에 id가 있으면 그걸 사용 (sessionStorage에는 id가 없을 수 있음)
-            const localSessionForId = JSON.parse(localStorage.getItem('weverseSession'));
-            if (localSessionForId && localSessionForId.id && (!session || !session.id)) {
-                session = localSessionForId;
+            let session = null;
+            let memberId = null;
+
+            if (adminViewMemberId) {
+                // 관리자 열람 모드: URL 파라미터에서 회원 ID 사용
+                memberId = adminViewMemberId;
+                console.log('[Account] 관리자 열람 모드 - memberId:', memberId);
+            } else {
+                // 일반 모드: 세션에서 회원 정보 가져오기
+                try {
+                    const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                    const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                    session = (storageSession && storageSession.loggedIn) ? storageSession :
+                              (localSession && localSession.loggedIn) ? localSession :
+                              (storageSession || localSession);
+                } catch (e) {}
+
+                // localStorage에 id가 있으면 그걸 사용 (sessionStorage에는 id가 없을 수 있음)
+                const localSessionForId = JSON.parse(localStorage.getItem('weverseSession'));
+                if (localSessionForId && localSessionForId.id && (!session || !session.id)) {
+                    session = localSessionForId;
+                }
+
+                if (session && session.id) {
+                    memberId = session.id;
+                }
             }
-            console.log('[Account] 최종 세션 정보:', session);
-            if (session && session.id) {
+
+            console.log('[Account] 최종 회원 ID:', memberId);
+
+            if (memberId) {
                 const allOrders = await weverseData.getOrders();
                 console.log('[Account] 전체 주문 수:', allOrders.length);
-                console.log('[Account] 내 ID:', session.id);
 
-                // 주문별 memberId 확인
-                allOrders.forEach((order, idx) => {
-                    console.log(`[Account] 주문 ${idx + 1}: ID=${order.id}, memberId=${order.customer?.memberId}`);
-                });
-
-                orders = allOrders.filter(order => order.customer?.memberId === session.id);
-                console.log('[Account] 필터링 후 내 주문 수:', orders.length);
+                orders = allOrders.filter(order => order.customer?.memberId === memberId);
+                console.log('[Account] 필터링 후 주문 수:', orders.length);
             } else {
                 // 로그인하지 않은 경우 주문 내역 없음
                 console.log('[Account] 세션 없음 - 주문 내역 비움');
                 orders = [];
             }
 
-            // Load profile from session
-            const storedProfile = localStorage.getItem('weverseProfile');
-            if (session) {
-                // Use session data for profile
-                profile = storedProfile ? JSON.parse(storedProfile) : {
-                    fullName: session.fullName || session.name || ''
-                };
+            // Load profile from session or member data
+            if (adminViewMemberId) {
+                // 관리자 모드에서는 회원 데이터에서 프로필 로드
+                const member = await weverseData.getMemberById(adminViewMemberId);
+                if (member) {
+                    profile = { fullName: member.name || '' };
+                }
             } else {
-                profile = storedProfile ? JSON.parse(storedProfile) : {
-                    fullName: ''
-                };
+                const storedProfile = localStorage.getItem('weverseProfile');
+                if (session) {
+                    profile = storedProfile ? JSON.parse(storedProfile) : {
+                        fullName: session.fullName || session.name || ''
+                    };
+                } else {
+                    profile = storedProfile ? JSON.parse(storedProfile) : {
+                        fullName: ''
+                    };
+                }
             }
 
             // Load addresses
@@ -1160,40 +1171,49 @@
 
         // Load member points
         async function loadMemberPoints() {
-            let session = null;
-            try {
-                const localSession = JSON.parse(localStorage.getItem('weverseSession'));
-                const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
-                session = (storageSession && storageSession.loggedIn) ? storageSession :
-                          (localSession && localSession.loggedIn) ? localSession :
-                          (storageSession || localSession);
-            } catch (e) {}
-            if (!session || (!session.loggedIn && !session.username)) return;
+            // 관리자 열람 모드인 경우 URL 파라미터에서 회원 ID 사용
+            if (adminViewMemberId) {
+                if (typeof weverseData !== 'undefined') {
+                    currentMember = await weverseData.getMemberById(adminViewMemberId);
+                }
+            } else {
+                // 일반 모드: 세션에서 회원 정보 가져오기
+                let session = null;
+                try {
+                    const localSession = JSON.parse(localStorage.getItem('weverseSession'));
+                    const storageSession = JSON.parse(sessionStorage.getItem('weverseSession'));
+                    session = (storageSession && storageSession.loggedIn) ? storageSession :
+                              (localSession && localSession.loggedIn) ? localSession :
+                              (storageSession || localSession);
+                } catch (e) {}
+                if (!session || (!session.loggedIn && !session.username)) return;
 
-            // Find member in weverseData
-            if (typeof weverseData !== 'undefined') {
-                const members = await weverseData.getMembers();
-                currentMember = members.find(m => m.username === session.username);
-
-                if (currentMember) {
-                    const points = currentMember.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
-
-                    // Update point displays
-                    document.getElementById('accountRPay').textContent = '₩' + (points.rPay || 0).toLocaleString();
-                    document.getElementById('accountPPoint').textContent = '$' + (points.pPoint || 0).toLocaleString();
-                    document.getElementById('accountCPoint').textContent = '$' + (points.cPoint || 0).toLocaleString();
-                    document.getElementById('accountTPoint').textContent = '$' + (points.tPoint || 0).toLocaleString();
-
-                    // Update member type - show as "회원" for all
-                    document.getElementById('accountMemberType').textContent = '회원';
-                    const badge = document.getElementById('accountMemberBadge');
-                    badge.textContent = 'Member';
-                    badge.style.background = 'rgba(33, 150, 243, 0.1)';
-                    badge.style.color = '#2196f3';
-                    // Show withdrawal link for all members
-                    document.getElementById('withdrawalLink').style.display = 'flex';
+                // Find member in weverseData
+                if (typeof weverseData !== 'undefined') {
+                    const members = await weverseData.getMembers();
+                    currentMember = members.find(m => m.username === session.username);
                 }
             }
+
+            if (!currentMember) return;
+
+            // 포인트 표시
+            const points = currentMember.points || { rPay: 0, pPoint: 0, cPoint: 0, tPoint: 0 };
+
+            // Update point displays
+            document.getElementById('accountRPay').textContent = '₩' + (points.rPay || 0).toLocaleString();
+            document.getElementById('accountPPoint').textContent = '$' + (points.pPoint || 0).toLocaleString();
+            document.getElementById('accountCPoint').textContent = '$' + (points.cPoint || 0).toLocaleString();
+            document.getElementById('accountTPoint').textContent = '$' + (points.tPoint || 0).toLocaleString();
+
+            // Update member type - show as "회원" for all
+            document.getElementById('accountMemberType').textContent = '회원';
+            const badge = document.getElementById('accountMemberBadge');
+            badge.textContent = 'Member';
+            badge.style.background = 'rgba(33, 150, 243, 0.1)';
+            badge.style.color = '#2196f3';
+            // Show withdrawal link for all members
+            document.getElementById('withdrawalLink').style.display = 'flex';
         }
 
         // Render profile
@@ -1821,31 +1841,33 @@
         }
 
         // Check and show admin access banner
-        function checkAdminAccess() {
-            try {
-                const session = JSON.parse(localStorage.getItem('weverseSession')) ||
-                               JSON.parse(sessionStorage.getItem('weverseSession'));
-                if (session && session.adminAccess) {
-                    const banner = document.getElementById('adminAccessBanner');
-                    const memberName = document.getElementById('adminAccessMemberName');
-                    if (banner) {
-                        banner.style.display = 'block';
-                        memberName.textContent = session.name || session.fullName || session.username;
-                        // Add padding to body to account for fixed banner
-                        document.body.style.paddingTop = '50px';
+        async function checkAdminAccess() {
+            // URL 파라미터에서 adminView 확인
+            const adminViewId = getAdminViewMemberId();
+
+            if (adminViewId) {
+                // URL 파라미터로 관리자 열람 모드 감지
+                const member = await weverseData.getMemberById(adminViewId);
+                const banner = document.getElementById('adminAccessBanner');
+                const memberName = document.getElementById('adminAccessMemberName');
+                const header = document.getElementById('header');
+
+                if (banner && member) {
+                    banner.style.display = 'block';
+                    memberName.textContent = member.name || member.username;
+                    // Add padding to body to account for fixed banner
+                    document.body.style.paddingTop = '50px';
+                    // Move header below the admin banner
+                    if (header) {
+                        header.style.top = '50px';
                     }
                 }
-            } catch (e) {
-                console.log('Admin access check error:', e);
             }
         }
 
         // Exit admin access mode and return to admin page
         function exitAdminAccess() {
-            // Clear the member session
-            localStorage.removeItem('weverseSession');
-            sessionStorage.removeItem('weverseSession');
-            // Redirect to admin members page
+            // Simply close the tab or redirect to admin members page
             window.location.href = '../admin/members.html';
         }
 
