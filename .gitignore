@@ -14,3 +14,9 @@ Thumbs.db
 .vscode/
 .idea/
 tbwjd/node_modules/
+node_modules/
+.next/
+.env
+.env.*
+dist/
+build/
